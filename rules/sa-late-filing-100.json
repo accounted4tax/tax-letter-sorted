@@ -1,6 +1,6 @@
 {
   "id": "sa-late-filing-100",
-  "version": "0.2",
+  "version": "0.3",
   "status": "agreed with Eduard 25 Oct 2026; recognition confirmed from real letters 28 Oct 2026",
   "title_key": "letters.sa_late_filing_100.title",
   "tax": "self_assessment",
@@ -222,7 +222,7 @@
       "id": "never_needed_to_file",
       "label_key": "reason.never_needed_to_file",
       "gov_uk_listed": false,
-      "route": "appeal",
+      "route": "hmrc_check_first",
       "needs_dates": false,
       "health_consent": false,
       "sub_options": [
@@ -244,7 +244,21 @@
           "free_text": true
         }
       ],
-      "added_to_appeal": "the chosen option and any free text"
+      "added_to_appeal": "the chosen option and any free text",
+      "hmrc_check_first": {
+        "message_key": "nnf.hmrc_check_first",
+        "message": "HMRC's own letter says: if you didn't need to send a tax return, tell HMRC using its free online checker. If HMRC agrees, it cancels the penalty. Try this first, before the 30-day appeal deadline.",
+        "link": "https://www.gov.uk/check-if-you-need-tax-return",
+        "link_label_key": "nnf.use_hmrc_checker",
+        "then_offer": [
+          "option_2",
+          "option_3"
+        ],
+        "then_offer_label_key": "nnf.appeal_instead",
+        "note": "Option 2 and Option 3 stay available underneath, for clients who prefer a formal appeal or whose deadline is close.",
+        "source": "SA326D HMRC 01/26 wording",
+        "status": "confirmed 29 Oct 2026"
+      }
     },
     {
       "id": "something_else",
@@ -280,7 +294,8 @@
     "appeal": "Outcome: can appeal -> Option 2 or Option 3",
     "choice": "Talk to an accountant first (free call-back) or appeal now (Option 2 or Option 3)",
     "callback": "Talk to an accountant only (call-back); no Option 2",
-    "not_accepted": "Outcome: unlikely to succeed; no charge"
+    "not_accepted": "Outcome: unlikely to succeed; no charge",
+    "hmrc_check_first": "Show HMRC's free online checker first (HMRC cancels the penalty if it agrees), then Option 2 or Option 3 underneath"
   },
   "not_accepted_options": [
     {
@@ -351,10 +366,5 @@
     "hmrc_helpline_on_letter": "0300 200 3310",
     "issued_from": "Self Assessment, HM Revenue & Customs, BX9 1AS",
     "letter_says_if_no_need_to_file": "Tell HMRC as soon as possible using the online tool ('check if you need to send a tax return'); if HMRC agrees, it cancels the penalty."
-  },
-  "suggestion_pending": {
-    "id": "never_needed_to_file_hmrc_route",
-    "text": "The SA326D itself tells people who didn't need to file to use HMRC's free online tool, after which HMRC cancels the penalty. Suggest showing that route first for 'I never needed to file', with Option 2 or 3 still offered.",
-    "status": "TO CONFIRM WITH EDUARD"
   }
 }

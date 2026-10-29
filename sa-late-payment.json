@@ -1,0 +1,166 @@
+{
+  "id": "sa-late-payment",
+  "version": "0.2",
+  "status": "agreed with Eduard 26 Oct 2026; recognition and phone number confirmed from a real March 2026 letter, 28 Oct 2026",
+  "title_key": "letters.sa_late_payment.title",
+  "tax": "self_assessment",
+  "penalty_type": "late_payment",
+  "applies_to_tax_years": {
+    "up_to": "2025-26",
+    "note": "From 2026-27, clients in Making Tax Digital for Income Tax come under a different late payment penalty regime. Separate rule to be added."
+  },
+  "recognition": {
+    "form_codes": [
+      "SA370"
+    ],
+    "form_code_versions_seen": [
+      "SA370 HMRC 08/25 (page 1)",
+      "SA370 HMRC 07/17 (page 2 payslip)"
+    ],
+    "heading_phrases": [
+      "Self Assessment",
+      "Notice of penalty assessment",
+      "Late payment penalties for the year ended"
+    ],
+    "page_2_lines": [
+      {
+        "penalty": "30 days",
+        "text": "30 days late - a penalty of 5% of £[amount] (the total tax unpaid at [date])",
+        "legal_reference": "Paragraph 3(2) of Schedule 56 to the Finance Act 2009"
+      },
+      {
+        "penalty": "6 months",
+        "legal_reference": "Paragraph 3(3) of Schedule 56 (expected; not yet seen in a sample)"
+      },
+      {
+        "penalty": "12 months",
+        "legal_reference": "Paragraph 3(4) of Schedule 56 (expected; not yet seen in a sample)"
+      }
+    ],
+    "fields_from_page_2": [
+      "tax_unpaid_amount",
+      "tax_unpaid_date"
+    ],
+    "not_this_letter_if": [
+      "the heading says 'Late filing penalties' or the form code is SA326D"
+    ],
+    "source": "Confirmed from real HMRC letters supplied by Eduard, 28 Oct 2026"
+  },
+  "fields_to_read": [
+    "notice_date",
+    "tax_year",
+    "penalty_amount",
+    "tax_unpaid_if_shown",
+    "utr",
+    "name",
+    "address"
+  ],
+  "facts_for_explanation": {
+    "what_it_is": "A penalty of 5% of the tax that was still unpaid 30 days after the payment deadline. Further 5% penalties follow at 6 months and 12 months if tax is still unpaid.",
+    "points": [
+      "Interest is also charged on tax paid late. Interest can't be appealed, only the penalty.",
+      "Unpaid payments on account become part of the tax due by 31 January, so they can lead to a late payment penalty too."
+    ],
+    "payment_deadline": "31 January after the end of the tax year"
+  },
+  "deadlines": {
+    "appeal_days_from_notice": 30,
+    "pay_days_from_notice": 30,
+    "no_payment_while_appeal_open": true,
+    "late_appeal": {
+      "allowed": true,
+      "route": "normal",
+      "extra_question": "q_why_late"
+    },
+    "extended_appeal_date_on_letter": {
+      "rule": "If page 2 of the notice says 'We've given you more time to appeal your penalty. You now have until [date]', use that date as the appeal deadline instead of notice date + 30 days.",
+      "phrase": "We've given you more time to appeal your penalty",
+      "source": "Confirmed from real HMRC letters supplied by Eduard, 28 Oct 2026"
+    }
+  },
+  "inherits_from": "sa-late-filing-100",
+  "inherits_note": "Same reasons list, routes, call-back cases, deadline checks, 'why late?' question and SA370 output. Late filing and late payment penalties for the same tax year go into one case and one SA370.",
+  "payment_help": {
+    "shown_when": [
+      "tax not paid yet",
+      "reason chosen is 'couldn't afford it' (not accepted)"
+    ],
+    "options": [
+      {
+        "id": "pay_now",
+        "label_key": "pay.pay_now",
+        "goes_to": "https://www.gov.uk/pay-self-assessment-tax-bill"
+      },
+      {
+        "id": "payment_plan",
+        "label_key": "pay.payment_plan",
+        "goes_to": "https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments",
+        "phone": {
+          "name": "HMRC (number printed on Self Assessment penalty notices for problems paying)",
+          "number": "0300 200 3820",
+          "hours": "Monday to Friday 8am to 8pm, Saturday 8am to 4pm",
+          "checked": "2026-10-28 from a real SA370 notice dated 17 March 2026 (form version 08/25). Older 2023 notices and a council page show 0300 200 3822; recheck on GOV.UK before launch."
+        }
+      }
+    ]
+  },
+  "special_situations": [
+    {
+      "id": "had_payment_plan_before_penalty",
+      "question_key": "q.had_payment_plan",
+      "route": "message_only",
+      "message_key": "lp.contact_hmrc_about_plan",
+      "message": "Contact HMRC to discuss this penalty, as you had a payment plan in place.",
+      "show_phone": "payment_help.options.payment_plan.phone",
+      "status": "confirmed 26 Oct 2026"
+    },
+    {
+      "id": "payments_on_account",
+      "route": "no_flag",
+      "note": "Not flagged as an error: unpaid payments on account become part of the tax due (confirmed by Eduard 26 Oct 2026)."
+    }
+  ],
+  "not_accepted": [
+    {
+      "id": "no_money",
+      "label_key": "na.no_money",
+      "then_show": "payment_help"
+    },
+    {
+      "id": "no_reminder",
+      "label_key": "na.no_reminder"
+    },
+    {
+      "id": "online_too_hard",
+      "label_key": "na.online_too_hard"
+    },
+    {
+      "id": "forgot",
+      "label_key": "na.forgot"
+    }
+  ],
+  "paid_call_offer": {
+    "id": "accountant_call_15",
+    "name_key": "product.accountant_call",
+    "name": "15-minute accountant call",
+    "price": 19,
+    "shown": "at the end of the late payment explanation and outcome screens",
+    "id_check": false,
+    "credit_towards_option_3": true,
+    "option_3_top_up": 20,
+    "admin_action": "Send Option 3 top-up link (£20)",
+    "status": "confirmed 26 Oct 2026"
+  },
+  "sources": [
+    {
+      "title": "GOV.UK: Self Assessment penalties",
+      "url": "https://www.gov.uk/self-assessment-tax-returns/penalties",
+      "checked": "2026-10-26"
+    },
+    {
+      "title": "East Cambridgeshire Council: If you cannot pay your tax bill on time (quotes HMRC helpline)",
+      "url": "https://eastcambs.gov.uk/content/if-you-cannot-pay-your-tax-bill-time",
+      "checked": "2026-10-26"
+    }
+  ]
+}

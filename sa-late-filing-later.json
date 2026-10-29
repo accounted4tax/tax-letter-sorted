@@ -1,0 +1,149 @@
+{
+  "id": "sa-late-filing-later",
+  "version": "0.2",
+  "status": "agreed with Eduard 26 Oct 2026; recognition confirmed from real letters 28 Oct 2026",
+  "inherits": "sa-late-filing-100",
+  "inherits_note": "Uses the same questions, reasons, routes, not-filed choice, deadline checks, late-appeal question, not-accepted options and SA370 output as sa-late-filing-100. Only the differences are listed here.",
+  "tax": "self_assessment",
+  "applies_to_tax_years": {
+    "up_to": "2025-26",
+    "note": "From 2026-27, clients in Making Tax Digital for Income Tax may come under the points-based late submission regime instead. Separate rule to be added."
+  },
+  "penalty_types": [
+    {
+      "id": "daily",
+      "title_key": "letters.sa_late_filing_daily.title",
+      "recognition": {
+        "form_codes": [
+          "SA370"
+        ],
+        "amount_rule": "£10 a day, up to £900; the letter shows the number of days or the period charged",
+        "line_on_page_2": "3 months late - a daily penalty of £10 a day for a maximum of 90 days",
+        "legal_reference": "Paragraph 4 of Schedule 55 to the Finance Act 2009"
+      },
+      "facts_for_explanation": {
+        "what_it_is": "Because your return was more than 3 months late, HMRC charges £10 for each day it stayed late, for up to 90 days (a maximum of £900).",
+        "points": [
+          "The daily penalties stop once 90 days have been charged.",
+          "They are on top of the £100 penalty you may already have received."
+        ]
+      },
+      "checks": [
+        {
+          "id": "possible_hmrc_error_daily",
+          "if": "q_filed_date is before (filing deadline + 3 months)",
+          "route": "callback",
+          "message_key": "check.penalty_may_be_wrong",
+          "status": "confirmed 26 Oct 2026"
+        }
+      ]
+    },
+    {
+      "id": "six_month",
+      "title_key": "letters.sa_late_filing_6m.title",
+      "recognition": {
+        "form_codes": [
+          "SA370"
+        ],
+        "amount_rule": "5% of the tax due or £300, whichever is greater",
+        "line_on_page_2": "6 months late - you have been charged the minimum filing penalty of £300 (or 5% of the tax due)",
+        "legal_reference": "Paragraph 5 of Schedule 55 to the Finance Act 2009"
+      },
+      "facts_for_explanation": {
+        "what_it_is": "Because your return was more than 6 months late, HMRC charges a further penalty of 5% of the tax due or £300, whichever is greater.",
+        "points": [
+          "If your return isn't filed yet, HMRC estimates the tax you owe and bases this penalty on that estimate.",
+          "Filing your return replaces the estimate and may lower this penalty."
+        ]
+      }
+    },
+    {
+      "id": "twelve_month",
+      "title_key": "letters.sa_late_filing_12m.title",
+      "recognition": {
+        "form_codes": [
+          "SA370"
+        ],
+        "amount_rule": "Another 5% of the tax due or £300, whichever is greater",
+        "line_on_page_2": "12 months late",
+        "legal_reference": "Paragraph 6 of Schedule 55 to the Finance Act 2009 (expected; not yet seen in a sample)"
+      },
+      "facts_for_explanation": {
+        "what_it_is": "Because your return was more than 12 months late, HMRC charges another penalty of 5% of the tax due or £300, whichever is greater.",
+        "points": [
+          "If HMRC believes information was deliberately withheld, this penalty can be much higher."
+        ]
+      },
+      "checks": [
+        {
+          "id": "deliberate_withholding",
+          "if": "penalty_amount > max(300, 5% of tax due shown on the letter)",
+          "route": "callback",
+          "message_key": "check.higher_12m_penalty",
+          "status": "confirmed 26 Oct 2026"
+        }
+      ]
+    }
+  ],
+  "case_grouping": {
+    "one_case_per_tax_year": true,
+    "question_key": "q.other_penalty_letters_same_year",
+    "allow_extra_uploads": true,
+    "note": "All late filing penalties for the same tax year (including the £100 penalty) go on one SA370, which has a section for each penalty.",
+    "status": "confirmed 26 Oct 2026"
+  },
+  "pricing": {
+    "same_price_whatever_the_amount": true,
+    "option_2": 19,
+    "option_3": 39,
+    "status": "confirmed 26 Oct 2026"
+  },
+  "routing_reminders": [
+    "Penalties over £100 follow the normal route (decided 25 Oct 2026).",
+    "More than one tax year: call-back only.",
+    "Each penalty notice has its own 30-day appeal deadline from its own date; the app shows the earliest."
+  ],
+  "sources": [
+    {
+      "title": "GOV.UK: Self Assessment penalties",
+      "url": "https://www.gov.uk/self-assessment-tax-returns/penalties",
+      "checked": "2026-10-23"
+    },
+    {
+      "title": "HMRC SA370 appeal form",
+      "url": "https://assets.publishing.service.gov.uk/media/657af4f6095987001295e0d7/SA370__Appeal.pdf",
+      "checked": "2026-10-23"
+    }
+  ],
+  "recognition_common": {
+    "form_codes": [
+      "SA370"
+    ],
+    "form_code_versions_seen": [
+      "SA370 HMRC 02/23 (page 1)",
+      "SA370 HMRC 07/17 (page 2 payslip)"
+    ],
+    "heading_phrases": [
+      "Self Assessment",
+      "Notice of penalty assessment",
+      "Late filing penalties for the year ended"
+    ],
+    "page_2_heading": "Penalties charged on this assessment",
+    "total_phrase": "These penalties total",
+    "one_notice_can_hold_several_penalties": true,
+    "source": "Confirmed from real HMRC letters supplied by Eduard, 28 Oct 2026"
+  },
+  "letter_facts": {
+    "pay_within_days": 30,
+    "problems_paying_phone_on_2023_letter": "0300 200 3822",
+    "extra_lines": [
+      "If you have recently filed a tax return, we will send you a revised penalty assessment shortly.",
+      "You will also have to pay interest on all outstanding amounts, including penalties."
+    ]
+  },
+  "extended_appeal_date_on_letter": {
+    "rule": "If page 2 of the notice says 'We've given you more time to appeal your penalty. You now have until [date]', use that date as the appeal deadline instead of notice date + 30 days.",
+    "phrase": "We've given you more time to appeal your penalty",
+    "source": "Confirmed from real HMRC letters supplied by Eduard, 28 Oct 2026"
+  }
+}

@@ -1,0 +1,557 @@
+{
+  "_meta": {
+    "language": "en",
+    "name": "English",
+    "direction": "ltr",
+    "version": "0.1",
+    "status": "source",
+    "note": "English is authoritative. Appeal forms and letters are always generated in English."
+  },
+  "common": {
+    "brand": "Tax Letter Sorted",
+    "by": "by Accounted4Tax",
+    "back": "Back",
+    "continue": "Continue",
+    "yes": "Yes",
+    "no": "No",
+    "not_yet": "Not yet",
+    "optional": "(optional)",
+    "from": "From",
+    "to": "To",
+    "full_name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "mobile": "Mobile number",
+    "home_address": "Home address",
+    "find_address": "Can't find it?",
+    "enter_manually": "Enter it manually",
+    "ni_number": "National Insurance number",
+    "ni_hint": "On your payslip, P60 or in the HMRC app.",
+    "utr": "UTR (Unique Taxpayer Reference)",
+    "utr_from_letter": "UTR (from your letter)",
+    "privacy": "Privacy Policy",
+    "terms": "Terms",
+    "contact": "Contact",
+    "step_of": "Step {n} of {total}",
+    "days_left": "{days} days left",
+    "deadline": "Your appeal deadline: {date}",
+    "deadline_still_applies": "It still applies while you wait for our call.",
+    "explain_another": "Explain another letter",
+    "back_home": "Back to home",
+    "pay_stripe": "You'll pay securely on Stripe. We never see your card.",
+    "english_authoritative": "This page is a translation. The English version is the official one.",
+    "view_english": "View in English",
+    "lang_en": "EN",
+    "lang_ro": "RO"
+  },
+  "footer": {
+    "not_hmrc": "We are not HMRC.",
+    "disclaimer": "This is a self-help tool, not personal tax advice. Complex cases are referred to a qualified accountant.",
+    "trading_name_short": "Tax Letter Sorted is a trading name of Accounted4Tax Ltd.",
+    "trading_name_full": "Tax Letter Sorted is a trading name of Accounted4Tax Ltd, registered in England and Wales, company number 16438537. Registered office: 128 City Road, London, EC1V 2NX. Licensed by the AAT {licence}."
+  },
+  "home": {
+    "title": "Got a letter from HMRC? Understand it. Sort it.",
+    "intro": "Upload a photo or PDF. We explain it in plain English or Romanian, show your deadlines, and help you appeal a penalty if you had a good reason.",
+    "cta": "Upload my letter – free",
+    "cta_note": "About 5 minutes · No account needed",
+    "how_title": "How it works",
+    "how_1": "Upload your letter. We read it and explain what it means and when your deadlines are.",
+    "how_2": "Got a penalty? Answer a few questions. We tell you honestly whether HMRC is likely to accept your reason.",
+    "how_3": "If you can appeal, get the official form filled in, in English, ready to sign and send.",
+    "prices_title": "Prices",
+    "option": "Option {n}",
+    "free": "Free",
+    "o1_title": "Understand your letter",
+    "o1_text": "Plain-language explanation, key dates and next steps.",
+    "o2_title": "Do it yourself",
+    "o2_text": "Appeal form filled in from your answers and emailed to you. You sign and post it.",
+    "o3_title": "Accountant review",
+    "o3_text": "A qualified accountant checks and improves your appeal within 48 hours.",
+    "pay_note": "You only pay once we've checked an appeal is possible.",
+    "letters_title": "Letters we explain",
+    "letter": {
+      "late_filing": "Late filing penalty",
+      "late_payment": "Late payment penalty",
+      "notice_to_file": "Notice to file",
+      "nudge": "Nudge letters",
+      "p800": "P800",
+      "simple_assessment": "Simple Assessment",
+      "ct_penalty": "Corporation Tax penalty",
+      "ch_penalty": "Companies House penalty"
+    }
+  },
+  "upload": {
+    "step": "Upload",
+    "title": "Upload your letter",
+    "intro": "Take a photo of each page, or choose a PDF or image.",
+    "take_photo": "Take a photo",
+    "choose_file": "Choose a file",
+    "limits": "PDF, JPG or PNG · up to 10 MB · include every page",
+    "tips_title": "For a clear photo",
+    "tips": "Lay the letter flat in good light, with all four corners in the picture. Make sure the date and reference numbers are readable.",
+    "consent": "I agree that Tax Letter Sorted can read this letter to explain it. It's deleted automatically after 24 hours unless I buy an appeal.",
+    "submit": "Read my letter",
+    "reading": "Reading your letter…",
+    "error_unreadable": "We couldn't read this letter clearly. Please try a clearer photo or the PDF.",
+    "error_too_big": "This file is over 10 MB. Please choose a smaller file.",
+    "error_not_recognised": "We don't recognise this type of letter yet. A qualified accountant can look at it for you."
+  },
+  "check": {
+    "step": "Check details",
+    "title": "Is this right?",
+    "intro": "This is what we read from your letter. Correct anything that's wrong before we explain it.",
+    "type": "Type of letter",
+    "letter_date": "Date on the letter",
+    "tax_year": "Tax year",
+    "amount": "Amount",
+    "name": "Name on the letter",
+    "confirm": "Yes, explain my letter",
+    "reupload": "Upload a clearer copy",
+    "penalty_may_be_wrong": "This penalty may have been charged by mistake. An accountant should check it before you pay or appeal.",
+    "higher_12m_penalty": "This penalty is higher than the usual amount. An accountant should look at it with you."
+  },
+  "explain": {
+    "step": "Explanation",
+    "appeal_or_pay_by": "Appeal or pay by {date}",
+    "days_note": "30 days from the date on the letter",
+    "extended_note": "HMRC has given you more time to appeal, until {date}",
+    "what_it_means": "What this letter means",
+    "if_nothing": "If you do nothing",
+    "next_steps": "What to do next",
+    "btn_help_return": "Get help filing my tax return",
+    "btn_check_appeal": "Check if I can appeal",
+    "btn_how_to_pay": "How to pay the penalty",
+    "auto_note": "Explained automatically from your letter. Check the details against the letter itself. This is general information, not personal tax advice."
+  },
+  "letters": {
+    "sa_late_filing_100": {
+      "title": "Self Assessment late filing penalty: £100"
+    },
+    "sa_late_filing_daily": {
+      "title": "Self Assessment daily late filing penalties"
+    },
+    "sa_late_filing_6m": {
+      "title": "Self Assessment 6-month late filing penalty"
+    },
+    "sa_late_filing_12m": {
+      "title": "Self Assessment 12-month late filing penalty"
+    },
+    "sa_late_payment": {
+      "title": "Self Assessment late payment penalty"
+    }
+  },
+  "q": {
+    "step": "Your circumstances",
+    "title": "What happened?",
+    "intro": "Answer in your own words, in any language. Only tell us what's true.",
+    "filed": "Have you filed the return now?",
+    "filed_date": "Date you filed",
+    "not_filed_note": "HMRC is expecting your tax return first. Filing it now stops further penalties.",
+    "file_first": "File first: get help with my return",
+    "file_yourself": "Or file it yourself on GOV.UK",
+    "continue_appeal": "Continue with appeal",
+    "reason": "What stopped you filing on time?",
+    "reason_paying": "What stopped you paying on time?",
+    "reasons_accepted": "Reasons HMRC says it may accept",
+    "reasons_other": "Other situations",
+    "nnf_why": "Why do you believe that?",
+    "something_else_text": "Tell us the reason",
+    "health_title": "Health information.",
+    "health_consent": "I agree you can use what I tell you about my health only to prepare my appeal. It's deleted 14 days after my appeal is emailed.",
+    "problem_from_to": "When did this start and end?",
+    "problem_at_deadline": "Was this happening at, or shortly before, the deadline?",
+    "filed_as_soon_as_able": "Did you file as soon as you could once it ended?",
+    "what_happened": "Tell us what happened (any language)",
+    "evidence": "What evidence do you have?",
+    "keep_evidence": "Keep all your evidence. HMRC may ask for it to support your appeal.",
+    "evidence_opt": {
+      "discharge_letter": "Hospital discharge letter",
+      "doctor_letter": "Doctor's letter",
+      "death_certificate": "Death certificate",
+      "repair_receipt": "Repair receipt or IT report",
+      "police_report": "Police or insurance report",
+      "other": "Other",
+      "none": "None yet"
+    },
+    "why_late": "Why are you appealing late?",
+    "why_late_note": "HMRC accepts late appeals only if there was a good reason for the delay.",
+    "other_penalty_letters_same_year": "Have you had other penalty letters for the same tax year?",
+    "add_letter": "Add another letter",
+    "more_than_one_year": "Are your penalties for more than one tax year?",
+    "had_payment_plan": "Did you have a payment plan with HMRC before this penalty?"
+  },
+  "warn": {
+    "return_not_filed": "HMRC usually won't decide your appeal until your return is filed. My appeal may be delayed or refused until then. I understand and want to continue."
+  },
+  "reason": {
+    "bereavement": "Your partner or a close relative died shortly before the deadline",
+    "hospital": "An unexpected stay in hospital stopped you dealing with your tax",
+    "serious_illness": "A serious or life-threatening illness",
+    "computer_failure": "Your computer or software failed while you were preparing your online return",
+    "hmrc_online_issues": "Problems with HMRC's online services",
+    "fire_flood_theft": "A fire, flood or theft stopped you completing your return",
+    "postal_delay": "Postal delays you couldn't have predicted",
+    "disability_mental_illness": "Delays because of a disability or mental illness you have",
+    "unaware_obligation": "You didn't know about, or misunderstood, what you had to do",
+    "relied_on_someone": "You relied on someone else to send your return, and they didn't",
+    "never_needed_to_file": "I never needed to file a tax return",
+    "nnf": {
+      "paye_only": "Only employed, all tax paid through PAYE",
+      "under_trading_allowance": "Self-employed income under the £1,000 trading allowance",
+      "stopped_before_year": "Stopped self-employment before that tax year",
+      "other": "Other (write your reason)"
+    },
+    "something_else": "Something else"
+  },
+  "nnf": {
+    "hmrc_check_first": "HMRC's own letter says: if you didn't need to send a tax return, tell HMRC using its free online checker. If HMRC agrees, it cancels the penalty. Try this first, before the 30-day appeal deadline.",
+    "use_hmrc_checker": "Use HMRC's free checker (GOV.UK)",
+    "appeal_instead": "Prefer a formal appeal? Choose an option below."
+  },
+  "na": {
+    "no_money": "I couldn't afford to pay",
+    "online_too_hard": "I found the online system too difficult",
+    "no_reminder": "I didn't get a reminder from HMRC",
+    "mistake_on_return": "I made a mistake on my return",
+    "forgot": "I forgot",
+    "option": {
+      "file_return": "File my tax return to stop further penalties",
+      "pay_penalty": "Pay the penalty (GOV.UK)"
+    },
+    "file_to_stop_more_penalties": "If your return isn't filed yet, file it now to stop further penalties (daily penalties start after 3 months)."
+  },
+  "outcome": {
+    "yes_title": "You can appeal",
+    "yes_text": "Your facts match a reason HMRC normally accepts: {reason}. HMRC makes the final decision.",
+    "online_alt": "You can also appeal online yourself, free, in your HMRC account.",
+    "copy_wording": "Copy the wording for an online appeal",
+    "o2_title": "Option 2 · Do it yourself",
+    "o2_b1": "Official SA370 form filled in, in English",
+    "o2_b2": "Emailed to you with posting instructions",
+    "o2_b3": "Download, print and sign",
+    "o2_cta": "Choose Option 2 · £19",
+    "o3_title": "Option 3 · Accountant review",
+    "o3_b1": "Checked and improved by a qualified accountant (MAAT)",
+    "o3_b2": "Within 48 hours of receiving everything we need",
+    "o3_b3": "Sent to you for e-signature",
+    "o3_b4": "ID check needed, as required by law",
+    "o3_cta": "Choose Option 3 · £39",
+    "call_alt": "Not sure? Book a 15-minute call with an accountant · £19"
+  },
+  "ne": {
+    "title": "An appeal is unlikely to succeed",
+    "text": "You told us: {reason}. HMRC's guidance says this is not normally a reasonable excuse.",
+    "no_charge": "You haven't been charged anything.",
+    "what_you_can_do": "What you can do",
+    "pay_by": "Pay the {amount} by {date} to avoid interest.",
+    "change_answers_hint": "If something else happened that you didn't mention, change your answers.",
+    "change_answers": "Change my answers",
+    "not_sure": "Not sure?",
+    "not_sure_text": "If your situation is more complicated, a qualified accountant can look at it with you.",
+    "talk_to_us": "Talk to us"
+  },
+  "talk": {
+    "title": "Talk to an accountant first",
+    "text_choice": "You told us: {reason}. HMRC accepts this reason less often, so a quick free call with an accountant can help you decide.",
+    "text_callback": "Your situation needs a closer look by an accountant before an appeal is prepared.",
+    "appeal_now": "Appeal now instead",
+    "request_call": "Request a free call",
+    "consent": "I agree Accounted4Tax can contact me about my penalty.",
+    "submit": "Request a call",
+    "retention": "We keep your letter and answers until we've spoken, for no more than 30 days. Your appeal deadline is {date}."
+  },
+  "callback": {
+    "title": "We'll call you",
+    "text": "Usually within one working day. After the call we'll email you a link to continue with your appeal, if that's right for you."
+  },
+  "pay": {
+    "title": "Paying what you owe",
+    "pay_now": "Pay now (GOV.UK)",
+    "payment_plan": "Set up a payment plan",
+    "call_hmrc": "Or call HMRC on {phone}",
+    "hours": "Monday to Friday 8am to 8pm, Saturday 8am to 4pm"
+  },
+  "lp": {
+    "contact_hmrc_about_plan": "Contact HMRC to discuss this penalty, as you had a payment plan in place."
+  },
+  "product": {
+    "accountant_call": "15-minute accountant call",
+    "accountant_call_text": "Talk your situation through with a qualified accountant. If you then choose Option 3, the £19 counts towards it."
+  },
+  "help": {
+    "title": "Get help with your tax return",
+    "intro": "A qualified accountant at Accounted4Tax can prepare and file your return. Leave your details and we'll call or email you, usually within one working day. No obligation.",
+    "which_year": "Which tax year?",
+    "earlier_years": "Earlier years",
+    "notes": "Anything we should know?",
+    "consent": "I agree Accounted4Tax can contact me about this request.",
+    "submit": "Send my request",
+    "sent_title": "Request sent",
+    "sent_text": "A qualified accountant at Accounted4Tax will call or email you, usually within one working day.",
+    "wait_title": "While you wait",
+    "wait_text": "Have your HMRC letter, your UTR and any income records to hand. If your penalty has a deadline, it still applies."
+  },
+  "confirm": {
+    "step": "Confirm facts",
+    "title": "Check your facts in English",
+    "intro": "HMRC needs your appeal in English. Make sure the English says exactly what you told us. We haven't added anything.",
+    "you_wrote": "You wrote",
+    "english_for_hmrc": "English for HMRC",
+    "change": "Change my answers",
+    "key_facts": "Your key facts",
+    "return_filed": "Return filed",
+    "reason": "Reason",
+    "dates": "Dates",
+    "evidence": "Evidence",
+    "declaration": "These facts are true and complete. I understand a false statement to HMRC can lead to further penalties.",
+    "submit": "Confirm and check my appeal"
+  },
+  "details": {
+    "title": "Your details",
+    "intro": "HMRC needs these on the appeal form. We've filled in what we could read from your letter.",
+    "mobile_hint": "Only used if there's a problem with your appeal.",
+    "agree_terms": "I agree to the {terms} and have read the {privacy}.",
+    "waive_cancel": "Send my appeal straight away. I understand I lose my 14-day right to cancel once it's delivered.",
+    "marketing": "Optional: email me tax deadline reminders and tips from Accounted4Tax. Unsubscribe any time.",
+    "pay_cta": "Continue to payment · {price}",
+    "stripe_note": "Next you'll see Stripe's secure payment page with your email already filled in. You only enter your card."
+  },
+  "review": {
+    "step": "Review and approve",
+    "paid": "Paid · {price}",
+    "title": "Review your appeal",
+    "intro": "This is the official SA370 form, filled in from your confirmed answers.",
+    "form_in_english": "The form is in English because it goes to HMRC.",
+    "open_full": "Open full size",
+    "sign_title": "You'll sign it by hand",
+    "sign_text": "After you approve, we email you the form. Download it, print it, then sign and date it before posting.",
+    "confirm": "I've read the form and it says what I want to tell HMRC.",
+    "approve": "Approve and email it to me",
+    "go_back": "Something's wrong, go back"
+  },
+  "done": {
+    "title": "Your appeal is ready",
+    "emailed": "We've emailed it to {email}. If it isn't there in 5 minutes, check your spam folder.",
+    "what_now": "What to do now",
+    "print_sign": "Download and print the form from the email, then sign and date it.",
+    "evidence_copies": "Add copies of any evidence you have. Evidence helps HMRC decide. Never send originals. No evidence? Just send the form.",
+    "post_before": "Post it before {date}.",
+    "keep_copy": "Keep a copy and a proof of postage.",
+    "post_to": "Post it to",
+    "privacy_note": "Your private case link is in the email. For your privacy we delete your letter, answers and form on {date}, 14 days after sending."
+  },
+  "o3": {
+    "step": "Option 3 · Step {n} of 4",
+    "details_intro": "Your accountant will use these to contact you about your appeal.",
+    "name_as_id": "Full name, as on your ID",
+    "address_hint": "Must match your proof of address.",
+    "id_notice": "After payment we'll ask for photo ID and proof of address. As an AAT-supervised practice, the law requires us to check who you are before we act for you.",
+    "agree_terms": "I agree to the {terms}, including the Option 3 engagement terms, and have read the {privacy}.",
+    "start_now": "Start the review now. If I cancel within 14 days, I'll pay for work already done.",
+    "id_title": "Check your identity",
+    "id_intro": "Money laundering rules require us to confirm who you are before we act for you. It takes about 2 minutes.",
+    "photo_id": "Photo ID",
+    "photo_id_hint": "Passport, driving licence or national ID card",
+    "proof_address": "Proof of address",
+    "proof_address_hint": "Bank statement, utility bill or council tax bill from the last 3 months, showing your name and home address",
+    "evidence": "Your evidence (optional)",
+    "evidence_hint": "Add your evidence so your accountant can check it.",
+    "add_evidence": "Add evidence",
+    "added": "Added",
+    "replace": "Replace",
+    "id_retention": "We keep ID records for 5 years after our work for you ends, as the law requires. Only your accountant sees them.",
+    "send": "Send to my accountant",
+    "sent_title": "Sent to your accountant",
+    "review_by": "Eduard Husaru MAAT will review your appeal by {datetime}.",
+    "next_title": "What happens next",
+    "next_1": "Payment and documents received",
+    "next_2": "ID check and review",
+    "next_2_text": "We may email you a question. Please reply quickly so the deadline isn't missed.",
+    "next_3": "You sign online",
+    "next_3_text": "You get an email from iLovePDF with a link to sign. No account needed.",
+    "next_4": "Your appeal is posted to HMRC",
+    "case_link_sent": "We've emailed you a private link to follow your case.",
+    "view_case": "View my case",
+    "ready_to_sign": "Ready for you to sign",
+    "sign_within": "Please sign within 2 days so we can post it in time.",
+    "note_from_accountant": "Note from your accountant",
+    "progress": "Progress",
+    "status_done": "Done",
+    "status_waiting": "Waiting for you",
+    "status_next": "Next",
+    "read_and_sign": "Read and sign (opens iLovePDF)",
+    "resend_link": "We also emailed you the signing link. Can't find it?",
+    "send_again": "Send it again",
+    "questions": "Questions? Reply to any of our emails or call {phone}.",
+    "signed_title": "Signed, thank you",
+    "signed_copy": "A copy of your signed appeal is in your email.",
+    "we_post": "We'll post your appeal and evidence to HMRC by {date} and email you the proof of postage.",
+    "after_title": "After that",
+    "after_text": "HMRC will write to you, not to us, with its decision. This usually takes several weeks. You don't have to pay the penalty while the appeal is open.",
+    "if_refused": "If HMRC says no, contact us and we'll explain your options.",
+    "next_year_help": "Get help with next year's tax return"
+  },
+  "glossary": [
+    {
+      "en": "Self Assessment",
+      "term": "Self Assessment"
+    },
+    {
+      "en": "tax return",
+      "term": "tax return"
+    },
+    {
+      "en": "tax year",
+      "term": "tax year"
+    },
+    {
+      "en": "penalty",
+      "term": "penalty"
+    },
+    {
+      "en": "late filing penalty",
+      "term": "late filing penalty"
+    },
+    {
+      "en": "late payment penalty",
+      "term": "late payment penalty"
+    },
+    {
+      "en": "daily penalty",
+      "term": "daily penalty"
+    },
+    {
+      "en": "appeal",
+      "term": "appeal"
+    },
+    {
+      "en": "reasonable excuse",
+      "term": "reasonable excuse"
+    },
+    {
+      "en": "notice to file",
+      "term": "notice to file"
+    },
+    {
+      "en": "notice of penalty assessment",
+      "term": "notice of penalty assessment"
+    },
+    {
+      "en": "Unique Taxpayer Reference (UTR)",
+      "term": "Unique Taxpayer Reference (UTR)"
+    },
+    {
+      "en": "National Insurance number",
+      "term": "National Insurance number"
+    },
+    {
+      "en": "National Insurance contributions",
+      "term": "National Insurance contributions"
+    },
+    {
+      "en": "Income Tax",
+      "term": "Income Tax"
+    },
+    {
+      "en": "Corporation Tax",
+      "term": "Corporation Tax"
+    },
+    {
+      "en": "PAYE",
+      "term": "PAYE"
+    },
+    {
+      "en": "self-employed",
+      "term": "self-employed"
+    },
+    {
+      "en": "sole trader",
+      "term": "sole trader"
+    },
+    {
+      "en": "trading allowance",
+      "term": "trading allowance"
+    },
+    {
+      "en": "payments on account",
+      "term": "payments on account"
+    },
+    {
+      "en": "balancing payment",
+      "term": "balancing payment"
+    },
+    {
+      "en": "payment plan",
+      "term": "payment plan"
+    },
+    {
+      "en": "interest",
+      "term": "interest"
+    },
+    {
+      "en": "tax calculation",
+      "term": "tax calculation"
+    },
+    {
+      "en": "Simple Assessment",
+      "term": "Simple Assessment"
+    },
+    {
+      "en": "P800",
+      "term": "P800"
+    },
+    {
+      "en": "nudge letter",
+      "term": "nudge letter"
+    },
+    {
+      "en": "compliance check",
+      "term": "compliance check"
+    },
+    {
+      "en": "tax agent",
+      "term": "tax agent"
+    },
+    {
+      "en": "HMRC",
+      "term": "HMRC"
+    },
+    {
+      "en": "Companies House",
+      "term": "Companies House"
+    },
+    {
+      "en": "Construction Industry Scheme (CIS)",
+      "term": "Construction Industry Scheme (CIS)"
+    },
+    {
+      "en": "evidence",
+      "term": "evidence"
+    },
+    {
+      "en": "proof of postage",
+      "term": "proof of postage"
+    },
+    {
+      "en": "filing deadline",
+      "term": "filing deadline"
+    },
+    {
+      "en": "payment deadline",
+      "term": "payment deadline"
+    },
+    {
+      "en": "overpayment / repayment",
+      "term": "overpayment / repayment"
+    },
+    {
+      "en": "underpayment",
+      "term": "underpayment"
+    },
+    {
+      "en": "tax code",
+      "term": "tax code"
+    }
+  ]
+}

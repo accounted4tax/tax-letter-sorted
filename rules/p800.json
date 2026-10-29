@@ -1,0 +1,96 @@
+{
+  "id": "p800",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.p800.title",
+  "tax": "income_tax_paye",
+  "kind": "explain_only",
+  "recognition": {
+    "form_codes": [
+      "P800"
+    ],
+    "heading_phrases": [
+      "Your tax calculation",
+      "Tax calculation for",
+      "You paid too much tax",
+      "You paid too little tax",
+      "You've paid too much",
+      "You owe"
+    ],
+    "sub_types": [
+      "refund_due",
+      "tax_owed"
+    ],
+    "not_this_letter_if": [
+      "the letter is a Simple Assessment (PA302)",
+      "the letter is a Self Assessment tax calculation (SA302)"
+    ]
+  },
+  "fields_to_read": [
+    "letter_date",
+    "tax_year",
+    "amount",
+    "direction (refund or owed)",
+    "p800_reference",
+    "ni_number",
+    "says_cheque_will_be_sent"
+  ],
+  "facts_for_explanation": {
+    "what_it_is": "A P800 is HMRC's end-of-year check of the tax you paid through your job or pension (PAYE). It says whether you paid too much or too little for the tax year shown. HMRC sends them between June and March after the tax year ends.",
+    "refund_due": [
+      "If the letter says you can claim online, claim through GOV.UK, your personal tax account or the HMRC app. Money usually arrives within 5 working days.",
+      "If the letter says a cheque will be sent, you don't need to do anything; it should arrive within 14 days of the date on the letter.",
+      "HMRC will never ask for bank details by text or email. Only claim through GOV.UK or the HMRC app."
+    ],
+    "tax_owed": [
+      "If you owe less than £3,000 and still have a job or pension, HMRC usually collects it through your tax code over the next tax year, in 12 equal monthly amounts.",
+      "You can choose to pay it all now instead.",
+      "If HMRC can't collect it this way, it will write to you with ways to pay."
+    ],
+    "common_causes": [
+      "wrong tax code",
+      "two jobs or pensions paid in the same month",
+      "starting a workplace pension",
+      "Employment and Support Allowance or Jobseeker's Allowance"
+    ]
+  },
+  "if_wrong": "Contact HMRC's income tax enquiries team, say which amounts are wrong and what they should be. If HMRC agrees, it sends a new calculation.",
+  "actions": [
+    {
+      "id": "claim_refund",
+      "label_key": "p800.claim_refund",
+      "goes_to": "https://www.gov.uk/tax-overpayments-and-underpayments/if-youre-due-a-refund",
+      "shown_if": "refund_due"
+    },
+    {
+      "id": "pay_now",
+      "label_key": "pay.pay_now",
+      "goes_to": "https://www.gov.uk/tax-overpayments-and-underpayments/if-you-owe-tax",
+      "shown_if": "tax_owed"
+    },
+    {
+      "id": "talk_to_accountant",
+      "label_key": "talk.request_call",
+      "goes_to": "talk_first",
+      "shown_if": "client thinks it is wrong"
+    }
+  ],
+  "paid_options": false,
+  "sources": [
+    {
+      "title": "GOV.UK: Tax overpayments and underpayments",
+      "url": "https://www.gov.uk/tax-overpayments-and-underpayments",
+      "checked": "2026-10-29"
+    },
+    {
+      "title": "GOV.UK: If your P800 says you're due a refund",
+      "url": "https://www.gov.uk/tax-overpayments-and-underpayments/if-youre-due-a-refund",
+      "checked": "2026-10-29"
+    },
+    {
+      "title": "GOV.UK: If your P800 says you owe tax",
+      "url": "https://www.gov.uk/tax-overpayments-and-underpayments/if-you-owe-tax",
+      "checked": "2026-10-29"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "sa-notice-to-file",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.sa_notice_to_file.title",
+  "tax": "self_assessment",
+  "kind": "explain_only",
+  "recognition": {
+    "form_codes": [
+      "SA316"
+    ],
+    "related_codes": {
+      "SA832": "notice to file withdrawn (no return needed for that year)",
+      "SA818": "you still need to fill in a tax return",
+      "SA251": "an update on your Self Assessment (last return you need to file)",
+      "SA981": "decision that no return was needed"
+    },
+    "heading_phrases": [
+      "Notice to complete a tax return",
+      "You need to send us a tax return"
+    ],
+    "not_this_letter_if": [
+      "the letter charges a penalty (use the penalty rules)"
+    ],
+    "form_code_versions_seen": [],
+    "note": "SA316 not yet seen in a sample; SA832, SA818, SA251 and SA981 were seen in the 28 Oct sample."
+  },
+  "fields_to_read": [
+    "notice_date",
+    "tax_year",
+    "utr",
+    "name"
+  ],
+  "deadlines": {
+    "paper": "31 October after the end of the tax year",
+    "online": "31 January after the end of the tax year",
+    "late_notice_rule": "If the notice is dated after 31 October, the deadline is 3 months from the date of the notice (for paper and online).",
+    "late_notice_rule_check": "Confirm with Eduard"
+  },
+  "facts_for_explanation": {
+    "what_it_is": "HMRC is asking you to send a Self Assessment tax return for the tax year shown. Once HMRC sends this notice, you must file, even if you think you owe no tax.",
+    "points": [
+      "If you miss the deadline, there is an automatic £100 penalty, then more penalties after 3, 6 and 12 months.",
+      "If you think you don't need to file, tell HMRC before the deadline (online checker or by phone). HMRC can withdraw the notice."
+    ]
+  },
+  "actions": [
+    {
+      "id": "help_with_return",
+      "label_key": "explain.btn_help_return",
+      "goes_to": "help_with_tax_return"
+    },
+    {
+      "id": "file_yourself",
+      "label_key": "q.file_yourself",
+      "goes_to": "https://www.gov.uk/log-in-file-self-assessment-tax-return"
+    },
+    {
+      "id": "dont_need_to_file",
+      "label_key": "nnf.use_hmrc_checker",
+      "goes_to": "https://www.gov.uk/check-if-you-need-a-tax-return"
+    }
+  ],
+  "paid_options": false,
+  "sources": [
+    {
+      "title": "GOV.UK: Self Assessment tax returns – deadlines",
+      "url": "https://www.gov.uk/self-assessment-tax-returns/deadlines",
+      "checked": "from knowledge; recheck before launch"
+    },
+    {
+      "title": "GOV.UK: Check if you need to send a Self Assessment tax return",
+      "url": "https://www.gov.uk/check-if-you-need-tax-return",
+      "checked": "2026-10-29"
+    }
+  ]
+}

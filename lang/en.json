@@ -139,6 +139,24 @@
     },
     "sa_late_payment": {
       "title": "Self Assessment late payment penalty"
+    },
+    "sa_notice_to_file": {
+      "title": "Notice to file a Self Assessment tax return"
+    },
+    "nudge": {
+      "title": "HMRC 'nudge' letter: check your tax"
+    },
+    "p800": {
+      "title": "P800 tax calculation"
+    },
+    "simple_assessment": {
+      "title": "Simple Assessment tax bill (PA302)"
+    },
+    "ct_late_filing": {
+      "title": "Corporation Tax late filing penalty"
+    },
+    "companies_house": {
+      "title": "Companies House late filing penalty"
     }
   },
   "q": {
@@ -553,5 +571,16 @@
       "en": "tax code",
       "term": "tax code"
     }
-  ]
+  ],
+  "p800": {
+    "claim_refund": "Claim your refund (GOV.UK)"
+  },
+  "ct": {
+    "q_role": "What is your role in the company?",
+    "q_other_directors": "Is there another director who could have filed the return?"
+  },
+  "ch": {
+    "pay_online": "Pay the penalty online",
+    "ask_instalments": "Ask Companies House to pay in instalments"
+  }
 }

@@ -1,0 +1,77 @@
+{
+  "id": "simple-assessment",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.simple_assessment.title",
+  "tax": "income_tax",
+  "kind": "explain_only",
+  "recognition": {
+    "form_codes": [
+      "PA302"
+    ],
+    "heading_phrases": [
+      "Simple Assessment",
+      "Your tax bill",
+      "Tax calculation for"
+    ],
+    "not_this_letter_if": [
+      "the letter is a P800",
+      "the letter is an SA302 (Self Assessment)"
+    ]
+  },
+  "fields_to_read": [
+    "letter_date",
+    "tax_year",
+    "amount",
+    "pay_by_date",
+    "utr_or_reference",
+    "ni_number"
+  ],
+  "facts_for_explanation": {
+    "what_it_is": "A Simple Assessment is a tax bill HMRC works out for you without a tax return, usually because you owe tax that can't be taken through your tax code, you owe more than £3,000, or you have to pay tax on your State Pension.",
+    "points": [
+      "Pay by the date on the letter (usually 31 January after the end of the tax year, or 3 months after the date of the letter if that is later).",
+      "If you think the amounts are wrong, contact HMRC within 60 days of the date on the bill, by phone or in writing, and say which amounts are wrong and what they should be.",
+      "You still need to pay by the deadline while HMRC looks at your query, unless HMRC tells you in writing that it will delay the payment date.",
+      "If HMRC disagrees, it sends a decision letter. You then have 30 days from that letter to appeal."
+    ]
+  },
+  "deadlines": {
+    "query_days_from_letter": 60,
+    "pay_by": "date on the letter",
+    "appeal_days_after_decision": 30,
+    "pay_by_rule_check": "Confirm the '3 months after the letter if later' rule with Eduard"
+  },
+  "actions": [
+    {
+      "id": "pay_now",
+      "label_key": "pay.pay_now",
+      "goes_to": "https://www.gov.uk/simple-assessment"
+    },
+    {
+      "id": "payment_plan",
+      "label_key": "pay.payment_plan",
+      "goes_to": "https://www.gov.uk/difficulties-paying-hmrc"
+    },
+    {
+      "id": "talk_to_accountant",
+      "label_key": "talk.request_call",
+      "goes_to": "talk_first",
+      "shown_if": "client thinks the amounts are wrong"
+    }
+  ],
+  "paid_options": false,
+  "future": "Option 2 query letter (amounts wrong) could be added later.",
+  "sources": [
+    {
+      "title": "GOV.UK: If the amounts used in your tax calculation are wrong",
+      "url": "https://www.gov.uk/understand-simple-assessment/if-the-amounts-used-in-your-tax-calculation-are-wrong",
+      "checked": "2026-10-29"
+    },
+    {
+      "title": "GOV.UK: Tax overpayments and underpayments (when Simple Assessment is used)",
+      "url": "https://www.gov.uk/tax-overpayments-and-underpayments",
+      "checked": "2026-10-29"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "id": "ct-late-filing",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.ct_late_filing.title",
+  "tax": "corporation_tax",
+  "kind": "penalty_appeal",
+  "recognition": {
+    "form_codes": [
+      "[TO CONFIRM FROM A SAMPLE LETTER]"
+    ],
+    "heading_phrases": [
+      "Corporation Tax",
+      "Company Tax Return",
+      "late filing penalty",
+      "penalty determination"
+    ],
+    "not_this_letter_if": [
+      "the letter is from Companies House (use companies-house-late-filing)",
+      "the letter is about paying Corporation Tax late (interest, not this rule)"
+    ]
+  },
+  "fields_to_read": [
+    "notice_date",
+    "company_name",
+    "company_utr",
+    "accounting_period_end",
+    "filing_date_due",
+    "penalty_amount",
+    "penalty_type"
+  ],
+  "penalties": {
+    "applies_to": "returns with a filing date on or after 1 April 2026",
+    "fixed": [
+      {
+        "id": "late",
+        "amount": 200,
+        "previous": 100,
+        "text": "Return late (1 day or more)"
+      },
+      {
+        "id": "late_3m",
+        "amount": 400,
+        "previous": 200,
+        "text": "Return more than 3 months late (total)"
+      },
+      {
+        "id": "third_late",
+        "amount": 1000,
+        "previous": 500,
+        "text": "Third return in a row late"
+      },
+      {
+        "id": "third_late_3m",
+        "amount": 2000,
+        "previous": 1000,
+        "text": "Third return in a row more than 3 months late"
+      }
+    ],
+    "tax_geared": [
+      {
+        "id": "18m",
+        "text": "Return 18 to 24 months after the end of the accounting period: 10% of the unpaid tax",
+        "check": "Confirm with Eduard; not on the 2026 GOV.UK page"
+      },
+      {
+        "id": "24m",
+        "text": "More than 24 months: 20% of the unpaid tax",
+        "check": "Confirm with Eduard"
+      }
+    ],
+    "older_returns": "Returns with a filing date before 1 April 2026 keep the old amounts (£100, £200, £500, £1,000)."
+  },
+  "checks": [
+    {
+      "id": "which_amount",
+      "if": "filing_date_due before 2026-04-01 and penalty uses new amounts (or the reverse)",
+      "route": "callback",
+      "message_key": "check.penalty_may_be_wrong"
+    },
+    {
+      "id": "tax_geared",
+      "if": "penalty includes 10% or 20% of unpaid tax",
+      "route": "callback"
+    },
+    {
+      "id": "third_in_a_row",
+      "if": "penalty is £1,000 or £2,000",
+      "route": "callback",
+      "note": "check whether the earlier two returns really were late"
+    }
+  ],
+  "deadlines": {
+    "appeal_days_from_notice": 30,
+    "late_appeal": {
+      "allowed": true,
+      "route": "normal",
+      "extra_question": "q_why_late"
+    },
+    "extended_appeal_date_on_letter": "use if printed"
+  },
+  "inherits_from": "sa-late-filing-100",
+  "inherits_note": "Same reasonable-excuse reasons and routes, read as the company's circumstances (illness or death of the director who files, system failure, fire/flood, HMRC online problems). 'Relied on accountant' and 'didn't know' go to the 'talk first' route.",
+  "company_specific_questions": [
+    {
+      "id": "q_role",
+      "label_key": "ct.q_role",
+      "type": "single_choice",
+      "options": [
+        "director",
+        "company secretary",
+        "other (route to callback)"
+      ]
+    },
+    {
+      "id": "q_other_directors",
+      "label_key": "ct.q_other_directors",
+      "type": "yes_no",
+      "note": "If another director could have filed, illness of one director is weaker: route to talk_first"
+    }
+  ],
+  "appeal_output": {
+    "form": "letter",
+    "language": "en",
+    "template": "ct_appeal_letter",
+    "signed_by": "director",
+    "post_to": "Corporation Tax Services, HM Revenue and Customs, BX9 1AX",
+    "post_to_check": "Confirm the address from the penalty notice; use the address printed on the letter when present",
+    "online_alternative": "Company can appeal through HMRC online services for Corporation Tax"
+  },
+  "pricing": {
+    "option_2": 19,
+    "option_3": 39
+  },
+  "sources": [
+    {
+      "title": "GOV.UK: Increases to Corporation Tax late filing penalties",
+      "url": "https://www.gov.uk/government/publications/corporation-tax-increases-to-late-filing-penalties/increases-to-corporation-tax-late-filing-penalties",
+      "checked": "2026-10-29"
+    },
+    {
+      "title": "GOV.UK: Corporation Tax penalty determinations (CT211 notes)",
+      "url": "https://www.gov.uk/government/publications/corporation-tax-penalty-determinations-ct211-notes/corporation-tax-penalty-determinations-ct211-notes",
+      "checked": "listed, not read"
+    }
+  ]
+}

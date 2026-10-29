@@ -1,0 +1,135 @@
+{
+  "id": "companies-house-late-filing",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.companies_house.title",
+  "tax": "not_hmrc",
+  "kind": "penalty_appeal",
+  "important": "This is from Companies House, not HMRC. The appeal goes to Companies House, and the test is stricter ('exceptional circumstances').",
+  "recognition": {
+    "form_codes": [
+      "[TO CONFIRM FROM A SAMPLE LETTER]"
+    ],
+    "heading_phrases": [
+      "Companies House",
+      "Late Filing Penalty",
+      "accounts were delivered late",
+      "penalty reference"
+    ],
+    "not_this_letter_if": [
+      "the letter is from HMRC (Corporation Tax penalty: use ct-late-filing)"
+    ]
+  },
+  "fields_to_read": [
+    "letter_date",
+    "company_name",
+    "company_number",
+    "accounts_made_up_to",
+    "date_delivered",
+    "penalty_amount",
+    "penalty_reference"
+  ],
+  "penalties": {
+    "private_company_or_llp": [
+      {
+        "late_up_to": "1 month",
+        "amount": 150
+      },
+      {
+        "late_up_to": "3 months",
+        "amount": 375
+      },
+      {
+        "late_up_to": "6 months",
+        "amount": 750
+      },
+      {
+        "late_over": "6 months",
+        "amount": 1500
+      }
+    ],
+    "public_company": [
+      {
+        "late_up_to": "1 month",
+        "amount": 750
+      },
+      {
+        "late_up_to": "3 months",
+        "amount": 1500
+      },
+      {
+        "late_up_to": "6 months",
+        "amount": 3000
+      },
+      {
+        "late_over": "6 months",
+        "amount": 7500
+      }
+    ],
+    "doubling": "The penalty is doubled if accounts were also late the previous financial year."
+  },
+  "checks": [
+    {
+      "id": "amount_matches_band",
+      "if": "penalty_amount does not match the lateness band (or doubled band)",
+      "route": "callback",
+      "message_key": "check.penalty_may_be_wrong"
+    }
+  ],
+  "reasons": {
+    "may_be_accepted": [
+      "An unforeseen event at a critical time, e.g. a fire destroying records days before the deadline",
+      "Serious illness or death of a director at a critical time, where no one else could file",
+      "Companies House system failure on the day"
+    ],
+    "not_accepted": [
+      "company is dormant",
+      "can't afford to pay",
+      "accountant was ill, or relied on the accountant",
+      "first accounts",
+      "not familiar with the requirements",
+      "financial difficulties, including insolvency",
+      "post delays or loss",
+      "directors living or travelling overseas",
+      "another director was responsible"
+    ],
+    "route_note": "Strict test: reasons on the may_be_accepted list go to Option 2/3; anything else goes to talk_first; not_accepted reasons go to the 'unlikely to succeed' outcome with instalment and payment options."
+  },
+  "deadlines": {
+    "appeal_time_limit": "No limit stated on GOV.UK; appeal as soon as possible",
+    "payment": "Can be paid online; instalments can be requested from Companies House",
+    "unpaid": "Passed to debt collectors and can go to the County Court or Sheriff Court"
+  },
+  "appeal_output": {
+    "form": "letter",
+    "language": "en",
+    "template": "companies_house_appeal_letter",
+    "signed_by": "director",
+    "send_to": "enquiries@companieshouse.gov.uk (email, preferred) – include the penalty reference and company number",
+    "phone_if_cannot_write": "0303 1234 500",
+    "if_refused": "Ask the Senior Casework Unit (Late Filing Penalties) to review; then the Independent Adjudicators"
+  },
+  "not_accepted_options": [
+    {
+      "id": "pay",
+      "label_key": "ch.pay_online",
+      "goes_to": "https://www.gov.uk/government/publications/late-filing-penalties/late-filing-penalties"
+    },
+    {
+      "id": "instalments",
+      "label_key": "ch.ask_instalments",
+      "goes_to": "mailto:enquiries@companieshouse.gov.uk"
+    }
+  ],
+  "pricing": {
+    "option_2": 19,
+    "option_3": 39
+  },
+  "sources": [
+    {
+      "title": "GOV.UK: Late filing penalties (Companies House)",
+      "url": "https://www.gov.uk/government/publications/late-filing-penalties/late-filing-penalties",
+      "checked": "2026-10-29"
+    }
+  ]
+}

@@ -10,6 +10,19 @@
       "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
       "Names: 'Nume și prenume' (surname first, as in Romania).",
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege)."
+    ],
+    "to_review": [
+      "ch.ask_instalments",
+      "ch.pay_online",
+      "ct.q_other_directors",
+      "ct.q_role",
+      "letters.companies_house.title",
+      "letters.ct_late_filing.title",
+      "letters.nudge.title",
+      "letters.p800.title",
+      "letters.sa_notice_to_file.title",
+      "letters.simple_assessment.title",
+      "p800.claim_refund"
     ]
   },
   "common": {
@@ -144,6 +157,24 @@
     },
     "sa_late_payment": {
       "title": "Amendă Self Assessment pentru plată întârziată"
+    },
+    "sa_notice_to_file": {
+      "title": "Notificare de depunere a declarației fiscale (Self Assessment)"
+    },
+    "nudge": {
+      "title": "Scrisoare de atenționare HMRC (nudge letter): verificați-vă impozitele"
+    },
+    "p800": {
+      "title": "Calculul impozitului P800"
+    },
+    "simple_assessment": {
+      "title": "Notă de plată Simple Assessment (PA302)"
+    },
+    "ct_late_filing": {
+      "title": "Amendă pentru depunerea întârziată a declarației de impozit pe profit (Corporation Tax)"
+    },
+    "companies_house": {
+      "title": "Amendă de la Companies House pentru depunerea întârziată a conturilor anuale"
     }
   },
   "q": {
@@ -558,5 +589,16 @@
       "en": "tax code",
       "term": "cod fiscal pe salariu (tax code)"
     }
-  ]
+  ],
+  "p800": {
+    "claim_refund": "Solicită rambursarea (GOV.UK)"
+  },
+  "ct": {
+    "q_role": "Ce funcție aveți în firmă?",
+    "q_other_directors": "Mai există un alt director care ar fi putut depune declarația?"
+  },
+  "ch": {
+    "pay_online": "Plătește amenda online",
+    "ask_instalments": "Solicită plata în rate la Companies House"
+  }
 }

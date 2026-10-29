@@ -1,0 +1,82 @@
+{
+  "id": "nudge-letters",
+  "version": "0.1",
+  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "title_key": "letters.nudge.title",
+  "tax": "various",
+  "kind": "explain_only",
+  "recognition": {
+    "form_codes": [
+      "ITSA6(A)MM",
+      "[campaign letters vary – no fixed code]"
+    ],
+    "form_code_versions_seen": [
+      "ITSA6(A)MM HMRC 08 24 (check if you need to send a return)"
+    ],
+    "heading_phrases": [
+      "Check if you need to send us a Self Assessment tax return",
+      "We have information that",
+      "online platform",
+      "selling goods",
+      "digital platform",
+      "you may need to tell us"
+    ],
+    "sub_types": {
+      "online_platform_sellers": "HMRC has data from platforms (eBay, Vinted, Etsy, Airbnb and others) under the digital platform reporting rules, in force from 1 January 2024.",
+      "missed_return": "A return HMRC expected was not received (ITSA6).",
+      "other_income": "Other campaigns, e.g. overseas income, property income, crypto."
+    },
+    "not_this_letter_if": [
+      "the letter opens a compliance check (CC/FS1a, CC/FS22 or similar): route to the accountant",
+      "the letter charges a penalty"
+    ]
+  },
+  "fields_to_read": [
+    "letter_date",
+    "tax_year",
+    "respond_by_date",
+    "utr",
+    "name",
+    "platform_named"
+  ],
+  "facts_for_explanation": {
+    "what_it_is": "A 'nudge' letter is HMRC asking you to check that your tax is right, because it has information suggesting you may have income you haven't declared. It is not a penalty and not a formal investigation, but you should not ignore it.",
+    "points": [
+      "If you only sold your own used belongings for less than you paid, that is usually not trading and not taxable.",
+      "Trading income up to £1,000 a year can be covered by the trading allowance.",
+      "If you do owe tax, telling HMRC yourself usually means lower penalties than if HMRC finds it later.",
+      "Platforms report sellers to HMRC once they make 30 or more sales, or about £1,700 or more, in a year. Being reported does not by itself mean tax is due."
+    ],
+    "threshold_check": "Confirm the 30 sales / €2,000 (about £1,700) reporting threshold before launch"
+  },
+  "routes": {
+    "default": "explain + call-back offer",
+    "if_respond_by_date_within_14_days": "highlight the date and offer a call-back"
+  },
+  "actions": [
+    {
+      "id": "talk_to_accountant",
+      "label_key": "talk.request_call",
+      "goes_to": "talk_first"
+    },
+    {
+      "id": "help_with_return",
+      "label_key": "explain.btn_help_return",
+      "goes_to": "help_with_tax_return"
+    },
+    {
+      "id": "check_if_need_return",
+      "label_key": "nnf.use_hmrc_checker",
+      "goes_to": "https://www.gov.uk/check-if-you-need-a-tax-return"
+    }
+  ],
+  "paid_options": false,
+  "future_link": "Online seller tax checker (Vinted/eBay/Etsy/Airbnb uploads, £1,000 trading allowance, badges of trade) will start from this letter type.",
+  "sources": [
+    {
+      "title": "GOV.UK: Check if you need to send a Self Assessment tax return",
+      "url": "https://www.gov.uk/check-if-you-need-tax-return",
+      "checked": "2026-10-29"
+    }
+  ]
+}

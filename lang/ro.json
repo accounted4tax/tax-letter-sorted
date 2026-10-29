@@ -3,12 +3,13 @@
     "language": "ro",
     "name": "Română",
     "direction": "ltr",
-    "version": "0.2",
+    "version": "0.3",
     "status": "reviewed by Eduard Husaru, 29 Oct 2026",
     "note": "English is authoritative. Appeal forms and letters are always generated in English.",
     "style_notes": [
       "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
-      "Names: 'Nume și prenume' (surname first, as in Romania)."
+      "Names: 'Nume și prenume' (surname first, as in Romania).",
+      "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege)."
     ]
   },
   "common": {
@@ -152,7 +153,7 @@
     "filed": "Ați depus declarația fiscală între timp?",
     "filed_date": "Data depunerii",
     "not_filed_note": "HMRC așteaptă mai întâi declarația fiscală. Dacă o depuneți acum, opriți alte amenzi în viitor.",
-    "file_first": "Depun mai întâi: ajutor cu declarația fiscală",
+    "file_first": "Depune mai întâi: ajutor cu declarația fiscală",
     "file_yourself": "Sau depuneți-o singur pe GOV.UK",
     "continue_appeal": "Continuă cu contestația",
     "reason": "Ce v-a împiedicat să depuneți la timp?",
@@ -220,8 +221,8 @@
     "mistake_on_return": "Am greșit ceva în declarație",
     "forgot": "Am uitat",
     "option": {
-      "file_return": "Depun declarația ca să opresc alte amenzi",
-      "pay_penalty": "Plătesc amenda (GOV.UK)"
+      "file_return": "Depune declarația ca să oprești alte amenzi",
+      "pay_penalty": "Plătește amenda (GOV.UK)"
     },
     "file_to_stop_more_penalties": "Dacă declarația nu este încă depusă, depuneți-o acum ca să opriți alte amenzi (amenzile zilnice încep după 3 luni)."
   },
@@ -234,13 +235,13 @@
     "o2_b1": "Formularul oficial SA370 completat în engleză",
     "o2_b2": "Trimis pe email, cu instrucțiuni de expediere",
     "o2_b3": "Îl descărcați, îl tipăriți și îl semnați",
-    "o2_cta": "Aleg Opțiunea 2 · 19 £",
+    "o2_cta": "Alege Opțiunea 2 · 19 £",
     "o3_title": "Opțiunea 3 · Verificare de către un contabil",
     "o3_b1": "Verificată și îmbunătățită de un contabil calificat (MAAT)",
     "o3_b2": "În 48 de ore de la primirea tuturor documentelor necesare",
     "o3_b3": "Vă este trimisă pentru semnătură electronică",
     "o3_b4": "Este necesară verificarea identității, conform legii",
-    "o3_cta": "Aleg Opțiunea 3 · 39 £",
+    "o3_cta": "Alege Opțiunea 3 · 39 £",
     "call_alt": "Nu sunteți sigur? Programați o discuție de 15 minute cu un contabil · 19 £"
   },
   "ne": {
@@ -250,7 +251,7 @@
     "what_you_can_do": "Ce puteți face",
     "pay_by": "Plătiți {amount} până la {date} ca să evitați dobânda.",
     "change_answers_hint": "Dacă s-a întâmplat și altceva ce nu ați menționat, modificați răspunsurile.",
-    "change_answers": "Modific răspunsurile",
+    "change_answers": "Modifică răspunsurile",
     "not_sure": "Nu sunteți sigur?",
     "not_sure_text": "Dacă situația dvs. este mai complicată, un contabil calificat o poate analiza împreună cu dvs.",
     "talk_to_us": "Vorbiți cu noi"
@@ -331,7 +332,7 @@
     "sign_title": "Îl veți semna de mână",
     "sign_text": "După ce aprobați, vă trimitem formularul pe email. Descărcați-l, tipăriți-l, apoi semnați-l și datați-l înainte de a-l trimite prin poștă.",
     "confirm": "Am citit formularul și spune ce vreau să comunic către HMRC.",
-    "approve": "Aprob și trimiteți-mi-l pe email",
+    "approve": "Aprobă și trimite pe email",
     "go_back": "Ceva nu este corect, înapoi la pasul precedent"
   },
   "done": {

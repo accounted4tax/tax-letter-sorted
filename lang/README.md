@@ -5,7 +5,7 @@ One file per language. Every piece of on-screen text has a key (e.g. `upload.tit
 | File | Language | Status |
 |---|---|---|
 | en.json | English | Source – authoritative |
-| ro.json | Română | Draft – awaiting Eduard's review |
+| ro.json | Română | Reviewed by Eduard, 29 Oct 2026 |
 
 Rules:
 - `{name}` placeholders are filled in by the app (dates, amounts, links) – keep them exactly as they are.

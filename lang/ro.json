@@ -3,9 +3,13 @@
     "language": "ro",
     "name": "Română",
     "direction": "ltr",
-    "version": "0.1",
-    "status": "draft – awaiting Eduard's review",
-    "note": "English is authoritative. Appeal forms and letters are always generated in English."
+    "version": "0.2",
+    "status": "reviewed by Eduard Husaru, 29 Oct 2026",
+    "note": "English is authoritative. Appeal forms and letters are always generated in English.",
+    "style_notes": [
+      "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
+      "Names: 'Nume și prenume' (surname first, as in Romania)."
+    ]
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -18,7 +22,7 @@
     "optional": "(opțional)",
     "from": "De la",
     "to": "Până la",
-    "full_name": "Nume complet",
+    "full_name": "Nume și prenume",
     "email": "Email",
     "phone": "Telefon",
     "mobile": "Număr de mobil",
@@ -45,8 +49,8 @@
     "lang_ro": "RO"
   },
   "footer": {
-    "not_hmrc": "Nu suntem HMRC.",
-    "disclaimer": "Acesta este un instrument de autoajutor, nu consultanță fiscală personală. Cazurile complexe sunt trimise unui contabil calificat.",
+    "not_hmrc": "Noi nu suntem HMRC.",
+    "disclaimer": "Acesta este un instrument de auto ajutor, nu consultanță fiscală personală. Cazurile complexe sunt trimise unui contabil calificat.",
     "trading_name_short": "Tax Letter Sorted este o denumire comercială a Accounted4Tax Ltd.",
     "trading_name_full": "Tax Letter Sorted este o denumire comercială a Accounted4Tax Ltd, înregistrată în Anglia și Țara Galilor, număr de înregistrare 16438537. Sediul social: 128 City Road, London, EC1V 2NX. Licențiată de AAT {licence}."
   },
@@ -54,16 +58,16 @@
     "title": "Ați primit o scrisoare de la HMRC? Înțelegeți-o. Rezolvați-o.",
     "intro": "Încărcați o fotografie sau un PDF. Vă explicăm scrisoarea pe înțelesul tuturor, în română sau engleză, vă arătăm termenele și vă ajutăm să contestați o amendă dacă ați avut un motiv întemeiat.",
     "cta": "Încarcă scrisoarea – gratuit",
-    "cta_note": "Aproximativ 5 minute · Fără cont",
+    "cta_note": "Aproximativ 5 minute. Nu necesită creare de cont.",
     "how_title": "Cum funcționează",
-    "how_1": "Încărcați scrisoarea. O citim și vă explicăm ce înseamnă și care sunt termenele.",
+    "how_1": "Încărcați scrisoarea. O citim și vă explicăm ce înseamnă și care sunt termenele limită.",
     "how_2": "Ați primit o amendă? Răspundeți la câteva întrebări. Vă spunem sincer dacă HMRC va accepta probabil motivul dvs.",
     "how_3": "Dacă puteți contesta, primiți formularul oficial completat în engleză, gata de semnat și trimis.",
     "prices_title": "Prețuri",
     "option": "Opțiunea {n}",
     "free": "Gratuit",
     "o1_title": "Înțelegeți scrisoarea",
-    "o1_text": "Explicație pe înțeles, datele importante și pașii următori.",
+    "o1_text": "Explicație pe înțelesul tuturor, date importante și pașii următori.",
     "o2_title": "Faceți-o singur",
     "o2_text": "Formularul de contestație completat din răspunsurile dvs. și trimis pe email. Îl semnați și îl trimiteți prin poștă.",
     "o3_title": "Verificare de către un contabil",
@@ -77,7 +81,7 @@
       "nudge": "Scrisori de atenționare (nudge letters)",
       "p800": "P800",
       "simple_assessment": "Simple Assessment (calcul simplificat al impozitului)",
-      "ct_penalty": "Amendă pentru impozitul pe profit (Corporation Tax)",
+      "ct_penalty": "Amendă pentru impozitul pe profit pe firmă (Corporation Tax)",
       "ch_penalty": "Amendă de la Companies House"
     }
   },
@@ -118,8 +122,8 @@
     "extended_note": "HMRC v-a acordat mai mult timp pentru contestație, până la {date}",
     "what_it_means": "Ce înseamnă această scrisoare",
     "if_nothing": "Dacă nu faceți nimic",
-    "next_steps": "Ce trebuie să faceți",
-    "btn_help_return": "Ajutor la depunerea declarației",
+    "next_steps": "Pașii următori",
+    "btn_help_return": "Ajutor la depunerea declarației fiscale",
     "btn_check_appeal": "Verifică dacă pot contesta",
     "btn_how_to_pay": "Cum plătesc amenda",
     "auto_note": "Explicație generată automat din scrisoarea dvs. Verificați detaliile cu scrisoarea originală. Aceasta este o informare generală, nu consultanță fiscală personală."
@@ -132,10 +136,10 @@
       "title": "Amenzi zilnice Self Assessment pentru depunere întârziată"
     },
     "sa_late_filing_6m": {
-      "title": "Amendă Self Assessment la 6 luni pentru depunere întârziată"
+      "title": "Amendă declarație fiscală – depunere întârziată 6 luni"
     },
     "sa_late_filing_12m": {
-      "title": "Amendă Self Assessment la 12 luni pentru depunere întârziată"
+      "title": "Amendă declarație fiscală – depunere întârziată 12 luni"
     },
     "sa_late_payment": {
       "title": "Amendă Self Assessment pentru plată întârziată"
@@ -145,10 +149,10 @@
     "step": "Situația dvs.",
     "title": "Ce s-a întâmplat?",
     "intro": "Răspundeți cu propriile cuvinte, în orice limbă. Spuneți-ne doar ce este adevărat.",
-    "filed": "Ați depus declarația între timp?",
+    "filed": "Ați depus declarația fiscală între timp?",
     "filed_date": "Data depunerii",
-    "not_filed_note": "HMRC așteaptă mai întâi declarația dvs. Dacă o depuneți acum, opriți alte amenzi.",
-    "file_first": "Depun mai întâi: ajutor cu declarația",
+    "not_filed_note": "HMRC așteaptă mai întâi declarația fiscală. Dacă o depuneți acum, opriți alte amenzi în viitor.",
+    "file_first": "Depun mai întâi: ajutor cu declarația fiscală",
     "file_yourself": "Sau depuneți-o singur pe GOV.UK",
     "continue_appeal": "Continuă cu contestația",
     "reason": "Ce v-a împiedicat să depuneți la timp?",
@@ -160,7 +164,7 @@
     "health_title": "Informații despre sănătate.",
     "health_consent": "Sunt de acord să folosiți informațiile despre sănătatea mea doar pentru a pregăti contestația. Sunt șterse la 14 zile după ce contestația îmi este trimisă pe email.",
     "problem_from_to": "Când a început și când s-a terminat?",
-    "problem_at_deadline": "Se întâmpla asta la termen sau cu puțin înainte?",
+    "problem_at_deadline": "Se întâmpla asta la termenul limită sau cu puțin timp înainte?",
     "filed_as_soon_as_able": "Ați depus declarația imediat ce ați putut, după ce s-a terminat?",
     "what_happened": "Spuneți-ne ce s-a întâmplat (în orice limbă)",
     "evidence": "Ce dovezi aveți?",
@@ -179,7 +183,7 @@
     "other_penalty_letters_same_year": "Ați mai primit alte scrisori cu amenzi pentru același an fiscal?",
     "add_letter": "Adăugați altă scrisoare",
     "more_than_one_year": "Amenzile dvs. sunt pentru mai mulți ani fiscali?",
-    "had_payment_plan": "Aveați un plan de plată cu HMRC înainte de această amendă?"
+    "had_payment_plan": "Ați avut un plan de plată cu HMRC înainte de această amendă?"
   },
   "warn": {
     "return_not_filed": "De obicei, HMRC nu decide asupra contestației până nu este depusă declarația. Contestația mea poate fi amânată sau respinsă până atunci. Înțeleg și vreau să continui."
@@ -188,14 +192,14 @@
     "bereavement": "Partenerul dvs. sau o rudă apropiată a decedat cu puțin înainte de termen",
     "hospital": "O internare neprevăzută în spital v-a împiedicat să vă ocupați de impozite",
     "serious_illness": "O boală gravă sau care v-a pus viața în pericol",
-    "computer_failure": "Calculatorul sau programul s-a defectat în timp ce pregăteați declarația online",
+    "computer_failure": "Calculatorul sau programul s-a defectat în timp ce pregăteați declarația fiscală online",
     "hmrc_online_issues": "Probleme cu serviciile online ale HMRC",
     "fire_flood_theft": "Un incendiu, o inundație sau un furt v-a împiedicat să completați declarația",
     "postal_delay": "Întârzieri poștale pe care nu le puteați prevedea",
     "disability_mental_illness": "Întârzieri din cauza unei dizabilități sau a unei afecțiuni psihice pe care o aveți",
     "unaware_obligation": "Nu știați sau ați înțeles greșit ce trebuia să faceți",
     "relied_on_someone": "V-ați bazat pe altcineva să vă trimită declarația și nu a făcut-o",
-    "never_needed_to_file": "Nu trebuia să depun nicio declarație",
+    "never_needed_to_file": "Nu consider că trebuia să depun o declarație fiscală",
     "nnf": {
       "paye_only": "Doar angajat, tot impozitul plătit prin PAYE (reținut din salariu)",
       "under_trading_allowance": "Venit din activitate independentă sub scutirea de 1.000 £ (trading allowance)",
@@ -205,14 +209,14 @@
     "something_else": "Altceva"
   },
   "nnf": {
-    "hmrc_check_first": "Chiar scrisoarea HMRC spune: dacă nu trebuia să trimiteți o declarație, anunțați HMRC prin instrumentul online gratuit de verificare. Dacă HMRC este de acord, anulează amenda. Încercați mai întâi această variantă, înainte de termenul de 30 de zile pentru contestație.",
+    "hmrc_check_first": "Scrisoarea de la HMRC spune: dacă nu trebuia să trimiteți o declarație, anunțați HMRC prin instrumentul online gratuit de verificare. Dacă HMRC este de acord, se va anula amenda. Încercați mai întâi această variantă, înainte de termenul de 30 de zile pentru contestație.",
     "use_hmrc_checker": "Folosiți verificarea gratuită HMRC (GOV.UK)",
     "appeal_instead": "Preferați o contestație formală? Alegeți o opțiune mai jos."
   },
   "na": {
     "no_money": "Nu am avut bani să plătesc",
     "online_too_hard": "Mi s-a părut prea complicat sistemul online",
-    "no_reminder": "Nu am primit niciun memento de la HMRC",
+    "no_reminder": "Nu am primit nicio înștiințare de la HMRC",
     "mistake_on_return": "Am greșit ceva în declarație",
     "forgot": "Am uitat",
     "option": {
@@ -223,7 +227,7 @@
   },
   "outcome": {
     "yes_title": "Puteți contesta",
-    "yes_text": "Faptele dvs. corespund unui motiv pe care HMRC îl acceptă de obicei: {reason}. Decizia finală îi aparține HMRC.",
+    "yes_text": "Motivele dvs. corespund unui motiv pe care HMRC îl acceptă de obicei: {reason}. Decizia finală îi aparține HMRC.",
     "online_alt": "Puteți contesta și singur, online și gratuit, din contul dvs. HMRC.",
     "copy_wording": "Copiați textul pentru o contestație online",
     "o2_title": "Opțiunea 2 · Faceți-o singur",
@@ -255,10 +259,10 @@
     "title": "Vorbiți mai întâi cu un contabil",
     "text_choice": "Ne-ați spus: {reason}. HMRC acceptă mai rar acest motiv, așa că o scurtă discuție gratuită cu un contabil vă poate ajuta să decideți.",
     "text_callback": "Situația dvs. trebuie analizată mai atent de un contabil înainte de a pregăti o contestație.",
-    "appeal_now": "Contest acum",
-    "request_call": "Solicit un apel gratuit",
+    "appeal_now": "Trimite contestația acum",
+    "request_call": "Solicită un apel telefonic gratuit",
     "consent": "Sunt de acord ca Accounted4Tax să mă contacteze în legătură cu amenda mea.",
-    "submit": "Solicit apelul",
+    "submit": "Solicită un apel telefonic",
     "retention": "Vă păstrăm scrisoarea și răspunsurile până vorbim, cel mult 30 de zile. Termenul pentru contestație este {date}."
   },
   "callback": {
@@ -267,8 +271,8 @@
   },
   "pay": {
     "title": "Plata sumelor datorate",
-    "pay_now": "Plătesc acum (GOV.UK)",
-    "payment_plan": "Stabilesc un plan de plată",
+    "pay_now": "Plătește acum (GOV.UK)",
+    "payment_plan": "Stabilește un plan de plată",
     "call_hmrc": "Sau sunați la HMRC la {phone}",
     "hours": "Luni–vineri 8:00–20:00, sâmbătă 8:00–16:00"
   },
@@ -276,30 +280,30 @@
     "contact_hmrc_about_plan": "Contactați HMRC pentru a discuta această amendă, deoarece aveați un plan de plată."
   },
   "product": {
-    "accountant_call": "Discuție de 15 minute cu un contabil",
+    "accountant_call": "Programare telefonică de 15 minute cu un contabil",
     "accountant_call_text": "Discutați situația cu un contabil calificat. Dacă alegeți apoi Opțiunea 3, cei 19 £ se scad din preț."
   },
   "help": {
     "title": "Ajutor cu declarația fiscală",
-    "intro": "Un contabil calificat de la Accounted4Tax vă poate pregăti și depune declarația. Lăsați-ne datele și vă sunăm sau vă scriem, de obicei într-o zi lucrătoare. Fără nicio obligație.",
+    "intro": "Un contabil calificat de la Accounted4Tax vă poate pregăti și depune declarația fiscală. Lăsați-ne datele și vă sunăm sau vă scriem pe email, de obicei într-o zi lucrătoare. Fără nicio obligație.",
     "which_year": "Pentru ce an fiscal?",
     "earlier_years": "Ani anteriori",
     "notes": "Ce ar trebui să știm?",
     "consent": "Sunt de acord ca Accounted4Tax să mă contacteze în legătură cu această solicitare.",
-    "submit": "Trimit solicitarea",
+    "submit": "Trimite solicitarea",
     "sent_title": "Solicitare trimisă",
     "sent_text": "Un contabil calificat de la Accounted4Tax vă va suna sau vă va scrie, de obicei într-o zi lucrătoare.",
     "wait_title": "Până atunci",
     "wait_text": "Pregătiți scrisoarea HMRC, codul UTR și documentele privind veniturile. Dacă amenda are un termen, acesta rămâne valabil."
   },
   "confirm": {
-    "step": "Confirmarea faptelor",
-    "title": "Verificați faptele în engleză",
+    "step": "Confirmați circumstanțele",
+    "title": "Verificați circumstanțele în engleză",
     "intro": "HMRC are nevoie de contestație în engleză. Asigurați-vă că textul în engleză spune exact ce ne-ați spus. Nu am adăugat nimic.",
     "you_wrote": "Ați scris",
     "english_for_hmrc": "Textul în engleză pentru HMRC",
-    "change": "Modific răspunsurile",
-    "key_facts": "Faptele principale",
+    "change": "Modifică răspunsurile",
+    "key_facts": "Circumstanțele principale",
     "return_filed": "Declarație depusă",
     "reason": "Motiv",
     "dates": "Perioada",
@@ -313,12 +317,12 @@
     "mobile_hint": "Îl folosim doar dacă apare o problemă cu contestația.",
     "agree_terms": "Sunt de acord cu {terms} și am citit {privacy}.",
     "waive_cancel": "Trimiteți-mi contestația imediat. Înțeleg că pierd dreptul de a anula în 14 zile după ce o primesc.",
-    "marketing": "Opțional: vreau să primesc pe email mementouri pentru termene fiscale și sfaturi de la Accounted4Tax. Mă pot dezabona oricând.",
+    "marketing": "Opțional: vreau să primesc pe email informații despre termene fiscale și sfaturi de la Accounted4Tax. Mă pot dezabona oricând.",
     "pay_cta": "Continuă spre plată · {price}",
     "stripe_note": "Urmează pagina de plată securizată Stripe, cu emailul deja completat. Introduceți doar datele cardului."
   },
   "review": {
-    "step": "Verificare și aprobare",
+    "step": "Verificați și aprobați",
     "paid": "Plătit · {price}",
     "title": "Verificați contestația",
     "intro": "Acesta este formularul oficial SA370, completat din răspunsurile confirmate de dvs.",
@@ -328,13 +332,13 @@
     "sign_text": "După ce aprobați, vă trimitem formularul pe email. Descărcați-l, tipăriți-l, apoi semnați-l și datați-l înainte de a-l trimite prin poștă.",
     "confirm": "Am citit formularul și spune ce vreau să comunic către HMRC.",
     "approve": "Aprob și trimiteți-mi-l pe email",
-    "go_back": "Ceva nu este corect, mă întorc"
+    "go_back": "Ceva nu este corect, înapoi la pasul precedent"
   },
   "done": {
     "title": "Contestația dvs. este gata",
     "emailed": "V-am trimis-o la {email}. Dacă nu ajunge în 5 minute, verificați folderul de spam.",
-    "what_now": "Ce faceți acum",
-    "print_sign": "Descărcați și tipăriți formularul din email, apoi semnați-l și datați-l.",
+    "what_now": "Pașii următori",
+    "print_sign": "Descărcați și printați formularul din email, apoi semnați-l și datați-l.",
     "evidence_copies": "Adăugați copii ale dovezilor pe care le aveți. Dovezile ajută HMRC să decidă. Nu trimiteți niciodată originale. Nu aveți dovezi? Trimiteți doar formularul.",
     "post_before": "Trimiteți-l prin poștă înainte de {date}.",
     "keep_copy": "Păstrați o copie și dovada expedierii.",
@@ -344,9 +348,9 @@
   "o3": {
     "step": "Opțiunea 3 · Pasul {n} din 4",
     "details_intro": "Contabilul dvs. le va folosi pentru a vă contacta în legătură cu contestația.",
-    "name_as_id": "Nume complet, ca în actul de identitate",
+    "name_as_id": "Nume și prenume, ca în actul de identitate",
     "address_hint": "Trebuie să corespundă cu dovada adresei.",
-    "id_notice": "După plată vă vom cere un act de identitate cu fotografie și o dovadă a adresei. Fiind o firmă supravegheată de AAT, legea ne obligă să vă verificăm identitatea înainte de a acționa în numele dvs.",
+    "id_notice": "După plată vă vom cere un act de identitate cu fotografie și o dovadă a adresei. Fiind o firmă supervizată de AAT, legea ne obligă să vă verificăm identitatea înainte de a acționa în numele dvs.",
     "agree_terms": "Sunt de acord cu {terms}, inclusiv condițiile de colaborare pentru Opțiunea 3, și am citit {privacy}.",
     "start_now": "Începeți verificarea acum. Dacă anulez în 14 zile, plătesc munca deja efectuată.",
     "id_title": "Verificarea identității",
@@ -364,7 +368,7 @@
     "send": "Trimite contabilului",
     "sent_title": "Trimis contabilului dvs.",
     "review_by": "Eduard Husaru MAAT vă va verifica contestația până la {datetime}.",
-    "next_title": "Ce urmează",
+    "next_title": "Pașii următori",
     "next_1": "Plata și documentele au fost primite",
     "next_2": "Verificarea identității și a contestației",
     "next_2_text": "Este posibil să vă trimitem o întrebare pe email. Vă rugăm să răspundeți repede, ca să nu se depășească termenul.",
@@ -373,7 +377,7 @@
     "next_4": "Contestația este trimisă prin poștă la HMRC",
     "case_link_sent": "V-am trimis pe email un link privat pentru a urmări dosarul.",
     "view_case": "Vezi dosarul meu",
-    "ready_to_sign": "Gata de semnat",
+    "ready_to_sign": "Pregătit pentru semnătură",
     "sign_within": "Vă rugăm să semnați în 2 zile ca să o putem trimite la timp.",
     "note_from_accountant": "Mesaj de la contabilul dvs.",
     "progress": "Progres",
@@ -386,7 +390,7 @@
     "questions": "Aveți întrebări? Răspundeți la oricare dintre emailurile noastre sau sunați la {phone}.",
     "signed_title": "Semnat, vă mulțumim",
     "signed_copy": "O copie a contestației semnate se află în emailul dvs.",
-    "we_post": "Trimitem contestația și dovezile prin poștă la HMRC până la {date} și vă trimitem pe email dovada expedierii.",
+    "we_post": "Urmează să trimitem contestația și dovezile prin poștă la HMRC până la {date} și vă trimitem pe email dovada expedierii.",
     "after_title": "După aceea",
     "after_text": "HMRC vă va scrie dvs., nu nouă, cu decizia. De obicei durează câteva săptămâni. Nu trebuie să plătiți amenda cât timp contestația este în curs.",
     "if_refused": "Dacă HMRC refuză, contactați-ne și vă explicăm ce opțiuni aveți.",
@@ -479,7 +483,7 @@
     },
     {
       "en": "balancing payment",
-      "term": "plată de regularizare (balancing payment)"
+      "term": "plata taxelor rămase (balancing payment)"
     },
     {
       "en": "payment plan",
@@ -499,7 +503,7 @@
     },
     {
       "en": "P800",
-      "term": "P800 – calculul impozitului plătit în plus sau în minus (P800)"
+      "term": "P800 – recalcularea impozitelor plătite prin PAYE (P800)"
     },
     {
       "en": "nudge letter",

@@ -1,6 +1,6 @@
 # Rules library
 
-One JSON file per HMRC letter type. The app reads these to recognise a letter, explain it and decide the appeal route.
+One JSON file per HMRC letter type, agreed with Eduard Husaru MAAT. The app reads these to recognise a letter, explain it and decide the appeal route.
 
 | File | Letter |
 |---|---|

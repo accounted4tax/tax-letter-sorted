@@ -27,3 +27,8 @@ jobs:
           echo "::notice::3 no consent -> $r3"
           echo "::notice::4 other website -> $r4"
           echo "::notice::5 good upload -> $(echo "$r5" | sed 's/"case":"[^"]*"/"case":"(hidden)"/')"
+          tok=$(echo "$r5" | sed -n 's/.*"case":"\([^"]*\)".*/\1/p')
+          r6=$(curl -s -H "$O" -H "Content-Type: application/json" -d "{\"action\":\"read\",\"case\":\"$tok\",\"preview\":\"$CODE\"}" "$URL/functions/v1/read-letter")
+          r7=$(curl -s -H "$O" -H "Content-Type: application/json" -d "{\"action\":\"read\",\"case\":\"$tok\"}" "$URL/functions/v1/read-letter")
+          echo "::notice::6 read letter -> $r6"
+          echo "::notice::7 read without test code -> $r7"

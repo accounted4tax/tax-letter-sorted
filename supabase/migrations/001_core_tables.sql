@@ -36,7 +36,7 @@ create table if not exists public.cases (
   notice_date date,
   appeal_deadline date,
   penalty_amount numeric(10,2),
-  private_token text unique default encode(gen_random_bytes(24), 'hex'),
+  private_token text unique default replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''),
   -- temporary personal data (deleted with the case files)
   address text,
   ni_number text,

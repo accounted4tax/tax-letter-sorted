@@ -11,6 +11,7 @@
 <script src="js/config.js"></script>
 <script src="js/visit.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/prepare.js"></script>
 </head>
 <body>
 <header class="topbar">
@@ -138,13 +139,16 @@
     if (!files.length) return;
     var cfg = window.TLS_CONFIG;
     var btn = $("send"); btn.disabled = true; btn.firstElementChild.textContent = t("upload.reading");
+    window.TLS_PREPARE(files).then(function (prepared) {
     var fd = new FormData();
-    files.forEach(function (f) { fd.append("files", f, f.name); });
+    prepared.files.forEach(function (f) { fd.append("files", f.blob, f.name); });
+    if (prepared.text) fd.append("text", prepared.text.slice(0, 60000));
     fd.append("consent", "yes");
     fd.append("language", document.documentElement.lang || "en");
     fd.append("visit_id", window.TLS_VISIT.id);
     fd.append("preview", window.TLS_VISIT.preview);
-    fetch(cfg.functionsUrl + "/upload-letter", { method: "POST", body: fd })
+    return fetch(cfg.functionsUrl + "/upload-letter", { method: "POST", body: fd });
+    })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (!res.ok) {
@@ -154,9 +158,7 @@
           return;
         }
         try { sessionStorage.setItem("tls_case", res.j.case); sessionStorage.setItem("tls_ref", res.j.ref); } catch (x) {}
-        $("form").hidden = true;
-        $("doneText").textContent = t("upload.preview_received", { ref: res.j.ref });
-        $("done").hidden = false;
+        location.href = "check.html";
       })
       .catch(function () {
         showError("upload.error_generic");

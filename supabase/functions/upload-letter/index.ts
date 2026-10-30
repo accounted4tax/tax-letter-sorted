@@ -72,9 +72,10 @@ Deno.serve(async (req) => {
     parts.push({ bytes, ...kind });
   }
 
+  const letterText = String(form.get("text") ?? "").slice(0, 60000) || null;
   const deleteAfter = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
   const { data: c, error: caseErr } = await db.from("cases")
-    .insert({ language, status: "uploaded", delete_after: deleteAfter })
+    .insert({ language, status: "uploaded", delete_after: deleteAfter, letter_text: letterText })
     .select("id, ref, private_token").single();
   if (caseErr || !c) return reply(500, { error: "server" });
 

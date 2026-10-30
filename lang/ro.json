@@ -14,12 +14,26 @@
     "to_review": [
       "ch.ask_instalments",
       "ch.pay_online",
+      "check.choose_type",
+      "check.company",
+      "check.demo",
+      "check.error",
+      "check.extended_note",
+      "check.not_configured",
+      "check.not_recognised_note",
+      "check.penalties_listed",
+      "check.reading",
+      "check.saved",
+      "check.try_again",
+      "check.unreadable",
       "ct.q_other_directors",
       "ct.q_role",
       "letters.companies_house.title",
       "letters.ct_late_filing.title",
+      "letters.not_recognised.title",
       "letters.nudge.title",
       "letters.p800.title",
+      "letters.sa_late_filing_later.title",
       "letters.sa_notice_to_file.title",
       "letters.simple_assessment.title",
       "p800.claim_refund",
@@ -147,7 +161,19 @@
     "confirm": "Da, explicați-mi scrisoarea",
     "reupload": "Încărcați o copie mai clară",
     "penalty_may_be_wrong": "Este posibil ca această amendă să fi fost aplicată din greșeală. Un contabil ar trebui să o verifice înainte să plătiți sau să contestați.",
-    "higher_12m_penalty": "Această amendă este mai mare decât suma obișnuită. Un contabil ar trebui să o analizeze împreună cu dvs."
+    "higher_12m_penalty": "Această amendă este mai mare decât suma obișnuită. Un contabil ar trebui să o analizeze împreună cu dvs.",
+    "reading": "Citim scrisoarea… durează aproximativ 20 de secunde.",
+    "not_configured": "Citirea scrisorilor nu este încă activată. Scrisoarea dvs. este salvată în siguranță.",
+    "unreadable": "Nu am putut citi clar detaliile. Încărcați o fotografie mai clară sau completați singur detaliile de mai jos.",
+    "error": "A apărut o eroare la citirea scrisorii. Vă rugăm să încercați din nou.",
+    "not_recognised_note": "Încă nu explicăm acest tip de scrisoare. Un contabil calificat o poate analiza împreună cu dvs.",
+    "choose_type": "Alegeți tipul scrisorii",
+    "penalties_listed": "Amenzi pe această notificare",
+    "extended_note": "Această scrisoare vă acordă mai mult timp pentru contestație, până la {date}.",
+    "company": "Firma",
+    "saved": "Detalii salvate. Dosarul {ref}. Ecranul cu explicația este următoarea etapă în lucru.",
+    "demo": "Date de probă pentru verificarea ecranului – nu a fost citită nicio scrisoare.",
+    "try_again": "Încearcă din nou"
   },
   "explain": {
     "step": "Explicație",
@@ -195,6 +221,12 @@
     },
     "companies_house": {
       "title": "Amendă de la Companies House pentru depunerea întârziată a conturilor anuale"
+    },
+    "sa_late_filing_later": {
+      "title": "Amenzi declarație fiscală – depunere întârziată (zilnice, 6 sau 12 luni)"
+    },
+    "not_recognised": {
+      "title": "Altceva / nu sunt sigur"
     }
   },
   "q": {

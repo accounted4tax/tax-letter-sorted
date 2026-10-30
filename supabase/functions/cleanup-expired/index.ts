@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     const now = new Date().toISOString();
     await db.from("case_files").update({ deleted_at: now }).eq("case_id", c.id).is("deleted_at", null);
     await db.from("case_answers").delete().eq("case_id", c.id);
-    const update: Record<string, unknown> = { address: null, ni_number: null, utr: null, data_deleted_at: now };
+    const update: Record<string, unknown> = { address: null, ni_number: null, utr: null, letter_text: null, extracted: null, data_deleted_at: now };
     if (c.product === "option1") update.status = "deleted";
     await db.from("cases").update(update).eq("id", c.id);
     await db.from("audit_log").insert({

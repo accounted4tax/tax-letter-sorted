@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Check details – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span><span data-i18n="common.step_of" data-i18n-vars="n=2,total=6">Step 2 of 6</span> · <span data-i18n="check.step">Check details</span></span>
+    <a href="upload.html" data-i18n="common.back">Back</a>
+  </div>
+
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" data-i18n="check.reading">Reading your letter…</p>
+  </section>
+
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <form id="form" class="stack" hidden novalidate>
+    <span class="badge" id="demo" hidden data-i18n="check.demo">Sample data</span>
+    <h1 data-i18n="check.title">Is this right?</h1>
+    <p class="lead" data-i18n="check.intro">This is what we read from your letter. Correct anything that's wrong before we explain it.</p>
+    <p class="callout" id="note" hidden></p>
+
+    <div class="card">
+      <label class="field"><span data-i18n="check.type">Type of letter</span>
+        <select id="letter_type"></select></label>
+      <label class="field"><span data-i18n="check.letter_date">Date on the letter</span>
+        <input id="letter_date" type="date"></label>
+      <label class="field"><span data-i18n="check.tax_year">Tax year</span>
+        <input id="tax_year" inputmode="numeric" placeholder="2024-25" maxlength="9"></label>
+      <label class="field"><span data-i18n="check.amount">Amount</span>
+        <input id="penalty_total" inputmode="decimal" placeholder="£"></label>
+      <div id="plistWrap" hidden><b style="font-size:14px" data-i18n="check.penalties_listed">Penalties on this notice</b><ul class="plist" id="plist"></ul></div>
+      <label class="field"><span data-i18n="check.name">Name on the letter</span>
+        <input id="name_on_letter" autocomplete="name"></label>
+      <label class="field" id="companyRow" hidden><span data-i18n="check.company">Company</span>
+        <input id="company_name"></label>
+      <label class="field"><span data-i18n="common.utr">UTR (Unique Taxpayer Reference)</span>
+        <input id="utr" inputmode="numeric" maxlength="13"></label>
+    </div>
+
+    <button class="btn" type="submit"><span data-i18n="check.confirm">Yes, explain my letter</span></button>
+    <a class="btn secondary" href="upload.html" data-i18n="check.reupload">Upload a clearer copy</a>
+  </form>
+
+  <div class="success" id="done" role="status" hidden></div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Must match cases.letter_type allowed values (supabase/ALLOWED_VALUES.md, checked 30 Oct 2026)
+  var TYPES = [
+    ["sa-late-filing-100", "letters.sa_late_filing_100.title"],
+    ["sa-late-filing-later", "letters.sa_late_filing_later.title"],
+    ["sa-late-payment", "letters.sa_late_payment.title"],
+    ["sa-notice-to-file", "letters.sa_notice_to_file.title"],
+    ["nudge-letters", "letters.nudge.title"],
+    ["p800", "letters.p800.title"],
+    ["simple-assessment", "letters.simple_assessment.title"],
+    ["ct-late-filing", "letters.ct_late_filing.title"],
+    ["companies-house-late-filing", "letters.companies_house.title"],
+    ["not-recognised", "letters.not_recognised.title"]
+  ];
+  var DEMO = { readable: true, letter_type: "sa-late-filing-later", issuer: "HMRC", form_code: "SA370", letter_date: "2026-03-17",
+    tax_year: "2024-25", penalty_total: 1200, penalties: [{ description: "3 months late – daily penalty £10 a day for 90 days", amount: 900 },
+    { description: "6 months late – minimum filing penalty", amount: 300 }], extended_appeal_date: "2026-04-27",
+    name_on_letter: "Mr A Sample", utr: "1234567890", company_name: null };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var dict = null, details = null, cfg = window.TLS_CONFIG;
+  var params = new URLSearchParams(location.search);
+  var demo = params.get("demo") === "1";
+  var token = null; try { token = sessionStorage.getItem("tls_case"); } catch (e) {}
+
+  function t(key, vars) {
+    var v = key.split(".").reduce(function (o, k) { return o && o[k]; }, dict) || key;
+    return String(v).replace(/\{(\w+)\}/g, function (m, k) { return vars && vars[k] != null ? vars[k] : m; });
+  }
+  function fmtDate(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    return isNaN(d) ? iso : d.toLocaleDateString(document.documentElement.lang === "ro" ? "ro-RO" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
+  }
+  function showError(key) { $("loading").hidden = true; $("error").textContent = t(key); $("error").hidden = false; }
+
+  function fill() {
+    if (!dict || !details) return;
+    $("loading").hidden = true;
+    var sel = $("letter_type"), cur = sel.value || details.letter_type;
+    sel.innerHTML = "";
+    TYPES.forEach(function (ty) { var o = document.createElement("option"); o.value = ty[0]; o.textContent = t(ty[1]); sel.appendChild(o); });
+    sel.value = cur;
+    ["letter_date", "tax_year", "name_on_letter", "utr", "company_name"].forEach(function (k) {
+      if (!$(k).dataset.touched) $(k).value = details[k] || "";
+    });
+    if (!$("penalty_total").dataset.touched) $("penalty_total").value = details.penalty_total != null ? details.penalty_total : "";
+    var pl = details.penalties || [];
+    $("plistWrap").hidden = pl.length < 2;
+    $("plist").innerHTML = "";
+    pl.forEach(function (p) { var li = document.createElement("li"); li.textContent = p.description + (p.amount != null ? " – £" + p.amount : ""); $("plist").appendChild(li); });
+    $("companyRow").hidden = !details.company_name && ["ct-late-filing", "companies-house-late-filing"].indexOf(sel.value) < 0;
+    var notes = [];
+    if (details.readable === false) notes.push(t("check.unreadable"));
+    if (sel.value === "not-recognised") notes.push(t("check.not_recognised_note"));
+    if (details.extended_appeal_date) notes.push(t("check.extended_note", { date: fmtDate(details.extended_appeal_date) }));
+    $("note").textContent = notes.join(" "); $("note").hidden = !notes.length;
+    $("demo").hidden = !demo;
+    $("form").hidden = false;
+  }
+
+  ["letter_date", "tax_year", "penalty_total", "name_on_letter", "utr", "company_name"].forEach(function (k) {
+    $(k).addEventListener("input", function () { $(k).dataset.touched = "1"; });
+  });
+  $("letter_type").addEventListener("change", fill);
+
+  document.addEventListener("tls:language", function (e) {
+    fetch("lang/" + e.detail.lang + ".json").then(function (r) { return r.json(); }).then(function (d) { dict = d; if (details) fill(); else start(); });
+  });
+
+  var started = false;
+  function call(payload) {
+    payload.case = token; payload.preview = window.TLS_VISIT.preview; payload.visit_id = window.TLS_VISIT.id;
+    return fetch(cfg.functionsUrl + "/read-letter", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); });
+  }
+  function start() {
+    if (started) return; started = true;
+    if (demo) { details = DEMO; fill(); return; }
+    if (!token) { location.href = "upload.html"; return; }
+    call({ action: "read" }).then(function (res) {
+      if (!res.ok) { showError(res.j.error === "not_configured" ? "check.not_configured" : "check.error"); return; }
+      details = res.j.details; fill();
+    }).catch(function () { showError("check.error"); });
+  }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var d = {
+      letter_type: $("letter_type").value, letter_date: $("letter_date").value || null,
+      tax_year: $("tax_year").value.trim() || null, penalty_total: $("penalty_total").value.replace(/[£,\s]/g, "") || null,
+      name_on_letter: $("name_on_letter").value.trim() || null, utr: $("utr").value.trim() || null,
+      company_name: $("company_name").value.trim() || null
+    };
+    var ref = ""; try { ref = sessionStorage.getItem("tls_ref") || ""; } catch (x) {}
+    var finish = function () { $("form").hidden = true; $("done").textContent = t("check.saved", { ref: ref || "TLS-DEMO" }); $("done").hidden = false; };
+    if (demo) { finish(); return; }
+    call({ action: "confirm", details: d }).then(function (res) { if (res.ok) finish(); else showError("check.error"); })
+      .catch(function () { showError("check.error"); });
+  });
+})();
+</script>
+</body>
+</html>

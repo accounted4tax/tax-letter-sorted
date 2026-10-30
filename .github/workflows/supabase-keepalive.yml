@@ -21,7 +21,7 @@ jobs:
         run: |
           if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
             echo "::error::A secret is missing (SUPABASE_URL or SUPABASE_ANON_KEY)"; exit 1; fi
-          URL="${SUPABASE_URL%/}"
+          URL="${SUPABASE_URL%/}"; URL="${URL%/rest/v1}"
           status=$(curl -s -o body.txt -w "%{http_code}" \
             "$URL/rest/v1/heartbeat?select=id&limit=1" \
             -H "apikey: $SUPABASE_ANON_KEY")

@@ -22,7 +22,17 @@
       "letters.p800.title",
       "letters.sa_notice_to_file.title",
       "letters.simple_assessment.title",
-      "p800.claim_refund"
+      "p800.claim_refund",
+      "upload.add_page",
+      "upload.consent_needed",
+      "upload.error_closed",
+      "upload.error_generic",
+      "upload.error_too_many",
+      "upload.error_type",
+      "upload.preview_received",
+      "upload.received_title",
+      "upload.remove",
+      "upload.selected"
     ]
   },
   "common": {
@@ -113,7 +123,17 @@
     "reading": "Citim scrisoarea…",
     "error_unreadable": "Nu am putut citi clar această scrisoare. Încercați o fotografie mai clară sau PDF-ul.",
     "error_too_big": "Fișierul depășește 10 MB. Alegeți un fișier mai mic.",
-    "error_not_recognised": "Încă nu recunoaștem acest tip de scrisoare. Un contabil calificat o poate analiza pentru dvs."
+    "error_not_recognised": "Încă nu recunoaștem acest tip de scrisoare. Un contabil calificat o poate analiza pentru dvs.",
+    "selected": "Pagini adăugate: {n}",
+    "remove": "Elimină",
+    "add_page": "Adaugă încă o pagină",
+    "consent_needed": "Vă rugăm să bifați căsuța pentru a continua.",
+    "error_type": "Acest tip de fișier nu este acceptat. Folosiți PDF, JPG sau PNG.",
+    "error_too_many": "Puteți adăuga maximum 10 pagini pentru o scrisoare.",
+    "error_generic": "A apărut o eroare. Vă rugăm să încercați din nou peste câteva momente.",
+    "error_closed": "Încărcarea va fi disponibilă din ianuarie 2027.",
+    "received_title": "Scrisoare primită",
+    "preview_received": "Încărcarea de test a fost primită în siguranță. Referința dosarului: {ref}. Citirea scrisorii este următoarea etapă în lucru."
   },
   "check": {
     "step": "Verificarea datelor",

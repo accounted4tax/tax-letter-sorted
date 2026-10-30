@@ -6,6 +6,7 @@ window.TLS_CONFIG = {
   contactEmail: "letters@accounted4tax.co.uk",
   phone: "07563 811938",
   aatLicence: "[licence number]",   // fill in once Accounted4Tax Ltd is on the AAT licence
+  functionsUrl: "https://pmngappuatunbhodqipn.supabase.co/functions/v1",
   languages: ["en", "ro"],
   defaultLanguage: "en",
   prices: { option2: "£19", option3: "£39", call: "£19" }

@@ -95,7 +95,17 @@
     "reading": "Reading your letter…",
     "error_unreadable": "We couldn't read this letter clearly. Please try a clearer photo or the PDF.",
     "error_too_big": "This file is over 10 MB. Please choose a smaller file.",
-    "error_not_recognised": "We don't recognise this type of letter yet. A qualified accountant can look at it for you."
+    "error_not_recognised": "We don't recognise this type of letter yet. A qualified accountant can look at it for you.",
+    "selected": "Pages added: {n}",
+    "remove": "Remove",
+    "add_page": "Add another page",
+    "consent_needed": "Please tick the box to continue.",
+    "error_type": "This type of file isn't supported. Please use PDF, JPG or PNG.",
+    "error_too_many": "You can add up to 10 pages per letter.",
+    "error_generic": "Something went wrong. Please try again in a moment.",
+    "error_closed": "Uploads open in January 2027.",
+    "received_title": "Letter received",
+    "preview_received": "Test upload received safely. Case reference: {ref}. Reading the letter is the next part being built."
   },
   "check": {
     "step": "Check details",

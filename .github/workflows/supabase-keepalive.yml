@@ -1,7 +1,7 @@
 # Keeps the free Supabase project awake by reading one row every day.
 # Uses two GitHub secrets (Settings > Secrets and variables > Actions):
 #   SUPABASE_URL       e.g. https://pmngappuatunbhodqipn.supabase.co
-#   SUPABASE_ANON_KEY  the project's anon / publishable key
+#   SUPABASE_ANON_KEY  the project's publishable key (or legacy anon key)
 # No secret values are stored in this file.
 name: Supabase keep-alive
 
@@ -21,7 +21,6 @@ jobs:
         run: |
           status=$(curl -s -o /dev/null -w "%{http_code}" \
             "$SUPABASE_URL/rest/v1/heartbeat?select=id&limit=1" \
-            -H "apikey: $SUPABASE_ANON_KEY" \
-            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+            -H "apikey: $SUPABASE_ANON_KEY")
           echo "Supabase answered with HTTP $status"
           test "$status" = "200"

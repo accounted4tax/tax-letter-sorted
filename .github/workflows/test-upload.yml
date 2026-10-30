@@ -1,0 +1,29 @@
+# Manual test of the upload-letter server function. Uses a dummy PDF, never a real letter.
+name: Test upload function
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "Temporary test code (changed straight after the test)"
+        required: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run checks
+        env:
+          CODE: ${{ inputs.code }}
+          URL: ${{ secrets.SUPABASE_URL }}
+        run: |
+          F="$URL/functions/v1/upload-letter"; O="Origin: https://accounted4tax.github.io"
+          printf '%%PDF-1.4\n%% dummy test file\n%%%%EOF\n' > t.pdf; printf 'hello' > t.txt
+          r1=$(curl -s -H "$O" -F consent=yes -F files=@t.pdf "$F")
+          r2=$(curl -s -H "$O" -F preview="$CODE" -F consent=yes -F files=@t.txt "$F")
+          r3=$(curl -s -H "$O" -F preview="$CODE" -F files=@t.pdf "$F")
+          r4=$(curl -s -H "Origin: https://evil.example" -F preview="$CODE" -F consent=yes -F files=@t.pdf "$F")
+          r5=$(curl -s -H "$O" -F preview="$CODE" -F consent=yes -F language=ro -F visit_id=11111111-2222-3333-4444-555555555555 -F files=@t.pdf "$F")
+          echo "::notice::1 no code -> $r1"
+          echo "::notice::2 wrong type -> $r2"
+          echo "::notice::3 no consent -> $r3"
+          echo "::notice::4 other website -> $r4"
+          echo "::notice::5 good upload -> $(echo "$r5" | sed 's/"case":"[^"]*"/"case":"(hidden)"/')"

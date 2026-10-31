@@ -90,6 +90,14 @@ const TOOL = {
       pay_by_date: { type: ["string", "null"] },
       extended_appeal_date: { type: ["string", "null"] },
       name_on_letter: { type: ["string", "null"] },
+      address_on_letter: {
+        type: ["object", "null"],
+        description: "the postal address the letter is sent TO (the taxpayer's or company's address in the address window under their name). Never HMRC's or Companies House's own address.",
+        properties: {
+          lines: { type: "array", items: { type: "string" }, description: "street and town lines, without the name and without the postcode" },
+          postcode: { type: ["string", "null"] },
+        },
+      },
       utr: { type: ["string", "null"], description: "10-digit UTR, digits only (labelled Tax Reference, UTR or Unique Taxpayer Reference, or the payment reference without the K)" },
       company_name: { type: ["string", "null"] },
       company_number: { type: ["string", "null"] },

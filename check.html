@@ -167,6 +167,8 @@
     call({ action: "read" }).then(function (res) {
       if (!res.ok) { showError(res.j.error === "not_configured" ? "check.not_configured" : "check.error"); return; }
       details = res.j.details; fill();
+      // the address the letter was sent to, to pre-fill the "Your details" screen later (this tab only)
+      try { sessionStorage.setItem("tls_letter_addr", JSON.stringify(details.address_on_letter || null)); } catch (e) {}
     }).catch(function () { showError("check.error"); });
   }
 

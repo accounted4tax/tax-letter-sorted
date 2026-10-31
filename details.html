@@ -134,11 +134,14 @@
     if (!filled) {
       filled = true;
       var d = info.details || {}, p = info.prefill || {};
-      var lines = d.address_lines || [];
+      // saved details first; otherwise the address printed on the letter (client can correct it)
+      var fromLetter = F.getJSON("tls_letter_addr") || {};
+      var lines = d.address_lines || (fromLetter.lines || []).filter(Boolean);
+      if (lines.length > 3) lines = [lines[0], lines.slice(1, -1).join(", "), lines[lines.length - 1]];
       $("full_name").value = d.full_name || (company ? "" : (p.full_name || "").replace(/^(mr|mrs|ms|miss|dr)\.?\s+/i, ""));
       $("addr1").value = lines[0] || ""; $("addr2").value = lines.length > 2 ? lines[1] : "";
       $("town").value = lines.length > 2 ? lines[2] : (lines[1] || "");
-      $("postcode").value = d.postcode || "";
+      $("postcode").value = d.postcode || fromLetter.postcode || "";
       $("phone").value = d.phone || ""; $("email").value = d.email || "";
       $("utr").value = d.utr || p.utr || "";
       $("ni_number").value = d.ni_number || "";

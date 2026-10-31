@@ -36,19 +36,16 @@
     <div class="card">
       <label class="field"><span data-i18n="common.full_name">Full name</span>
         <input id="full_name" autocomplete="name" maxlength="120"></label>
-      <label class="field"><span data-i18n="common.mobile">Mobile number</span>
+      <label class="field"><span><span data-i18n="common.mobile">Mobile number</span> <span class="hint" id="phoneOpt" data-i18n="common.optional">(optional)</span></span>
         <input id="phone" type="tel" autocomplete="tel" maxlength="40"></label>
-      <label class="field"><span><span data-i18n="common.email">Email</span> <span class="hint" id="emailOpt" data-i18n="common.optional">(optional)</span></span>
+      <label class="field"><span><span data-i18n="common.email">Email</span></span>
         <input id="email" type="email" autocomplete="email" maxlength="200"></label>
       <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
         <select id="tax_year"></select></label>
       <label class="field"><span><span id="noteLabel"></span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
         <textarea id="note" maxlength="1000" style="min-height:90px"></textarea></label>
     </div>
-    <label class="check" id="consentWrap">
-      <input type="checkbox" id="consent">
-      <span id="consentText"></span>
-    </label>
+    <p class="note" style="text-align:left" data-i18n="contact.consent_note">By sending this form, you agree that Accounted4Tax can contact you about your request.</p>
     <p class="error" id="error" role="alert" hidden></p>
     <button class="btn" type="submit" id="submit"></button>
     <p class="note" data-i18n="contact.privacy_note">We use your details only to contact you about this request.</p>
@@ -87,9 +84,8 @@
     $("title").textContent = t(isHelp ? "help.title" : "contact.callback_title");
     $("intro").textContent = t(isHelp ? "help.intro" : "contact.callback_intro");
     $("noteLabel").textContent = t(isHelp ? "help.notes" : "contact.best_time");
-    $("consentText").textContent = t(isHelp ? "help.consent" : "talk.consent");
     $("submit").textContent = t(isHelp ? "help.submit" : "talk.submit");
-    $("emailOpt").hidden = false;
+    $("phoneOpt").hidden = !isHelp;   // a call-back needs a phone number; help requests need at least the email
     $("yearRow").hidden = !isHelp;
     if (isHelp) {
       var sel = $("tax_year"), cur = sel.value || ctx.tax_year || "";
@@ -110,9 +106,8 @@
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
     var name = $("full_name").value.trim(), phone = $("phone").value.trim(), email = $("email").value.trim();
-    if (!name || (isHelp ? !(phone || email) : !phone)) return err(isHelp ? "contact.err_missing_help" : "contact.err_missing");
+    if (!name || !email || (!isHelp && !phone)) return err(isHelp ? "contact.err_missing_help" : "contact.err_missing");
     if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return err("contact.err_email");
-    if (!$("consent").checked) { $("consentWrap").classList.add("invalid"); return err("contact.err_consent"); }
     $("error").hidden = true;
     var done = function () { $("form").hidden = true; $("sent").hidden = false; window.scrollTo(0, 0); };
     if (F.demo) { done(); return; }

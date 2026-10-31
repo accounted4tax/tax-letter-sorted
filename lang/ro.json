@@ -144,7 +144,8 @@
       "email.id.reminder",
       "email.id.button",
       "email.id.deadline",
-      "email.id.footer"
+      "email.id.footer",
+      "contact.consent_note"
     ]
   },
   "common": {
@@ -934,12 +935,13 @@
     "callback_intro": "Un contabil calificat de la Accounted4Tax vă va suna, de obicei într-o zi lucrătoare. Fără nicio obligație.",
     "best_time": "Cel mai bun moment pentru a vă suna",
     "sending": "Se trimite…",
-    "err_missing": "Vă rugăm să introduceți numele și numărul de telefon.",
-    "err_missing_help": "Vă rugăm să introduceți numele și o adresă de email sau un număr de telefon.",
+    "err_missing": "Vă rugăm să introduceți numele, numărul de telefon și adresa de email.",
+    "err_missing_help": "Vă rugăm să introduceți numele și adresa de email.",
     "err_email": "Vă rugăm să verificați adresa de email.",
     "err_consent": "Bifați căsuța ca să vă putem contacta.",
     "err_server": "A apărut o eroare. Încercați din nou sau scrieți-ne la {email}.",
-    "privacy_note": "Folosim datele dvs. doar pentru a vă contacta în legătură cu această solicitare."
+    "privacy_note": "Folosim datele dvs. doar pentru a vă contacta în legătură cu această solicitare.",
+    "consent_note": "Trimițând acest formular, sunteți de acord ca Accounted4Tax să vă contacteze în legătură cu solicitarea dvs."
   },
   "paid": {
     "checking": "Verificăm plata…",

@@ -786,12 +786,13 @@
     "callback_intro": "A qualified accountant at Accounted4Tax will call you, usually within one working day. No obligation.",
     "best_time": "Best time to call",
     "sending": "Sending…",
-    "err_missing": "Please enter your name and phone number.",
-    "err_missing_help": "Please enter your name and an email address or phone number.",
+    "err_missing": "Please enter your name, phone number and email address.",
+    "err_missing_help": "Please enter your name and email address.",
     "err_email": "Please check your email address.",
     "err_consent": "Please tick the box so we can contact you.",
     "err_server": "Something went wrong. Please try again, or email {email}.",
-    "privacy_note": "We use your details only to contact you about this request."
+    "privacy_note": "We use your details only to contact you about this request.",
+    "consent_note": "By sending this form, you agree that Accounted4Tax can contact you about your request."
   },
   "paid": {
     "checking": "Checking your payment…",

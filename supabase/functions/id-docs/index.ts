@@ -1,7 +1,7 @@
 // id-docs: identity documents for Option 3 (customer due diligence), server side.
 //   status    (JSON)      – which documents are still needed / received
 //   upload    (form data) – one document: part (photo_id | selfie | proof_address | incorporation), doc_type, file
-//   complete  (JSON)      – authority to act ticked and every document received → case goes to the review queue
+//   complete  (JSON)      – every document received → case goes to the review queue
 //   later     (JSON)      – "I will upload later": emails a private upload link; id-reminders sends reminders
 // Rules (rules/id-documents.json): one document cannot be used for both photo ID and proof of address,
 // and the same file cannot be uploaded twice.
@@ -152,9 +152,10 @@ Deno.serve(async (req) => {
     if (body.action === "complete") {
       const st = await statusOf(c);
       if (!st.all_received) return reply(400, { error: "missing", status: st });
-      if (body.authority !== true) return reply(400, { error: "authority" });
+      // Option 3 is only the appeal letter, so no authority to act is needed (Eduard, 31 Oct 2026).
+      // It is requested separately if the client later asks for other services.
       const now = new Date().toISOString();
-      await db.from("cases").update({ authority_to_act_at: now, id_completed_at: now, status: "in_review" }).eq("id", c.id);
+      await db.from("cases").update({ id_completed_at: now, status: "in_review" }).eq("id", c.id);
       await db.from("audit_log").insert({ actor: "client", action: "id_completed", case_id: c.id });
       return reply(200, { ok: true });
     }

@@ -5,7 +5,8 @@
     "direction": "ltr",
     "version": "0.1",
     "status": "source",
-    "note": "English is authoritative. Appeal forms and letters are always generated in English."
+    "note": "English is authoritative. Appeal forms and letters are always generated in English.",
+    "to_review": []
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -850,10 +851,8 @@
     "err_type": "Please choose which document this is first.",
     "err_file": "This file can't be used. Please upload a photo (JPG, PNG) or a PDF up to 10 MB.",
     "err_server": "Something went wrong. Please try again.",
-    "authority": "I authorise Accounted4Tax Ltd to act for me (or for the company) on this penalty appeal, and I agree to the Option 3 terms.",
-    "terms_link": "Read the terms",
     "submit": "Send my documents",
-    "err_missing": "Please upload every document and tick the box.",
+    "err_missing": "Please upload every document.",
     "later": "I will upload later",
     "later_sent": "We've emailed you a link to upload your documents. We'll remind you if they're still missing.",
     "later_failed": "We couldn't send the email just now. You can come back to this page using the same link.",

@@ -48,10 +48,6 @@
     <h1 data-i18n="id.title">Your case is with our accountant</h1>
     <p class="lead" id="intro"></p>
     <div id="parts" class="stack"></div>
-    <label class="check" id="authWrap">
-      <input type="checkbox" id="authority">
-      <span data-i18n="id.authority"></span>
-    </label>
     <button class="btn" type="button" id="submit" data-i18n="id.submit">Send my documents</button>
     <button class="linkbtn" type="button" id="later" data-i18n="id.later">I will upload later</button>
     <p class="success" id="laterMsg" role="status" hidden></p>
@@ -164,12 +160,9 @@
   }
 
   $("submit").addEventListener("click", function () {
-    if (!st.all_received || !$("authority").checked) {
-      showErr("id.err_missing");
-      $("authWrap").classList.toggle("invalid", !$("authority").checked); return;
-    }
+    if (!st.all_received) { showErr("id.err_missing"); return; }
     showErr(null); $("submit").disabled = true;
-    api({ action: "complete", authority: true }).then(function (res) {
+    api({ action: "complete" }).then(function (res) {
       $("submit").disabled = false;
       if (res.ok) { $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0); }
       else { $("error").textContent = t("id.err_missing"); $("error").hidden = false; }

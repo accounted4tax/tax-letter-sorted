@@ -1,6 +1,6 @@
 {
   "id": "companies-house-late-filing",
-  "version": "0.1",
+  "version": "0.2",
   "status": "draft 29 Oct 2026 – for Eduard's review",
   "title_key": "letters.companies_house.title",
   "tax": "not_hmrc",
@@ -130,6 +130,73 @@
       "title": "GOV.UK: Late filing penalties (Companies House)",
       "url": "https://www.gov.uk/government/publications/late-filing-penalties/late-filing-penalties",
       "checked": "2026-10-29"
+    }
+  ],
+  "reasons_list": [
+    {
+      "id": "ch_unforeseen_event",
+      "label_key": "reason.ch.unforeseen_event",
+      "route": "appeal",
+      "needs_dates": true,
+      "health_consent": false
+    },
+    {
+      "id": "ch_director_illness_death",
+      "label_key": "reason.ch.director_illness_death",
+      "route": "appeal",
+      "needs_dates": true,
+      "health_consent": true
+    },
+    {
+      "id": "ch_system_failure",
+      "label_key": "reason.ch.system_failure",
+      "route": "appeal",
+      "needs_dates": true,
+      "health_consent": false
+    },
+    {
+      "id": "something_else",
+      "label_key": "reason.something_else",
+      "route": "choice",
+      "free_text": true
+    }
+  ],
+  "not_accepted_list": [
+    {
+      "id": "ch_dormant",
+      "label_key": "reason.ch.dormant"
+    },
+    {
+      "id": "ch_cant_afford",
+      "label_key": "reason.ch.cant_afford"
+    },
+    {
+      "id": "ch_relied_accountant",
+      "label_key": "reason.ch.relied_accountant"
+    },
+    {
+      "id": "ch_first_accounts",
+      "label_key": "reason.ch.first_accounts"
+    },
+    {
+      "id": "ch_not_familiar",
+      "label_key": "reason.ch.not_familiar"
+    },
+    {
+      "id": "ch_financial_difficulty",
+      "label_key": "reason.ch.financial_difficulty"
+    },
+    {
+      "id": "ch_post",
+      "label_key": "reason.ch.post"
+    },
+    {
+      "id": "ch_overseas",
+      "label_key": "reason.ch.overseas"
+    },
+    {
+      "id": "ch_other_director",
+      "label_key": "reason.ch.other_director"
     }
   ]
 }

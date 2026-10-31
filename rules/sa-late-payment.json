@@ -1,6 +1,6 @@
 {
   "id": "sa-late-payment",
-  "version": "0.2",
+  "version": "0.3",
   "status": "agreed with Eduard 26 Oct 2026; recognition and phone number confirmed from a real March 2026 letter, 28 Oct 2026",
   "title_key": "letters.sa_late_payment.title",
   "tax": "self_assessment",
@@ -162,5 +162,8 @@
       "url": "https://eastcambs.gov.uk/content/if-you-cannot-pay-your-tax-bill-time",
       "checked": "2026-10-26"
     }
+  ],
+  "exclude_reasons": [
+    "never_needed_to_file"
   ]
 }

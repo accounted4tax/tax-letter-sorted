@@ -3,90 +3,16 @@
     "language": "ro",
     "name": "Română",
     "direction": "ltr",
-    "version": "0.4",
-    "status": "reviewed by Eduard Husaru, 31 Oct 2026",
+    "version": "0.5",
+    "status": "reviewed by Eduard Husaru, 31 Oct 2026 (review 3)",
     "note": "English is authoritative. Appeal forms and letters are always generated in English.",
     "style_notes": [
       "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
       "Names: 'Nume și prenume' (surname first, as in Romania).",
-      "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege)."
+      "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
+      "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": [
-      "explain.loading",
-      "explain.error",
-      "explain.appeal_by",
-      "explain.pay_by",
-      "explain.deadline_passed",
-      "explain.key_points",
-      "explain.needs_accountant",
-      "explain.btn_talk_accountant",
-      "explain.btn_file_yourself",
-      "explain.btn_dont_need_to_file",
-      "explain.btn_p800_claim",
-      "explain.btn_p800_pay",
-      "explain.demo",
-      "explain.ref",
-      "q.filed_company",
-      "q.filed_accounts",
-      "q.reason_company",
-      "q.continue_not_filed",
-      "q.paid_as_soon_as_able",
-      "q.choose_one",
-      "q.sending",
-      "q.late_appeal_title",
-      "q.story_hint",
-      "q.err_required",
-      "q.err_server",
-      "q.no_questions",
-      "ct.role_opt.director",
-      "ct.role_opt.secretary",
-      "ct.role_opt.other",
-      "reason.ch.unforeseen_event",
-      "reason.ch.director_illness_death",
-      "reason.ch.system_failure",
-      "reason.ch.dormant",
-      "reason.ch.cant_afford",
-      "reason.ch.relied_accountant",
-      "reason.ch.first_accounts",
-      "reason.ch.not_familiar",
-      "reason.ch.financial_difficulty",
-      "reason.ch.post",
-      "reason.ch.overseas",
-      "reason.ch.other_director",
-      "confirm.loading",
-      "confirm.no_answers",
-      "confirm.err_declaration",
-      "confirm.label_story",
-      "confirm.label_why_late",
-      "confirm.label_nnf_other_text",
-      "confirm.label_something_else_text",
-      "confirm.none",
-      "outcome.step",
-      "outcome.o2_b1_letter",
-      "outcome.coming_soon",
-      "outcome.late_appeal",
-      "outcome.explain_only_title",
-      "outcome.ch_note",
-      "outcome.note.penalty_may_be_wrong",
-      "outcome.note.higher_12m_penalty",
-      "outcome.note.more_than_one_year",
-      "outcome.note.not_director",
-      "outcome.note.ct_high_or_tax_geared",
-      "outcome.note.another_director_could_file",
-      "outcome.note.problem_not_at_deadline",
-      "outcome.note.not_filed_as_soon_as_able",
-      "outcome.reason_other",
-      "contact.callback_title",
-      "contact.callback_intro",
-      "contact.best_time",
-      "contact.sending",
-      "contact.err_missing",
-      "contact.err_missing_help",
-      "contact.err_email",
-      "contact.err_consent",
-      "contact.err_server",
-      "contact.privacy_note"
-    ]
+    "to_review": []
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -154,7 +80,7 @@
     "letter": {
       "late_filing": "Amendă pentru depunere întârziată",
       "late_payment": "Amendă pentru plată întârziată",
-      "notice_to_file": "Notificare de depunere a declarației",
+      "notice_to_file": "Notificare de depunere a declarației fiscale anuale",
       "nudge": "Scrisori de atenționare (nudge letters)",
       "p800": "P800",
       "simple_assessment": "Simple Assessment (calcul simplificat al impozitului)",
@@ -222,7 +148,7 @@
     "what_it_means": "Ce înseamnă această scrisoare",
     "if_nothing": "Dacă nu faceți nimic",
     "next_steps": "Pașii următori",
-    "btn_help_return": "Ajutor la depunerea declarației fiscale",
+    "btn_help_return": "Ajutor la depunerea declarației fiscale anuale",
     "btn_check_appeal": "Verifică dacă pot contesta",
     "btn_how_to_pay": "Cum plătesc amenda",
     "auto_note": "Explicație generată automat din scrisoarea dvs. Verificați detaliile cu scrisoarea originală. Aceasta este o informare generală, nu consultanță fiscală personală.",
@@ -230,15 +156,15 @@
     "error": "Nu am putut pregăti explicația. Vă rugăm să încercați din nou.",
     "appeal_by": "Contestați până la {date}",
     "pay_by": "Plătiți până la {date}",
-    "deadline_passed": "Această dată a trecut. Este posibil să mai puteți face ceva, dar acționați acum.",
-    "key_points": "Pe scurt",
+    "deadline_passed": "Această dată a trecut. Este posibil să mai puteți face ceva dacă acționați acum.",
+    "key_points": "Aspecte esențiale",
     "needs_accountant": "Vă recomandăm ca un contabil să analizeze această scrisoare",
     "btn_talk_accountant": "Solicită un apel gratuit de la un contabil",
     "btn_file_yourself": "Depune-o singur pe GOV.UK",
-    "btn_dont_need_to_file": "Verifică dacă trebuie să depui declarația (GOV.UK)",
+    "btn_dont_need_to_file": "Verifică dacă trebuie să depui declarația fiscală anuală (GOV.UK)",
     "btn_p800_claim": "Solicită rambursarea (GOV.UK)",
-    "btn_p800_pay": "Cum plătesc suma datorată (GOV.UK)",
-    "demo": "Explicație de probă – nu a fost citită nicio scrisoare.",
+    "btn_p800_pay": "Cum plătești suma datorată",
+    "demo": "Explicație de probă – nu a fost citită nici o scrisoare.",
     "ref": "Dosarul dvs.: {ref}"
   },
   "letters": {
@@ -249,16 +175,16 @@
       "title": "Amenzi zilnice Self Assessment pentru depunere întârziată"
     },
     "sa_late_filing_6m": {
-      "title": "Amendă declarație fiscală – depunere întârziată 6 luni"
+      "title": "Amendă pentru depunerea întârziată a declarației fiscale anuale – 6 luni"
     },
     "sa_late_filing_12m": {
-      "title": "Amendă declarație fiscală – depunere întârziată 12 luni"
+      "title": "Amendă pentru depunerea întârziată a declarației fiscale anuale – 12 luni"
     },
     "sa_late_payment": {
       "title": "Amendă Self Assessment pentru plată întârziată"
     },
     "sa_notice_to_file": {
-      "title": "Notificare de depunere a declarației fiscale (Self Assessment)"
+      "title": "Notificare de depunere a declarației fiscale anuale (Self Assessment)"
     },
     "nudge": {
       "title": "Scrisoare de atenționare HMRC (nudge letter): verificați-vă impozitele"
@@ -270,13 +196,13 @@
       "title": "Notă de plată Simple Assessment (PA302)"
     },
     "ct_late_filing": {
-      "title": "Amendă pentru depunerea întârziată a declarației de impozit pe profit (Corporation Tax)"
+      "title": "Amendă pentru depunerea întârziată a declarației fiscale anuale a firmei (Corporation Tax)"
     },
     "companies_house": {
-      "title": "Amendă de la Companies House pentru depunerea întârziată a conturilor anuale"
+      "title": "Amendă de la Companies House pentru depunerea întârziată a bilanțului financiar anual"
     },
     "sa_late_filing_later": {
-      "title": "Amenzi declarație fiscală – depunere întârziată (zilnice, 6 sau 12 luni)"
+      "title": "Amenzi pentru depunerea întârziată a declarației fiscale anuale (zilnice, 6 sau 12 luni)"
     },
     "not_recognised": {
       "title": "Altceva / nu sunt sigur"
@@ -316,10 +242,10 @@
     "step": "Situația dvs.",
     "title": "Ce s-a întâmplat?",
     "intro": "Răspundeți cu propriile cuvinte, în orice limbă. Spuneți-ne doar ce este adevărat.",
-    "filed": "Ați depus declarația fiscală între timp?",
+    "filed": "Ați depus declarația fiscală anuală între timp?",
     "filed_date": "Data depunerii",
-    "not_filed_note": "HMRC așteaptă mai întâi declarația fiscală. Dacă o depuneți acum, opriți alte amenzi în viitor.",
-    "file_first": "Depune mai întâi: ajutor cu declarația fiscală",
+    "not_filed_note": "HMRC așteaptă mai întâi declarația fiscală anuală. Dacă o depuneți acum, opriți alte amenzi în viitor.",
+    "file_first": "Depune mai întâi: ajutor cu declarația fiscală anuală",
     "file_yourself": "Sau depuneți-o singur pe GOV.UK",
     "continue_appeal": "Continuă cu contestația",
     "reason": "Ce v-a împiedicat să depuneți la timp?",
@@ -332,7 +258,7 @@
     "health_consent": "Sunt de acord să folosiți informațiile despre sănătatea mea doar pentru a pregăti contestația. Sunt șterse la 14 zile după ce contestația îmi este trimisă pe email.",
     "problem_from_to": "Când a început și când s-a terminat?",
     "problem_at_deadline": "Se întâmpla asta la termenul limită sau cu puțin timp înainte?",
-    "filed_as_soon_as_able": "Ați depus declarația imediat ce ați putut, după ce s-a terminat?",
+    "filed_as_soon_as_able": "Ați depus declarația fiscală anuală imediat ce ați putut, după ce s-a terminat?",
     "what_happened": "Spuneți-ne ce s-a întâmplat (în orice limbă)",
     "evidence": "Ce dovezi aveți?",
     "keep_evidence": "Păstrați toate dovezile. HMRC le poate cere pentru a vă susține contestația.",
@@ -351,10 +277,10 @@
     "add_letter": "Adăugați altă scrisoare",
     "more_than_one_year": "Amenzile dvs. sunt pentru mai mulți ani fiscali?",
     "had_payment_plan": "Ați avut un plan de plată cu HMRC înainte de această amendă?",
-    "filed_company": "Firma a depus declarația între timp?",
-    "filed_accounts": "Situațiile financiare (accounts) au fost depuse între timp?",
+    "filed_company": "Firma a depus declarația fiscală anuală între timp?",
+    "filed_accounts": "Bilanțul financiar anual (annual accounts) a fost depus între timp?",
     "reason_company": "Ce a împiedicat firma să depună la timp?",
-    "continue_not_filed": "Înțeleg că HMRC așteaptă mai întâi declarația. Vreau totuși să continui cu contestația.",
+    "continue_not_filed": "Înțeleg că HMRC așteaptă mai întâi declarația fiscală anuală. Vreau totuși să continui cu contestația.",
     "paid_as_soon_as_able": "Ați plătit imediat ce ați putut, după ce s-a terminat?",
     "choose_one": "Alegeți o variantă",
     "sending": "Verificăm răspunsurile… durează aproximativ 15 secunde.",
@@ -362,23 +288,24 @@
     "story_hint": "Spuneți ce s-a întâmplat, când și cum v-a împiedicat. Doar ce este adevărat.",
     "err_required": "Vă rugăm să răspundeți la întrebările marcate cu roșu.",
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
-    "no_questions": "Încă nu avem întrebări pentru contestarea acestui tip de scrisoare."
+    "no_questions": "Încă nu avem întrebări pentru contestarea acestui tip de scrisoare.",
+    "filed_asap_accounts": "Ați depus bilanțul financiar anual imediat ce ați putut, după ce s-a terminat?"
   },
   "warn": {
-    "return_not_filed": "De obicei, HMRC nu decide asupra contestației până nu este depusă declarația. Contestația mea poate fi amânată sau respinsă până atunci. Înțeleg și vreau să continui."
+    "return_not_filed": "De obicei, HMRC nu decide asupra contestației până nu este depusă declarația fiscală anuală. Contestația mea poate fi amânată sau respinsă până atunci. Înțeleg și vreau să continui."
   },
   "reason": {
     "bereavement": "Partenerul dvs. sau o rudă apropiată a decedat cu puțin înainte de termen",
     "hospital": "O internare neprevăzută în spital v-a împiedicat să vă ocupați de impozite",
     "serious_illness": "O boală gravă sau care v-a pus viața în pericol",
-    "computer_failure": "Calculatorul sau programul s-a defectat în timp ce pregăteați declarația fiscală online",
+    "computer_failure": "Calculatorul sau programul s-a defectat în timp ce pregăteați declarația fiscală anuală online",
     "hmrc_online_issues": "Probleme cu serviciile online ale HMRC",
-    "fire_flood_theft": "Un incendiu, o inundație sau un furt v-a împiedicat să completați declarația",
+    "fire_flood_theft": "Un incendiu, o inundație sau un furt v-a împiedicat să completați declarația fiscală anuală",
     "postal_delay": "Întârzieri poștale pe care nu le puteați prevedea",
     "disability_mental_illness": "Întârzieri din cauza unei dizabilități sau a unei afecțiuni psihice pe care o aveți",
     "unaware_obligation": "Nu știați sau ați înțeles greșit ce trebuia să faceți",
-    "relied_on_someone": "V-ați bazat pe altcineva să vă trimită declarația și nu a făcut-o",
-    "never_needed_to_file": "Nu consider că trebuia să depun o declarație fiscală",
+    "relied_on_someone": "V-ați bazat pe altcineva să vă trimită declarația fiscală anuală și nu a făcut-o",
+    "never_needed_to_file": "Nu consider că trebuia să depun o declarație fiscală anuală",
     "nnf": {
       "paye_only": "Doar angajat, tot impozitul plătit prin PAYE (reținut din salariu)",
       "under_trading_allowance": "Venit din activitate independentă sub scutirea de 1.000 £ (trading allowance)",
@@ -393,7 +320,7 @@
       "dormant": "Firma este inactivă (dormant)",
       "cant_afford": "Firma nu își permite să plătească",
       "relied_accountant": "Ne-am bazat pe contabil sau contabilul a fost bolnav",
-      "first_accounts": "Acestea au fost primele situații financiare ale firmei",
+      "first_accounts": "Acesta a fost primul bilanț financiar anual al companiei",
       "not_familiar": "Nu cunoșteam regulile sau termenele",
       "financial_difficulty": "Dificultăți financiare, inclusiv insolvență",
       "post": "Corespondența a întârziat sau s-a pierdut",
@@ -402,7 +329,7 @@
     }
   },
   "nnf": {
-    "hmrc_check_first": "Scrisoarea de la HMRC spune: dacă nu trebuia să trimiteți o declarație, anunțați HMRC prin instrumentul online gratuit de verificare. Dacă HMRC este de acord, se va anula amenda. Încercați mai întâi această variantă, înainte de termenul de 30 de zile pentru contestație.",
+    "hmrc_check_first": "Scrisoarea de la HMRC spune: dacă nu trebuia să trimiteți o declarație fiscală anuală, anunțați HMRC prin instrumentul online gratuit de verificare. Dacă HMRC este de acord, se va anula amenda. Încercați mai întâi această variantă, înainte de termenul de 30 de zile pentru contestație.",
     "use_hmrc_checker": "Folosiți verificarea gratuită HMRC (GOV.UK)",
     "appeal_instead": "Preferați o contestație formală? Alegeți o opțiune mai jos."
   },
@@ -410,13 +337,13 @@
     "no_money": "Nu am avut bani să plătesc",
     "online_too_hard": "Mi s-a părut prea complicat sistemul online",
     "no_reminder": "Nu am primit nicio înștiințare de la HMRC",
-    "mistake_on_return": "Am greșit ceva în declarație",
+    "mistake_on_return": "Am greșit ceva în declarația fiscală anuală",
     "forgot": "Am uitat",
     "option": {
-      "file_return": "Depune declarația ca să oprești alte amenzi",
+      "file_return": "Depune declarația fiscală anuală ca să oprești alte amenzi",
       "pay_penalty": "Plătește amenda (GOV.UK)"
     },
-    "file_to_stop_more_penalties": "Dacă declarația nu este încă depusă, depuneți-o acum ca să opriți alte amenzi (amenzile zilnice încep după 3 luni)."
+    "file_to_stop_more_penalties": "Dacă declarația fiscală anuală nu este încă depusă, depuneți-o acum ca să opriți alte amenzi (amenzile zilnice încep după 3 luni)."
   },
   "outcome": {
     "yes_title": "Puteți contesta",
@@ -440,18 +367,21 @@
     "coming_soon": "Plata se deschide în ianuarie 2027. Aceasta este o previzualizare.",
     "late_appeal": "Termenul de 30 de zile a trecut. Contestația va include motivul întârzierii. HMRC decide dacă o acceptă.",
     "explain_only_title": "Contactați HMRC în legătură cu această amendă",
-    "ch_note": "Contestațiile pentru amenzile de depunere întârziată sunt decise de Companies House, nu de HMRC.",
+    "ch_note": "Contestațiile pentru amenzile de depunere întârziată a bilanțului financiar anual sunt decise de Companies House, nu de HMRC.",
     "note": {
-      "penalty_may_be_wrong": "Față de data la care ați depus declarația, este posibil ca amenda zilnică să fi fost aplicată din greșeală. Un contabil ar trebui să o verifice înainte să plătiți sau să contestați.",
+      "penalty_may_be_wrong": "Pe baza datei la care ați depus declarația fiscală anuală, este posibil ca amenda zilnică să fi fost aplicată din greșeală. Un contabil ar trebui să o verifice înainte să plătiți sau să contestați.",
       "higher_12m_penalty": "Amenda de 12 luni este mai mare decât suma obișnuită de 300 £. Un contabil ar trebui să o analizeze împreună cu dvs.",
       "more_than_one_year": "Amenzile pentru mai mulți ani fiscali este bine să fie tratate împreună de un contabil.",
       "not_director": "Contestațiile pentru o firmă sunt făcute de obicei de un director sau de secretarul firmei.",
       "ct_high_or_tax_geared": "Această amendă este de 1.000 £ sau mai mult, ori este calculată în funcție de impozitul datorat. Un contabil ar trebui să o analizeze împreună cu dvs.",
-      "another_director_could_file": "Un alt director ar fi putut depune declarația, așa că este posibil ca HMRC să nu accepte doar boala unui singur director.",
-      "problem_not_at_deadline": "Problema nu exista la momentul termenului, ceea ce face contestația mai slabă.",
-      "not_filed_as_soon_as_able": "Declarația nu a fost depusă imediat după ce problema s-a terminat, ceea ce face contestația mai slabă."
+      "another_director_could_file": "Un alt director ar fi putut depune declarația fiscală anuală, așa că este posibil ca HMRC să nu accepte doar boala unui singur director.",
+      "problem_not_at_deadline": "Problema nu exista la momentul termenului, ceea ce poate diminua șansele de acceptare.",
+      "not_filed_as_soon_as_able": "Declarația fiscală anuală nu a fost depusă imediat după ce problema s-a terminat, ceea ce poate diminua șansele de acceptare."
     },
-    "reason_other": "motivul indicat de dvs."
+    "reason_other": "motivul indicat de dvs.",
+    "note_ch": {
+      "not_filed_as_soon_as_able": "Bilanțul financiar anual nu a fost depus imediat după ce problema s-a terminat, ceea ce poate diminua șansele de acceptare."
+    }
   },
   "ne": {
     "title": "O contestație are puține șanse de reușită",
@@ -494,8 +424,8 @@
     "accountant_call_text": "Discutați situația cu un contabil calificat. Dacă alegeți apoi Opțiunea 3, cei 19 £ se scad din preț."
   },
   "help": {
-    "title": "Ajutor cu declarația fiscală",
-    "intro": "Un contabil calificat de la Accounted4Tax vă poate pregăti și depune declarația fiscală. Lăsați-ne datele și vă sunăm sau vă scriem pe email, de obicei într-o zi lucrătoare. Fără nicio obligație.",
+    "title": "Ajutor cu declarația fiscală anuală",
+    "intro": "Un contabil calificat de la Accounted4Tax vă poate pregăti și depune declarația fiscală anuală. Lăsați-ne datele și vă sunăm sau vă scriem pe email, de obicei într-o zi lucrătoare. Fără nicio obligație.",
     "which_year": "Pentru ce an fiscal?",
     "earlier_years": "Ani anteriori",
     "notes": "Ce ar trebui să știm?",
@@ -514,7 +444,7 @@
     "english_for_hmrc": "Textul în engleză pentru HMRC",
     "change": "Modifică răspunsurile",
     "key_facts": "Circumstanțele principale",
-    "return_filed": "Declarație depusă",
+    "return_filed": "Declarația fiscală anuală depusă",
     "reason": "Motiv",
     "dates": "Perioada",
     "evidence": "Dovezi",
@@ -525,9 +455,10 @@
     "err_declaration": "Bifați căsuța pentru a confirma.",
     "label_story": "Ce s-a întâmplat",
     "label_why_late": "De ce contestația este depusă cu întârziere",
-    "label_nnf_other_text": "De ce nu trebuia să depuneți declarația",
+    "label_nnf_other_text": "De ce nu trebuia să depuneți declarația fiscală anuală",
     "label_something_else_text": "Motivul dvs.",
-    "none": "Niciuna"
+    "none": "Niciuna",
+    "accounts_filed": "Bilanțul financiar anual depus"
   },
   "details": {
     "title": "Datele dvs.",
@@ -612,7 +543,7 @@
     "after_title": "După aceea",
     "after_text": "HMRC vă va scrie dvs., nu nouă, cu decizia. De obicei durează câteva săptămâni. Nu trebuie să plătiți amenda cât timp contestația este în curs.",
     "if_refused": "Dacă HMRC refuză, contactați-ne și vă explicăm ce opțiuni aveți.",
-    "next_year_help": "Ajutor cu declarația de anul viitor"
+    "next_year_help": "Ajutor cu declarația fiscală anuală de anul viitor"
   },
   "glossary": [
     {
@@ -621,7 +552,7 @@
     },
     {
       "en": "tax return",
-      "term": "declarație fiscală (tax return)"
+      "term": "declarația fiscală anuală (tax return)"
     },
     {
       "en": "tax year",
@@ -653,7 +584,7 @@
     },
     {
       "en": "notice to file",
-      "term": "notificare de depunere a declarației (notice to file)"
+      "term": "notificare de depunere a declarației fiscale anuale (notice to file)"
     },
     {
       "en": "notice of penalty assessment",
@@ -774,6 +705,14 @@
     {
       "en": "tax code",
       "term": "cod fiscal pe salariu (tax code)"
+    },
+    {
+      "en": "Corporation Tax return",
+      "term": "declarația fiscală anuală a firmei (Corporation Tax return, CT600)"
+    },
+    {
+      "en": "annual accounts",
+      "term": "bilanțul financiar anual (annual accounts)"
     }
   ],
   "p800": {
@@ -781,10 +720,10 @@
   },
   "ct": {
     "q_role": "Ce funcție aveți în firmă?",
-    "q_other_directors": "Mai există un alt director care ar fi putut depune declarația?",
+    "q_other_directors": "Mai există un alt director care ar fi putut depune declarația fiscală anuală?",
     "role_opt": {
       "director": "Director (administrator)",
-      "secretary": "Secretar al firmei (company secretary)",
+      "secretary": "Secretarul firmei",
       "other": "Altceva"
     }
   },

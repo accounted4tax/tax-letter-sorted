@@ -201,7 +201,7 @@
     if (p.date_from) {
       f.appendChild(q("dates", "q.problem_from_to", [el("div", { class: "two" }, [dateInput("date_from", "common.from"), dateInput("date_to", "common.to")])]));
       f.appendChild(yn("at_deadline", "q.problem_at_deadline"));
-      f.appendChild(yn("filed_asap", isPay ? "q.paid_as_soon_as_able" : "q.filed_as_soon_as_able"));
+      f.appendChild(yn("filed_asap", isPay ? "q.paid_as_soon_as_able" : isCH ? "q.filed_asap_accounts" : "q.filed_as_soon_as_able"));
     }
     if (p.story) f.appendChild(textArea("story", "q.what_happened", "q.story_hint"));
     if (p.evidence) {

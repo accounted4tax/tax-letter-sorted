@@ -72,7 +72,7 @@
     var fx = ans.facts || {}, dl = $("facts"); dl.innerHTML = "";
     var add = function (k, v) { if (v) { dl.appendChild(el("dt", { text: t(k) })); dl.appendChild(el("dd", { text: v })); } };
     add("confirm.reason", ans.reason_label_key ? t(ans.reason_label_key) : "");
-    add("confirm.return_filed", fx.filed_date ? F.fmtDate(fx.filed_date) : "");
+    add(ctx.letter_type === "companies-house-late-filing" ? "confirm.accounts_filed" : "confirm.return_filed", fx.filed_date ? F.fmtDate(fx.filed_date) : "");
     add("confirm.dates", fx.date_from ? F.fmtDate(fx.date_from) + (fx.date_to ? " – " + F.fmtDate(fx.date_to) : "") : "");
     if (fx.date_from || (fx.evidence || []).length) {
       add("confirm.evidence", (fx.evidence || []).length ? fx.evidence.map(function (k) { return t("q.evidence_opt." + k); }).join(", ") : t("confirm.none"));

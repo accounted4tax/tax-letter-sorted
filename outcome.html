@@ -78,6 +78,7 @@
   function noteBox() {
     if (!note) return null;
     var k = "outcome.note." + note, txt = t(k);
+    if (isCH && t("outcome.note_ch." + note) !== "outcome.note_ch." + note) { k = "outcome.note_ch." + note; txt = t(k); }
     return txt === k ? null : el("p", { class: "callout", text: txt });
   }
   function offer(featured, titleKey, bullets, ctaKey) {

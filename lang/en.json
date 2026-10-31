@@ -281,7 +281,8 @@
     "story_hint": "Include what happened, when, and how it stopped you. Only what's true.",
     "err_required": "Please answer the questions marked in red.",
     "err_server": "Something went wrong. Please try again.",
-    "no_questions": "There are no appeal questions for this type of letter yet."
+    "no_questions": "There are no appeal questions for this type of letter yet.",
+    "filed_asap_accounts": "Did you file the accounts as soon as you could once it ended?"
   },
   "warn": {
     "return_not_filed": "HMRC usually won't decide your appeal until your return is filed. My appeal may be delayed or refused until then. I understand and want to continue."
@@ -367,10 +368,13 @@
       "not_director": "Appeals for a company are usually made by a director or the company secretary.",
       "ct_high_or_tax_geared": "This penalty is £1,000 or more, or is based on the tax due. An accountant should look at it with you.",
       "another_director_could_file": "Another director could have filed the return, so HMRC may not accept one director's illness on its own.",
-      "problem_not_at_deadline": "The problem wasn't happening at the deadline, which makes the appeal weaker.",
-      "not_filed_as_soon_as_able": "The return wasn't filed as soon as the problem ended, which makes the appeal weaker."
+      "problem_not_at_deadline": "The problem wasn't happening at the deadline, which may reduce the chance of the appeal being accepted.",
+      "not_filed_as_soon_as_able": "The return wasn't filed as soon as the problem ended, which may reduce the chance of the appeal being accepted."
     },
-    "reason_other": "the reason you gave"
+    "reason_other": "the reason you gave",
+    "note_ch": {
+      "not_filed_as_soon_as_able": "The accounts weren't filed as soon as the problem ended, which may reduce the chance of the appeal being accepted."
+    }
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -446,7 +450,8 @@
     "label_why_late": "Why the appeal is late",
     "label_nnf_other_text": "Why you didn't need to file",
     "label_something_else_text": "Your reason",
-    "none": "None"
+    "none": "None",
+    "accounts_filed": "Accounts filed"
   },
   "details": {
     "title": "Your details",

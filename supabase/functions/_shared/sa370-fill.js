@@ -30,11 +30,16 @@ export async function fillSA370(PDFLib, templateBytes, map, data) {
       page(p).drawText(ch, { x: xs[i] + (BW - w) / 2, y: H - top - BH + 4.5, size, font: bold, color: ink });
     });
   }
-  // right-aligned whole pounds in the amount boxes
+  // pounds right-aligned in the amount boxes, pence in the two boxes after the point
   function amount(p, top, value) {
-    const pounds = String(Math.floor(Number(value) || 0));
-    const xs = F.amount_cells.slice(-pounds.length);
-    cells(p, top, xs, pounds);
+    const pence = Math.round((Number(value) || 0) * 100);
+    const pounds = String(Math.floor(pence / 100));
+    const pp = String(pence % 100).padStart(2, "0");
+    cells(p, top, F.amount_cells.slice(-pounds.length), pounds);
+    for (const x of F.pence_cells) {          // cover the faint printed "0"
+      page(p).drawRectangle({ x: x + 1, y: H - top - BH + 1, width: BW - 2, height: BH - 2, color: rgb(1, 1, 1) });
+    }
+    cells(p, top, F.pence_cells, pp);
   }
   function date(p, top, iso) {
     if (!iso) return;

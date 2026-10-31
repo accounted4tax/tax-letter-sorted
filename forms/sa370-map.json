@@ -233,7 +233,12 @@
         216.4,
         16.5
       ]
-    }
+    },
+    "pence_cells": [
+      177.9,
+      193.5
+    ],
+    "pence_note": "Pence boxes have a faint printed 0 0; the filler covers them with white and writes the actual pence."
   },
   "reason_to_tick": {
     "hospital": "ill_health",

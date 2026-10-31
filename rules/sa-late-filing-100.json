@@ -44,7 +44,8 @@
       "After 6 months: a further 5% of the tax due or £300, whichever is greater",
       "After 12 months: another 5% or £300, whichever is greater"
     ],
-    "filing_deadline_online": "31 January after the end of the tax year"
+    "filing_deadline_online": "31 January after the end of the tax year",
+    "hmrc_phone_problems_paying": "If the client can't pay, the HMRC number for Self Assessment payment problems is 0300 200 3820 (Monday to Friday 8am to 8pm, Saturday 8am to 4pm). Use this number even if an older letter shows a different one. Confirmed by Eduard 31 Oct 2026."
   },
   "deadlines": {
     "appeal_days_from_notice": 30,

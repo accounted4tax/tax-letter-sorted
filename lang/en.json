@@ -452,7 +452,9 @@
     "label_nnf_other_text": "Why you didn't need to file",
     "label_something_else_text": "Your reason",
     "none": "None",
-    "accounts_filed": "Accounts filed"
+    "accounts_filed": "Accounts filed",
+    "appeal_text_title": "Your appeal, as HMRC will read it",
+    "appeal_text_hint": "This text goes on your appeal. Check it says only what's true."
   },
   "details": {
     "title": "Your details",

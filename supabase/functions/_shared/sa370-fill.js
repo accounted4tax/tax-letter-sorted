@@ -96,17 +96,34 @@ export async function fillSA370(PDFLib, templateBytes, map, data) {
   const tick = F.reason_ticks[data.reason_tick] ?? F.reason_ticks.other;
   cells(tick[0], tick[2], [tick[1]], "X");
 
-  let rest = boxText(2, F.description.box, data.description, { size: 9.5, lead: 11.5 });
-  if (rest.length) {
+  // Description: blank lines between paragraphs take a small gap, so a normal appeal fits the box.
+  const DS = 9.5, DL = 11.2, GAP = 4.5;
+  const [dx, dtop, dw, dh] = F.description.box;
+  const allLines = wrap(data.description, font, DS, dw - 8);
+  const bottom = H - dtop - dh + 3;
+  const MORE = "(continued on the attached sheet)";
+  // how many lines fit, leaving room for the pointer line if not everything fits
+  function fitCount(reserve) {
+    let y = H - dtop - 3 - DS, n = 0;
+    for (const ln of allLines) {
+      if (y < bottom + reserve) break;
+      y -= ln === "" ? GAP : DL; n++;
+    }
+    return n;
+  }
+  let n = fitCount(0);
+  const overflow = n < allLines.length;
+  if (overflow) n = fitCount(DL);
+  let y = H - dtop - 3 - DS;
+  for (const ln of allLines.slice(0, n)) {
+    if (ln !== "") page(2).drawText(ln, { x: dx + 4, y, size: DS, font, color: ink });
+    y -= ln === "" ? GAP : DL;
+  }
+  let rest = allLines.slice(n);
+  while (rest.length && rest[0] === "") rest.shift();
+  if (overflow) {
+    page(2).drawText(MORE, { x: dx + 4, y: bottom + 1, size: DS, font: bold, color: ink });
     // continuation sheet, as the form itself asks ("continue on a separate sheet ... attach to the back")
-    const allLines = wrap(data.description, font, 9.5, F.description.box[2] - 8);
-    const fits = allLines.length - rest.length;
-    // redraw the box ending with a pointer to the continuation sheet
-    rest = allLines.slice(fits - 1);
-    page(2).drawRectangle({ x: F.description.box[0] + 1, y: H - F.description.box[1] - F.description.box[3] + 1,
-      width: F.description.box[2] - 2, height: 12.5, color: rgb(1, 1, 1) });
-    page(2).drawText("(continued on the attached sheet)", { x: F.description.box[0] + 4,
-      y: H - F.description.box[1] - F.description.box[3] + 4, size: 9.5, font: bold, color: ink });
     const extra = doc.addPage([595.28, 841.89]);
     const head = [
       "SA370 Appeal – continuation sheet",
@@ -115,8 +132,9 @@ export async function fillSA370(PDFLib, templateBytes, map, data) {
     extra.drawText(head[0], { x: 50, y: 790, size: 14, font: bold, color: rgb(0, 0, 0) });
     extra.drawText(head[1], { x: 50, y: 770, size: 10, font, color: rgb(0, 0, 0) });
     extra.drawText("Your reason for making an appeal (continued)", { x: 50, y: 745, size: 11, font: bold, color: rgb(0, 0, 0) });
-    let y = 725;
-    for (const ln of rest) { extra.drawText(ln, { x: 50, y, size: 10, font, color: ink }); y -= 13.5; if (y < 60) break; }
+    const more = wrap(rest.join("\n"), font, 10, 495);
+    let cy = 725;
+    for (const ln of more) { if (ln !== "") extra.drawText(ln, { x: 50, y: cy, size: 10, font, color: ink }); cy -= ln === "" ? 6 : 13.5; if (cy < 60) break; }
   }
 
   // ---- What to do next ----

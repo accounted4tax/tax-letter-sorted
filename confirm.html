@@ -43,6 +43,12 @@
 
     <div id="texts" class="stack"></div>
 
+    <section class="section" id="appealWrap" hidden>
+      <h2 data-i18n="confirm.appeal_text_title">Your appeal, as HMRC will read it</h2>
+      <p class="hint" data-i18n="confirm.appeal_text_hint">This text goes on your appeal.</p>
+      <div class="compare" style="grid-template-columns:1fr"><div id="appealText" lang="en"></div></div>
+    </section>
+
     <a class="btn secondary changeLink" href="questions.html" data-i18n="confirm.change">Change my answers</a>
 
     <label class="check" id="declWrap">
@@ -90,8 +96,21 @@
              el("div", {}, [el("small", { text: t("confirm.english_for_hmrc") }), eng[k]])])
       ]));
     });
+    // The full English wording that will go on the form (same code the server uses)
+    var compose = window.TLS_composeAppeal;
+    var showAppeal = compose && ["appeal", "choice", "hmrc_check_first"].indexOf(ans.route) > -1;
+    $("appealWrap").hidden = !showAppeal;
+    if (showAppeal) {
+      var st = F.getJSON("tls_q_state") || {};
+      $("appealText").textContent = compose({
+        letter_type: ctx.letter_type, tax_year: ctx.tax_year, penalty_count: ctx.penalty_count || 1,
+        story: eng.story, why_late: eng.why_late, nnf_other_text: eng.nnf_other_text, something_else_text: eng.something_else_text,
+        date_from: fx.date_from, date_to: fx.date_to, filed_date: fx.filed_date, filed_asap: st.filed_asap, evidence: fx.evidence || []
+      });
+    }
     $("form").hidden = false;
   }
+  window.TLS_renderConfirm = render;
 
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -118,6 +137,11 @@
 
   F.onLanguage(render);
 })();
+</script>
+<script type="module">
+  import { composeAppeal } from "./js/appeal-text.js";
+  window.TLS_composeAppeal = composeAppeal;
+  if (window.TLS_renderConfirm && document.documentElement.lang) try { window.TLS_renderConfirm(); } catch (e) {}
 </script>
 </body>
 </html>

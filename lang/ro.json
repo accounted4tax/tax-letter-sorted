@@ -14,7 +14,9 @@
     ],
     "to_review": [
       "reason.fire_flood_disaster",
-      "reason.theft_crime"
+      "reason.theft_crime",
+      "confirm.appeal_text_title",
+      "confirm.appeal_text_hint"
     ]
   },
   "common": {
@@ -462,7 +464,9 @@
     "label_nnf_other_text": "De ce nu trebuia să depuneți declarația fiscală anuală",
     "label_something_else_text": "Motivul dvs.",
     "none": "Niciuna",
-    "accounts_filed": "Bilanțul financiar anual depus"
+    "accounts_filed": "Bilanțul financiar anual depus",
+    "appeal_text_title": "Contestația dvs., așa cum o va citi HMRC",
+    "appeal_text_hint": "Acest text va fi trecut în contestația dvs. Verificați să spună doar ce este adevărat."
   },
   "details": {
     "title": "Datele dvs.",

@@ -1,0 +1,23 @@
+name: Fetch official forms
+# Manual: downloads the public HMRC SA370 form so the app can fill it in.
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download SA370
+        run: |
+          mkdir -p forms
+          curl -sSfL -o forms/SA370.pdf "https://assets.publishing.service.gov.uk/media/657af4f6095987001295e0d7/SA370__Appeal.pdf"
+          file forms/SA370.pdf
+          sha256sum forms/SA370.pdf
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add forms/SA370.pdf
+          git diff --cached --quiet || git commit -m "Add official HMRC SA370 form (downloaded from GOV.UK)"
+          git push

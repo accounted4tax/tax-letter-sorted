@@ -198,6 +198,8 @@ Deno.serve(async (req) => {
       if (errors.length) return reply(400, { error: "invalid", fields: errors });
       await db.from("cases").update({
         details: out, details_saved_at: new Date().toISOString(), product, status: "awaiting_payment",
+        // keep the case while the client pays and approves; emailing it later sets sent + 14 days
+        delete_after: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString(),
         address: [...(out.address_lines as string[]), out.postcode].join(", "),
         ni_number: out.ni_number ?? null, utr: out.utr ?? c.utr ?? null,
       }).eq("id", c.id);
@@ -220,6 +222,10 @@ Deno.serve(async (req) => {
       const path = `${c.id}/appeal-${hash.slice(0, 12)}.pdf`;
       const up = await db.storage.from("appeals").upload(path, bytes, { contentType: "application/pdf", upsert: true });
       if (up.error) throw new Error("storage:" + up.error.message);
+      // older versions of the PDF: remove the file, keep the record (with its fingerprint)
+      const { data: old } = await db.from("case_files").select("id, storage_path").eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
+      const oldPaths = (old ?? []).map((f) => f.storage_path.replace(/^appeals\//, "")).filter((p) => p !== path);
+      if (oldPaths.length) await db.storage.from("appeals").remove(oldPaths);
       await db.from("case_files").update({ deleted_at: new Date().toISOString() }).eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
       await db.from("case_files").insert({ case_id: c.id, kind: "appeal_pdf", storage_path: `appeals/${path}`, sha256: hash });
       await db.from("cases").update({ pdf_built_at: new Date().toISOString(), approved_at: null }).eq("id", c.id);

@@ -41,12 +41,13 @@ window.TLS_FLOW = (function () {
     return Math.round((b - a) / 86400000);
   }
 
-  function call(payload) {
+  function call(payload) { return callFn("case-flow", payload); }
+  function callFn(name, payload) {
     payload.case = payload.case === undefined ? get("tls_case") : payload.case;
     payload.preview = window.TLS_VISIT.preview;
     payload.visit_id = window.TLS_VISIT.id;
     payload.language = lang();
-    return fetch(cfg.functionsUrl + "/case-flow", {
+    return fetch(cfg.functionsUrl + "/" + name, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
     }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); });
   }
@@ -90,7 +91,7 @@ window.TLS_FLOW = (function () {
 
   return {
     t: t, lang: lang, fmtDate: fmtDate, money: money, today: today, daysUntil: daysUntil,
-    call: call, onLanguage: onLanguage, el: el, loadRules: loadRules,
+    call: call, callFn: callFn, onLanguage: onLanguage, el: el, loadRules: loadRules,
     get: get, set: set, getJSON: getJSON, setJSON: setJSON,
     demo: params.get("demo") === "1"
   };

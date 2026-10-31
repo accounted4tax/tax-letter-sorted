@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Review your appeal – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  .pages{display:flex;flex-direction:column;gap:12px}
+  .pages canvas{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(20,33,61,.08)}
+  ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span data-i18n="review.step">Review your appeal</span>
+    <a href="details.html" id="backLink" data-i18n="common.back">Back</a>
+  </div>
+
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" data-i18n="review.building">Filling in your appeal…</p>
+  </section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <!-- Option 3: goes to the accountant -->
+  <section id="o3" class="stack" hidden>
+    <h1 data-i18n="review.o3_title">Your case is with our accountant</h1>
+    <p class="lead" data-i18n="review.o3_text"></p>
+  </section>
+
+  <!-- Option 2: check and approve -->
+  <section id="check" class="stack" hidden>
+    <span class="badge" id="previewBadge" hidden data-i18n="review.preview_badge"></span>
+    <h1 data-i18n="review.title">Check your appeal</h1>
+    <p class="lead" id="intro"></p>
+    <div class="pages" id="pages" lang="en"></div>
+    <a class="btn secondary" id="openPdf" target="_blank" rel="noopener" data-i18n="review.open_pdf">Open the PDF</a>
+    <div class="card">
+      <b data-i18n="review.wrong">Something wrong?</b>
+      <div class="btnrow">
+        <a class="btn secondary" href="details.html" id="fixDetails" data-i18n="review.fix_details">Change my details</a>
+        <a class="btn secondary" href="questions.html" data-i18n="review.fix_answers">Change my answers</a>
+      </div>
+    </div>
+    <label class="check" id="approveWrap">
+      <input type="checkbox" id="approveTick">
+      <span data-i18n="review.approve">I've checked the appeal. Everything in it is correct and true.</span>
+    </label>
+    <button class="btn" type="button" id="approveBtn" data-i18n="review.approve_btn">Approve my appeal</button>
+  </section>
+
+  <!-- After approval -->
+  <section id="done" class="stack" hidden>
+    <div class="success" role="status"><b data-i18n="review.approved_title">Your appeal is ready</b></div>
+    <a class="btn" id="downloadBtn" target="_blank" rel="noopener" data-i18n="review.download">Download my appeal (PDF)</a>
+    <p class="note" data-i18n="review.email_soon"></p>
+    <h2 data-i18n="review.next_title">What to do now</h2>
+    <ol class="steps" id="steps"></ol>
+    <p class="callout" data-i18n="review.evidence"></p>
+    <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var ctx = F.getJSON("tls_explain") || {};
+  var product = F.get("tls_product") || "option2";
+  var built = null, approvedUrl = null, started = false;
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+  if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+  function err(key) { $("loading").hidden = true; $("error").textContent = t(key); $("error").hidden = false; }
+
+  function steps() {
+    var ol = $("steps"); ol.innerHTML = "";
+    var add = function (txt) { ol.appendChild(el("li", { text: txt })); };
+    var s = built && built.send || {};
+    if (s.how === "email") {
+      add(t("review.email_1")); add(t("review.email_2", { address: s.to }));
+    } else {
+      add(t("review.post_1"));
+      add(t(built && built.kind === "letter" ? "review.post_2_letter" : "review.post_2"));
+      add(t("review.post_3", { address: s.to || "" }));
+      add(t("review.post_4"));
+    }
+    if (ctx.appeal_deadline && F.daysUntil(ctx.appeal_deadline) >= 0) add(t("review.deadline", { date: F.fmtDate(ctx.appeal_deadline) }));
+  }
+
+  function renderText() {
+    $("intro").textContent = t(ctx.letter_type === "companies-house-late-filing" ? "review.intro_ch" : "review.intro");
+    if (approvedUrl) steps();
+  }
+
+  function showPdf(url) {
+    $("openPdf").href = url;
+    if (!window.pdfjsLib) return Promise.resolve();
+    return pdfjsLib.getDocument(url).promise.then(function (pdf) {
+      var box = $("pages"); box.innerHTML = "";
+      var chain = Promise.resolve();
+      for (var i = 1; i <= pdf.numPages; i++) (function (n) {
+        chain = chain.then(function () { return pdf.getPage(n); }).then(function (page) {
+          var vp = page.getViewport({ scale: 2 });
+          var c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+          c.setAttribute("aria-label", "Page " + n);
+          box.appendChild(c);
+          return page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+        });
+      })(i);
+      return chain;
+    });
+  }
+
+  function build() {
+    if (started) return; started = true;
+    if (product === "option3") { $("loading").hidden = true; $("o3").hidden = false; return; }
+    F.callFn("appeal", { action: "build" }).then(function (res) {
+      if (res.status === 404) { location.href = "upload.html"; return; }
+      if (res.j.error === "no_details") { location.href = "details.html"; return; }
+      if (res.j.error === "not_paid") { location.href = "pay.html"; return; }
+      if (!res.ok) return err("review.err_server");
+      built = res.j;
+      $("previewBadge").hidden = !built.preview;
+      renderText();
+      return showPdf(built.url).then(function () { $("loading").hidden = true; $("check").hidden = false; });
+    }).catch(function () { err("review.err_server"); });
+  }
+
+  $("approveBtn").addEventListener("click", function () {
+    if (!$("approveTick").checked) { $("approveWrap").classList.add("invalid"); $("error").textContent = t("review.err_approve"); $("error").hidden = false; return; }
+    $("error").hidden = true; $("approveBtn").disabled = true;
+    F.callFn("appeal", { action: "approve", sha256: built.sha256, declaration: true }).then(function (res) {
+      $("approveBtn").disabled = false;
+      if (res.status === 409) { started = false; $("check").hidden = true; $("loading").hidden = false; err("review.err_changed"); build(); return; }
+      if (!res.ok) return err("review.err_server");
+      approvedUrl = res.j.url;
+      $("downloadBtn").href = approvedUrl;
+      steps();
+      $("check").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
+    }).catch(function () { $("approveBtn").disabled = false; err("review.err_server"); });
+  });
+
+  F.onLanguage(function () { renderText(); build(); });
+})();
+</script>
+</body>
+</html>

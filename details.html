@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your details – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span data-i18n="details.step">Your details</span>
+    <a href="outcome.html" id="backLink" data-i18n="common.back">Back</a>
+  </div>
+
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+  </section>
+
+  <form id="form" class="stack" novalidate hidden>
+    <h1 data-i18n="details.title">Your details for the appeal</h1>
+    <p class="lead" id="intro"></p>
+    <div class="card" style="flex-direction:row;justify-content:space-between;align-items:center;gap:10px">
+      <b id="productLabel"></b>
+      <a href="outcome.html" id="changeOption" data-i18n="details.change_option">Change</a>
+    </div>
+
+    <div class="card" id="companyCard" hidden>
+      <label class="field" data-f="company_name"><span data-i18n="details.company_name">Company name</span>
+        <input id="company_name" autocomplete="organization" maxlength="160"></label>
+      <label class="field" data-f="company_number"><span data-i18n="details.company_number">Company number</span>
+        <span class="hint" data-i18n="details.company_number_hint"></span>
+        <input id="company_number" maxlength="10" autocapitalize="characters"></label>
+      <label class="field" data-f="penalty_reference"><span><span data-i18n="details.penalty_reference">Penalty reference</span> <span class="hint" id="penRefOpt" data-i18n="common.optional">(optional)</span></span>
+        <input id="penalty_reference" maxlength="40" autocapitalize="characters"></label>
+      <label class="field" data-f="utr" id="ctUtrRow"><span><span data-i18n="details.ct_utr">Company UTR</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <input id="ct_utr" inputmode="numeric" maxlength="13"></label>
+    </div>
+
+    <div class="card">
+      <label class="field" data-f="full_name"><span id="nameLabel"></span>
+        <input id="full_name" autocomplete="name" maxlength="120"></label>
+      <fieldset class="q" id="roleRow" data-f="role" hidden>
+        <legend data-i18n="details.role">Your role in the company</legend>
+        <div class="yn">
+          <label class="opt"><input type="radio" name="role" value="director" checked><span data-i18n="ct.role_opt.director">Director</span></label>
+          <label class="opt"><input type="radio" name="role" value="secretary"><span data-i18n="ct.role_opt.secretary">Company secretary</span></label>
+        </div>
+      </fieldset>
+      <p id="addrTitle" style="font-weight:700;margin-top:4px" hidden data-i18n="details.company_address"></p>
+      <label class="field" data-f="address_lines"><span data-i18n="details.address1">Address line 1</span>
+        <input id="addr1" autocomplete="address-line1" maxlength="80"></label>
+      <label class="field"><span><span data-i18n="details.address2">Address line 2</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <input id="addr2" autocomplete="address-line2" maxlength="80"></label>
+      <label class="field"><span data-i18n="details.town">Town or city</span>
+        <input id="town" autocomplete="address-level2" maxlength="80"></label>
+      <label class="field" data-f="postcode"><span data-i18n="details.postcode">Postcode</span>
+        <input id="postcode" autocomplete="postal-code" maxlength="10" autocapitalize="characters" style="max-width:180px"></label>
+    </div>
+
+    <div class="card" id="saCard" hidden>
+      <label class="field" data-f="utr"><span data-i18n="common.utr">UTR</span>
+        <span class="hint" data-i18n="details.utr_hint"></span>
+        <input id="utr" inputmode="numeric" maxlength="13"></label>
+      <label class="field" data-f="ni_number"><span><span data-i18n="common.ni_number">National Insurance number</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <span class="hint" data-i18n="common.ni_hint"></span>
+        <input id="ni_number" maxlength="13" autocapitalize="characters" style="max-width:220px"></label>
+    </div>
+
+    <div class="card">
+      <label class="field" data-f="phone"><span data-i18n="details.phone">Daytime phone number</span>
+        <input id="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+      <label class="field" data-f="email"><span data-i18n="details.email">Email address</span>
+        <span class="hint" data-i18n="details.email_hint"></span>
+        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
+    </div>
+
+    <p class="note" data-i18n="details.privacy"></p>
+    <p class="error" id="error" role="alert" hidden></p>
+    <p class="soon" id="previewNote" hidden data-i18n="details.preview_note"></p>
+    <button class="btn" type="submit" id="submit"></button>
+  </form>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t;
+  var $ = function (id) { return document.getElementById(id); };
+  var SA = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment"];
+  var params = new URLSearchParams(location.search);
+  var product = params.get("product") === "option3" ? "option3" : "option2";
+  var preview = !window.TLS_CONFIG.live && !!window.TLS_VISIT.preview;
+  var info = null, filled = false;
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+
+  function T() { return info ? info.letter_type : ""; }
+  function isCompany() { return T() === "ct-late-filing" || T() === "companies-house-late-filing"; }
+
+  function render() {
+    if (!info) return;
+    var company = isCompany(), sa = SA.indexOf(T()) > -1, ch = T() === "companies-house-late-filing";
+    $("intro").textContent = t(company ? "details.intro_company" : "details.intro");
+    $("productLabel").textContent = t(product === "option3" ? "details.option3" : "details.option2");
+    $("nameLabel").textContent = t(company ? "details.your_name" : "details.full_name");
+    $("companyCard").hidden = !company; $("roleRow").hidden = !company; $("addrTitle").hidden = !company;
+    $("ctUtrRow").hidden = ch; $("penRefOpt").hidden = ch;
+    $("saCard").hidden = !sa;
+    $("previewNote").hidden = !preview;
+    $("submit").textContent = t(preview ? "details.continue_preview" : "details.continue_pay");
+    if (!filled) {
+      filled = true;
+      var d = info.details || {}, p = info.prefill || {};
+      var lines = d.address_lines || [];
+      $("full_name").value = d.full_name || (company ? "" : (p.full_name || "").replace(/^(mr|mrs|ms|miss|dr)\.?\s+/i, ""));
+      $("addr1").value = lines[0] || ""; $("addr2").value = lines.length > 2 ? lines[1] : "";
+      $("town").value = lines.length > 2 ? lines[2] : (lines[1] || "");
+      $("postcode").value = d.postcode || "";
+      $("phone").value = d.phone || ""; $("email").value = d.email || "";
+      $("utr").value = d.utr || p.utr || "";
+      $("ni_number").value = d.ni_number || "";
+      $("company_name").value = d.company_name || p.company_name || "";
+      $("company_number").value = d.company_number || p.company_number || "";
+      $("penalty_reference").value = d.penalty_reference || "";
+      $("ct_utr").value = company ? (d.utr || "") : "";
+      if (d.role === "Company Secretary") document.querySelector('input[name=role][value=secretary]').checked = true;
+    }
+    $("loading").hidden = true; $("form").hidden = false;
+  }
+
+  function markErrors(fields) {
+    document.querySelectorAll("[data-f]").forEach(function (n) { n.classList.toggle("invalid", fields.indexOf(n.getAttribute("data-f")) > -1); });
+  }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var company = isCompany();
+    var details = {
+      full_name: $("full_name").value, phone: $("phone").value, email: $("email").value,
+      address_lines: [$("addr1").value, $("addr2").value, $("town").value].map(function (s) { return s.trim(); }).filter(Boolean),
+      postcode: $("postcode").value
+    };
+    if (company) {
+      details.company_name = $("company_name").value; details.company_number = $("company_number").value;
+      details.penalty_reference = $("penalty_reference").value; details.utr = $("ct_utr").value;
+      details.role = (document.querySelector('input[name=role]:checked') || {}).value;
+    } else {
+      details.utr = $("utr").value; details.ni_number = $("ni_number").value;
+    }
+    $("submit").disabled = true; $("submit").textContent = t("details.saving"); $("error").hidden = true;
+    F.callFn("appeal", { action: "save_details", product: product, details: details }).then(function (res) {
+      $("submit").disabled = false; render();
+      if (res.ok) {
+        F.set("tls_product", product);
+        location.href = res.j.needs_payment ? "pay.html" : "review.html";
+        return;
+      }
+      if (res.j.error === "invalid") { markErrors(res.j.fields || []); $("error").textContent = t("details.err_fields"); }
+      else if (res.j.error === "not_ready") $("error").textContent = t("details.err_not_ready");
+      else if (res.status === 404) { location.href = "upload.html"; return; }
+      else $("error").textContent = t("details.err_server");
+      $("error").hidden = false;
+      var first = document.querySelector(".invalid"); if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+    }).catch(function () { $("submit").disabled = false; render(); $("error").textContent = t("details.err_server"); $("error").hidden = false; });
+  });
+
+  F.onLanguage(function () {
+    if (info) { render(); return; }
+    F.callFn("appeal", { action: "get" }).then(function (res) {
+      if (res.status === 404) { location.href = "upload.html"; return; }
+      if (!res.ok || !res.j.can_continue) { location.href = "outcome.html"; return; }
+      info = res.j; render();
+    }).catch(function () { $("loading").hidden = true; $("error").textContent = t("details.err_server"); $("error").hidden = false; $("form").hidden = false; });
+  });
+})();
+</script>
+</body>
+</html>

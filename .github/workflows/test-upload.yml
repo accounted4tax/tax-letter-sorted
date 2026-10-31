@@ -21,19 +21,19 @@ jobs:
           r2=$(curl -s -H "$O" -F preview="$CODE" -F consent=yes -F files=@t.txt "$F")
           r3=$(curl -s -H "$O" -F preview="$CODE" -F files=@t.pdf "$F")
           r4=$(curl -s -H "Origin: https://evil.example" -F preview="$CODE" -F consent=yes -F files=@t.pdf "$F")
-          cat > letter.txt <<'TXT'
---- Page 1 ---
-HM Revenue & Customs  Self Assessment: Late tax return  Notice of penalty assessment
-Tax Reference 00000 00000   Date 17 February 2026
-Issued by: HM Revenue and Customs SELF ASSESSMENT BX9 1AS  Phone 0300 200 3310
-For: MR T TESTPERSON   (fictional test letter, not a real person)
-We didn't receive your tax return on time
-We've charged you a £100 penalty because we didn't receive your Self Assessment tax return on time for the year ended 5 April 2025.
-You need to file your return even if you think you don't owe any tax, or you've already paid all the tax you owe.
-What you need to do: You'll need to pay the penalty within 30 days of the date of this notice.
-If you think you don't need to file a return for the tax year ended 5 April 2025 you must tell us as soon as possible.
-SA326D HMRC 01/26
-TXT
+          {
+            echo '--- Page 1 ---'
+            echo 'HM Revenue & Customs  Self Assessment: Late tax return  Notice of penalty assessment'
+            echo 'Tax Reference 00000 00000   Date 17 February 2026'
+            echo 'Issued by: HM Revenue and Customs SELF ASSESSMENT BX9 1AS  Phone 0300 200 3310'
+            echo 'For: MR T TESTPERSON   (fictional test letter, not a real person)'
+            echo 'We didn'\''t receive your tax return on time'
+            echo 'We'\''ve charged you a £100 penalty because we didn'\''t receive your Self Assessment tax return on time for the year ended 5 April 2025.'
+            echo 'You need to file your return even if you think you don'\''t owe any tax, or you'\''ve already paid all the tax you owe.'
+            echo 'What you need to do: You'\''ll need to pay the penalty within 30 days of the date of this notice.'
+            echo 'If you think you don'\''t need to file a return for the tax year ended 5 April 2025 you must tell us as soon as possible.'
+            echo 'SA326D HMRC 01/26'
+          } > letter.txt
           r5=$(curl -s -H "$O" -F preview="$CODE" -F consent=yes -F language=ro -F visit_id=11111111-2222-3333-4444-555555555555 -F files=@t.pdf -F "text=<letter.txt" "$F")
           echo "::notice::1 no code -> $r1"
           echo "::notice::2 wrong type -> $r2"

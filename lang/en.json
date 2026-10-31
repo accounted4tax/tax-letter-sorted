@@ -408,7 +408,10 @@
     "pay_now": "Pay now (GOV.UK)",
     "payment_plan": "Set up a payment plan",
     "call_hmrc": "Or call HMRC on {phone}",
-    "hours": "Monday to Friday 8am to 8pm, Saturday 8am to 4pm"
+    "hours": "Monday to Friday 8am to 8pm, Saturday 8am to 4pm",
+    "redirecting": "Taking you to our secure payment page (Stripe)…",
+    "error": "We couldn't open the payment page. Please try again.",
+    "try_again": "Try again"
   },
   "lp": {
     "contact_hmrc_about_plan": "Contact HMRC to discuss this penalty, as you had a payment plan in place."
@@ -462,7 +465,7 @@
     "mobile_hint": "Only used if there's a problem with your appeal.",
     "agree_terms": "I agree to the {terms} and have read the {privacy}.",
     "waive_cancel": "Send my appeal straight away. I understand I lose my 14-day right to cancel once it's delivered.",
-    "marketing": "Optional: email me tax deadline reminders and tips from Accounted4Tax. Unsubscribe any time.",
+    "marketing": "Email me occasional tax tips and offers from Accounted4Tax. (Optional. You can unsubscribe at any time.)",
     "pay_cta": "Continue to payment · {price}",
     "stripe_note": "Next you'll see Stripe's secure payment page with your email already filled in. You only enter your card.",
     "step": "Your details",
@@ -496,7 +499,8 @@
     "err_fields": "Please check the fields marked in red.",
     "err_server": "Something went wrong. Please try again.",
     "err_not_ready": "Please confirm your facts first.",
-    "preview_note": "Preview: payment is skipped until January 2027."
+    "preview_note": "Preview: no real money is taken. If asked to pay, use the Stripe test card 4242 4242 4242 4242, any future date and any 3 digits.",
+    "cancelled": "Payment cancelled. You haven't been charged."
   },
   "review": {
     "step": "Review your appeal",
@@ -788,5 +792,11 @@
     "err_consent": "Please tick the box so we can contact you.",
     "err_server": "Something went wrong. Please try again, or email {email}.",
     "privacy_note": "We use your details only to contact you about this request."
+  },
+  "paid": {
+    "checking": "Checking your payment…",
+    "not_yet": "We haven't received your payment yet. If you've just paid, wait a moment and check again.",
+    "check_again": "Check again",
+    "thanks": "Thank you. Your payment is confirmed."
   }
 }

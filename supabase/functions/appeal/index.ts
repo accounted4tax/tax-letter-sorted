@@ -55,6 +55,7 @@ function cleanDetails(c: Obj, d: Obj) {
     postcode: str(d.postcode, 10).toUpperCase(),
     phone: str(d.phone, 30),
     email: str(d.email, 200).toLowerCase(),
+    marketing_consent: d.marketing_consent === true,   // separate, unticked by default (PECR)
   };
   const errors: string[] = [];
   if (String(out.full_name).length < 2) errors.push("full_name");
@@ -170,6 +171,8 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return reply(400, { error: "bad_request" }); }
   const preview = !settings?.live && !!settings?.preview_code && body.preview === settings.preview_code;
   if (!settings?.live && !preview) return reply(403, { error: "closed" });
+  // Payment is needed when live, and in preview while Stripe test mode is switched on.
+  const mustPay = !preview || !!settings?.payments_test;
 
   const token = String(body.case ?? "");
   if (!/^[0-9a-f]{40,80}$/.test(token)) return reply(400, { error: "bad_request" });
@@ -185,7 +188,7 @@ Deno.serve(async (req) => {
       return reply(200, {
         ref: c.ref, letter_type: c.letter_type, outcome_route: c.outcome_route, product: c.product,
         appeal_deadline: c.appeal_deadline, can_continue: !!c.facts_confirmed_at && APPEAL_ROUTES.includes(String(c.outcome_route)),
-        details: c.details ?? null,
+        details: c.details ?? null, needs_payment: mustPay,
         prefill: { full_name: conf.name_on_letter ?? ext.name_on_letter ?? null, utr: c.utr ?? ext.utr ?? null,
           company_name: conf.company_name ?? ext.company_name ?? null, company_number: ext.company_number ?? null },
       });
@@ -205,12 +208,12 @@ Deno.serve(async (req) => {
       }).eq("id", c.id);
       await funnel(body.visit_id, "option_chosen", c, product);
       await db.from("audit_log").insert({ actor: "system", action: "details_saved", case_id: c.id, detail: { product } });
-      return reply(200, { ok: true, product, needs_payment: !preview });
+      return reply(200, { ok: true, product, needs_payment: mustPay });
     }
 
     if (body.action === "build" || body.action === "approve" || body.action === "download") {
       if (!c.details_saved_at) return reply(400, { error: "no_details" });
-      if (!preview) {
+      if (mustPay) {
         const { data: paid } = await db.from("payments").select("id").eq("case_id", c.id).eq("status", "paid").limit(1);
         if (!paid?.length) return reply(402, { error: "not_paid" });
       }
@@ -230,7 +233,7 @@ Deno.serve(async (req) => {
       await db.from("case_files").insert({ case_id: c.id, kind: "appeal_pdf", storage_path: `appeals/${path}`, sha256: hash });
       await db.from("cases").update({ pdf_built_at: new Date().toISOString(), approved_at: null }).eq("id", c.id);
       await db.from("audit_log").insert({ actor: "system", action: "appeal_pdf_built", case_id: c.id, detail: { kind, sha256: hash, bytes: bytes.length } });
-      return reply(200, { url: await signedUrl(path), sha256: hash, kind, send, product: c.product, ref: c.ref, preview });
+      return reply(200, { url: await signedUrl(path), sha256: hash, kind, send, product: c.product, ref: c.ref, preview: preview && !mustPay });
     }
 
     if (body.action === "approve" || body.action === "download") {

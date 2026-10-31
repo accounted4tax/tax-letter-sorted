@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Payment – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" id="status"></p>
+  </section>
+  <div id="problem" class="stack" hidden>
+    <p class="callout" id="msg"></p>
+    <button class="btn" type="button" id="again"></button>
+    <a class="btn secondary" href="details.html" data-i18n="common.back">Back</a>
+  </div>
+  <p class="note" data-i18n="common.pay_stripe">You'll pay securely on Stripe. We never see your card.</p>
+</main>
+<script>
+(function () {
+  // Stripe sends the client back here; we check the payment with Stripe (server side), then continue.
+  var F = window.TLS_FLOW, t = F.t, $ = function (id) { return document.getElementById(id); };
+  var session = new URLSearchParams(location.search).get("session") || "";
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+  var busy = false;
+  function check() {
+    if (busy) return; busy = true;
+    $("problem").hidden = true; $("loading").hidden = false; $("status").textContent = t("paid.checking");
+    F.callFn("payments", { action: "confirm", session: session }).then(function (res) {
+      busy = false;
+      if (res.ok && res.j.paid) { F.set("tls_product", res.j.product); location.href = "review.html"; return; }
+      $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false;
+    }).catch(function () { busy = false; $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false; });
+  }
+  $("again").addEventListener("click", check);
+  F.onLanguage(function () { check(); });
+})();
+</script>
+</body>
+</html>

@@ -16,3 +16,7 @@ Edge functions: upload-letter, cleanup-expired (source in functions/).
 Edge functions now: upload-letter (v2), cleanup-expired (v2), read-letter (v1 – needs the ANTHROPIC_API_KEY secret).
 - 007_more_letter_types.sql – 31 Oct 2026 (Claude). 20 letter types: VAT, PAYE, CT, Companies House, compliance check, other HMRC. Checked in pg_constraint.
 - 008_appeal_details.sql – applied 31 Oct 2026 (cases.details, details_saved_at, pdf_built_at)
+- 009_payments_test – applied 31 Oct 2026 (app_settings.payments_test, payments.stripe_mode)
+
+Edge functions (31 Oct 2026): appeal v3, payments v1, cleanup-expired v6, case-flow v1, read-letter v4, upload-letter v2.
+Secrets set by Eduard in the dashboard: ANTHROPIC_API_KEY, STRIPE_SECRET_KEY (sandbox), BREVO_API_KEY (send-only).

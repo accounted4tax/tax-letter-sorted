@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Payment – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/app.css">
 <script src="js/config.js"></script>
 <script src="js/visit.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
 </head>
 <body>
 <header class="topbar">
@@ -21,9 +24,37 @@
   </div>
 </header>
 <main class="wrap">
-  <!-- Stripe Checkout is added here in the next build step. -->
-  <p class="soon" data-i18n="outcome.coming_soon">Payment opens in January 2027.</p>
-  <a class="btn secondary" href="outcome.html" data-i18n="common.back">Back</a>
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" id="status"></p>
+  </section>
+  <div id="problem" class="stack" hidden>
+    <p class="callout" id="msg"></p>
+    <button class="btn" type="button" id="again"></button>
+    <a class="btn secondary" href="details.html" data-i18n="common.back">Back</a>
+  </div>
+  <p class="note" data-i18n="common.pay_stripe">You'll pay securely on Stripe. We never see your card.</p>
 </main>
+<script>
+(function () {
+  // Opens Stripe Checkout for this case (Option 2 or 3).
+  var F = window.TLS_FLOW, t = F.t, $ = function (id) { return document.getElementById(id); };
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+  var busy = false;
+  function go() {
+    if (busy) return; busy = true;
+    $("problem").hidden = true; $("loading").hidden = false; $("status").textContent = t("pay.redirecting");
+    F.callFn("payments", { action: "checkout" }).then(function (res) {
+      busy = false;
+      if (res.ok && res.j.url) { location.href = res.j.url; return; }
+      if (res.j.error === "no_details") { location.href = "details.html"; return; }
+      fail();
+    }).catch(function () { busy = false; fail(); });
+  }
+  function fail() { $("loading").hidden = true; $("msg").textContent = t("pay.error"); $("again").textContent = t("pay.try_again"); $("problem").hidden = false; }
+  $("again").addEventListener("click", go);
+  F.onLanguage(function () { if (!busy && $("problem").hidden) go(); else if (busy) $("status").textContent = t("pay.redirecting"); });
+})();
+</script>
 </body>
 </html>

@@ -74,7 +74,15 @@
       "review.evidence",
       "review.o3_title",
       "review.o3_text",
-      "review.preview_badge"
+      "review.preview_badge",
+      "details.cancelled",
+      "pay.redirecting",
+      "pay.error",
+      "pay.try_again",
+      "paid.checking",
+      "paid.not_yet",
+      "paid.check_again",
+      "paid.thanks"
     ]
   },
   "common": {
@@ -478,7 +486,10 @@
     "pay_now": "Plătește acum (GOV.UK)",
     "payment_plan": "Stabilește un plan de plată",
     "call_hmrc": "Sau sunați la HMRC la {phone}",
-    "hours": "Luni–vineri 8:00–20:00, sâmbătă 8:00–16:00"
+    "hours": "Luni–vineri 8:00–20:00, sâmbătă 8:00–16:00",
+    "redirecting": "Vă ducem la pagina securizată de plată (Stripe)…",
+    "error": "Nu am putut deschide pagina de plată. Vă rugăm să încercați din nou.",
+    "try_again": "Încearcă din nou"
   },
   "lp": {
     "contact_hmrc_about_plan": "Contactați HMRC pentru a discuta această amendă, deoarece aveați un plan de plată."
@@ -532,7 +543,7 @@
     "mobile_hint": "Îl folosim doar dacă apare o problemă cu contestația.",
     "agree_terms": "Sunt de acord cu {terms} și am citit {privacy}.",
     "waive_cancel": "Trimiteți-mi contestația imediat. Înțeleg că pierd dreptul de a anula în 14 zile după ce o primesc.",
-    "marketing": "Opțional: vreau să primesc pe email informații despre termene fiscale și sfaturi de la Accounted4Tax. Mă pot dezabona oricând.",
+    "marketing": "Trimiteți-mi pe email, din când în când, sfaturi fiscale și oferte de la Accounted4Tax. (Opțional. Vă puteți dezabona oricând.)",
     "pay_cta": "Continuă spre plată · {price}",
     "stripe_note": "Urmează pagina de plată securizată Stripe, cu emailul deja completat. Introduceți doar datele cardului.",
     "step": "Datele dvs.",
@@ -566,7 +577,8 @@
     "err_fields": "Vă rugăm să verificați câmpurile marcate cu roșu.",
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
     "err_not_ready": "Vă rugăm să confirmați mai întâi circumstanțele.",
-    "preview_note": "Previzualizare: plata este omisă până în ianuarie 2027."
+    "preview_note": "Previzualizare: nu se iau bani reali. Dacă vi se cere plata, folosiți cardul de test Stripe 4242 4242 4242 4242, orice dată viitoare și orice 3 cifre.",
+    "cancelled": "Plata a fost anulată. Nu ați plătit nimic."
   },
   "review": {
     "step": "Verificați contestația",
@@ -866,5 +878,11 @@
     "err_consent": "Bifați căsuța ca să vă putem contacta.",
     "err_server": "A apărut o eroare. Încercați din nou sau scrieți-ne la {email}.",
     "privacy_note": "Folosim datele dvs. doar pentru a vă contacta în legătură cu această solicitare."
+  },
+  "paid": {
+    "checking": "Verificăm plata…",
+    "not_yet": "Încă nu am primit plata. Dacă tocmai ați plătit, așteptați puțin și verificați din nou.",
+    "check_again": "Verifică din nou",
+    "thanks": "Vă mulțumim. Plata dvs. este confirmată."
   }
 }

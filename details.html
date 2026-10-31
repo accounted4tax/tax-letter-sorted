@@ -92,6 +92,7 @@
         <input id="email" type="email" autocomplete="email" maxlength="200"></label>
     </div>
 
+    <label class="check"><input type="checkbox" id="marketing"><span data-i18n="details.marketing"></span></label>
     <p class="note" data-i18n="details.privacy"></p>
     <p class="error" id="error" role="alert" hidden></p>
     <p class="soon" id="previewNote" hidden data-i18n="details.preview_note"></p>
@@ -129,7 +130,7 @@
     $("ctUtrRow").hidden = ch; $("penRefOpt").hidden = ch;
     $("saCard").hidden = !sa;
     $("previewNote").hidden = !preview;
-    $("submit").textContent = t(preview ? "details.continue_preview" : "details.continue_pay");
+    $("submit").textContent = t(info.needs_payment ? "details.continue_pay" : "details.continue_preview");
     if (!filled) {
       filled = true;
       var d = info.details || {}, p = info.prefill || {};
@@ -145,6 +146,8 @@
       $("company_number").value = d.company_number || p.company_number || "";
       $("penalty_reference").value = d.penalty_reference || "";
       $("ct_utr").value = company ? (d.utr || "") : "";
+      $("marketing").checked = d.marketing_consent === true;
+      if (params.get("cancelled")) { $("error").textContent = t("details.cancelled"); $("error").hidden = false; }
       if (d.role === "Company Secretary") document.querySelector('input[name=role][value=secretary]').checked = true;
     }
     $("loading").hidden = true; $("form").hidden = false;
@@ -160,7 +163,7 @@
     var details = {
       full_name: $("full_name").value, phone: $("phone").value, email: $("email").value,
       address_lines: [$("addr1").value, $("addr2").value, $("town").value].map(function (s) { return s.trim(); }).filter(Boolean),
-      postcode: $("postcode").value
+      postcode: $("postcode").value, marketing_consent: $("marketing").checked
     };
     if (company) {
       details.company_name = $("company_name").value; details.company_number = $("company_number").value;

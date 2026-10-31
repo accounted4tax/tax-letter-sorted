@@ -82,7 +82,7 @@
     return txt === k ? null : el("p", { class: "callout", text: txt });
   }
   // Preview (private test link): the buttons work and skip payment. Otherwise they wait for Stripe.
-  var canBuy = !window.TLS_CONFIG.live && !!window.TLS_VISIT.preview && !F.demo && !!F.get("tls_case") && !!done;
+  var canBuy = (window.TLS_CONFIG.live || !!window.TLS_VISIT.preview) && !F.demo && !!F.get("tls_case") && !!done;
   function offer(featured, titleKey, bullets, ctaKey, product) {
     return el("div", { class: "offer" + (featured ? " featured" : "") }, [
       el("h2", { text: t(titleKey) }),
@@ -95,7 +95,7 @@
     return el("section", { class: "stack", id: "offers" }, [
       offer(false, "outcome.o2_title", [isSA ? "outcome.o2_b1" : "outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta", "option2"),
       offer(true, "outcome.o3_title", ["outcome.o3_b1", "outcome.o3_b2", "outcome.o3_b3", "outcome.o3_b4"], "outcome.o3_cta", "option3"),
-      el("p", { class: "soon", text: t(canBuy ? "details.preview_note" : "outcome.coming_soon") }),
+      el("p", { class: "soon", text: t(canBuy ? (window.TLS_CONFIG.live ? "common.pay_stripe" : "details.preview_note") : "outcome.coming_soon") }),
       isSA ? el("p", { class: "note", text: t("outcome.online_alt") }) : null,
       link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "outcome.call_alt")
     ]);

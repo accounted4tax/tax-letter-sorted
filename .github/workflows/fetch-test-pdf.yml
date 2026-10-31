@@ -1,0 +1,19 @@
+name: Fetch test PDF
+# Manual: downloads a TEST appeal PDF (fictional data only) from a short-lived signed link
+# so Claude can check the layout. Never use with a real client's case.
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Signed URL of a TEST appeal PDF"
+        required: true
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -sSfL -o test-appeal.pdf "${{ inputs.url }}" && file test-appeal.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-appeal
+          path: test-appeal.pdf
+          retention-days: 1

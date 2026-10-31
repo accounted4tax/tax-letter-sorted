@@ -180,12 +180,24 @@
       "health_consent": false
     },
     {
-      "id": "fire_flood_theft",
-      "label_key": "reason.fire_flood_theft",
+      "id": "fire_flood_disaster",
+      "label_key": "reason.fire_flood_disaster",
       "gov_uk_listed": true,
       "route": "appeal",
       "needs_dates": true,
-      "health_consent": false
+      "health_consent": false,
+      "sa370_box": "Fire, flood or other natural disasters",
+      "note": "Split from fire_flood_theft on 31 Oct 2026 (Eduard) so the matching SA370 box is ticked."
+    },
+    {
+      "id": "theft_crime",
+      "label_key": "reason.theft_crime",
+      "gov_uk_listed": true,
+      "route": "appeal",
+      "needs_dates": true,
+      "health_consent": false,
+      "sa370_box": "Theft or crime",
+      "note": "Split from fire_flood_theft on 31 Oct 2026 (Eduard) so the matching SA370 box is ticked."
     },
     {
       "id": "postal_delay",

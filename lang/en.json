@@ -293,7 +293,6 @@
     "serious_illness": "A serious or life-threatening illness",
     "computer_failure": "Your computer or software failed while you were preparing your online return",
     "hmrc_online_issues": "Problems with HMRC's online services",
-    "fire_flood_theft": "A fire, flood or theft stopped you completing your return",
     "postal_delay": "Postal delays you couldn't have predicted",
     "disability_mental_illness": "Delays because of a disability or mental illness you have",
     "unaware_obligation": "You didn't know about, or misunderstood, what you had to do",
@@ -319,7 +318,9 @@
       "post": "Post was delayed or lost",
       "overseas": "Directors were living or travelling abroad",
       "other_director": "Another director was responsible"
-    }
+    },
+    "fire_flood_disaster": "A fire, flood or other disaster stopped you completing your return",
+    "theft_crime": "A theft or other crime stopped you completing your return"
   },
   "nnf": {
     "hmrc_check_first": "HMRC's own letter says: if you didn't need to send a tax return, tell HMRC using its free online checker. If HMRC agrees, it cancels the penalty. Try this first, before the 30-day appeal deadline.",

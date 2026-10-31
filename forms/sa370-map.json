@@ -243,10 +243,11 @@
     "postal_delay": "postal_issues",
     "computer_failure": "it_difficulties",
     "hmrc_online_issues": "it_difficulties",
-    "fire_flood_theft": "other",
     "unaware_obligation": "other",
     "relied_on_someone": "other",
     "never_needed_to_file": "other",
-    "something_else": "other"
+    "something_else": "other",
+    "fire_flood_disaster": "fire_flood",
+    "theft_crime": "theft_crime"
   }
 }

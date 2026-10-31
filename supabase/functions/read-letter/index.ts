@@ -37,7 +37,9 @@ How to choose letter_type:
 - not-recognised: anything else, including compliance checks (CC/FS factsheets, "I'm checking your tax return"), agent letters, repayment security checks, or if unreadable.
 
 A notice can list several penalties (e.g. daily + 6-month). Put each in penalties[] and the total in penalty_total.
-If the notice says "We've given you more time to appeal ... You now have until [date]", put that date in extended_appeal_date.`;
+If the notice says "We've given you more time to appeal ... You now have until [date]", put that date in extended_appeal_date.
+
+The UTR (Unique Taxpayer Reference) is a 10-digit number. HMRC prints it under different labels: "Tax Reference", "Tax reference", "UTR", "Unique Taxpayer Reference", "Your Unique Taxpayer Reference", or inside the payment reference (the UTR followed by K, e.g. 1234567890K). It may be printed with spaces (12345 67890) or with a letter before or after it. Record only the 10 digits in utr. If the same 10 digits appear in the payment reference, that is the UTR. Do not use case references, "Our Ref", "Your Ref", NI numbers or charge references as the UTR.`;
 
 const TOOL = {
   name: "record_letter",
@@ -67,7 +69,7 @@ const TOOL = {
       pay_by_date: { type: ["string", "null"] },
       extended_appeal_date: { type: ["string", "null"] },
       name_on_letter: { type: ["string", "null"] },
-      utr: { type: ["string", "null"], description: "10-digit Unique Taxpayer Reference, digits only" },
+      utr: { type: ["string", "null"], description: "10-digit UTR, digits only (labelled Tax Reference, UTR or Unique Taxpayer Reference, or the payment reference without the K)" },
       company_name: { type: ["string", "null"] },
       company_number: { type: ["string", "null"] },
       hmrc_phone: { type: ["string", "null"] },
@@ -203,7 +205,10 @@ Deno.serve(async (req) => {
   if (!use) return reply(502, { error: "reader_unavailable" });
   const details = use.input as Record<string, unknown>;
   if (!LETTER_TYPES.includes(String(details.letter_type))) details.letter_type = "not-recognised";
-  if (typeof details.utr === "string") details.utr = details.utr.replace(/\D/g, "").slice(0, 10);
+  if (typeof details.utr === "string") {
+    const digits = details.utr.replace(/\D/g, "");
+    details.utr = digits.length === 10 ? digits : null;
+  }
 
   await db.from("cases").update({
     extracted: details,

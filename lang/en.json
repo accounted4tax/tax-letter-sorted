@@ -185,6 +185,36 @@
     },
     "not_recognised": {
       "title": "Something else / not sure"
+    },
+    "sa_other": {
+      "title": "Other Self Assessment letter"
+    },
+    "vat_late_submission": {
+      "title": "VAT late submission penalty or points"
+    },
+    "vat_late_payment": {
+      "title": "VAT late payment penalty"
+    },
+    "vat_other": {
+      "title": "Other VAT letter"
+    },
+    "paye_employer_penalty": {
+      "title": "Employer PAYE late filing or payment penalty"
+    },
+    "paye_other": {
+      "title": "Other PAYE letter (e.g. tax code notice)"
+    },
+    "ct_other": {
+      "title": "Other Corporation Tax letter"
+    },
+    "companies_house_other": {
+      "title": "Other Companies House letter"
+    },
+    "compliance_check": {
+      "title": "HMRC compliance check or enquiry"
+    },
+    "hmrc_other": {
+      "title": "Other HMRC letter"
     }
   },
   "q": {

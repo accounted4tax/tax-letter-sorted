@@ -8,10 +8,16 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const MODEL = "claude-haiku-5-5";
 const MAX_READS = 3;
 const LETTER_TYPES = [
-  "sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "sa-notice-to-file",
-  "nudge-letters", "p800", "simple-assessment", "ct-late-filing", "companies-house-late-filing", "not-recognised",
+  "sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "sa-notice-to-file", "sa-other",
+  "nudge-letters", "p800", "simple-assessment",
+  "vat-late-submission", "vat-late-payment", "vat-other",
+  "paye-employer-penalty", "paye-other",
+  "ct-late-filing", "ct-other",
+  "companies-house-late-filing", "companies-house-other",
+  "compliance-check", "hmrc-other", "not-recognised",
 ];
-const PENALTY_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing", "companies-house-late-filing"];
+const PENALTY_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing",
+  "companies-house-late-filing", "vat-late-submission", "vat-late-payment", "paye-employer-penalty"];
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },
@@ -25,16 +31,31 @@ Rules:
 - Dates as YYYY-MM-DD. Tax years as "2024-25". Money as a number in pounds (100, 1200.50).
 
 How to choose letter_type:
+Self Assessment (individuals):
 - sa-late-filing-100: form code SA326D, "We didn't receive your tax return on time", a fixed £100 Self Assessment late filing penalty.
 - sa-late-filing-later: form code SA370 with "Late filing penalties for the year ended": daily (£10 a day), 6-month or 12-month penalties.
 - sa-late-payment: form code SA370 with "Late payment penalties for the year ended" (5% penalties on tax unpaid).
 - sa-notice-to-file: SA316 or a notice asking the person to send a Self Assessment tax return (also SA818 "you still need to fill in a tax return").
+- sa-other: any other Self Assessment letter (SA302 tax calculation, statement of account, return corrections AAS1, notice withdrawn SA832, SA251 update, payments on account, repayment).
 - nudge-letters: HMRC asking the person to check their tax because it has information (online selling platforms, other income), including ITSA6 "Check if you need to send us a Self Assessment tax return". Not a penalty.
 - p800: P800 tax calculation (PAYE overpaid or underpaid).
 - simple-assessment: PA302 Simple Assessment tax bill.
+VAT (businesses):
+- vat-late-submission: VAT late submission penalty points, or a £200 penalty for a late VAT return.
+- vat-late-payment: VAT late payment penalty (first or second late payment penalty, including "Notice of change" to a late payment penalty).
+- vat-other: any other VAT letter (registration, VAT assessment, interest, surcharge, deregistration, Making Tax Digital for VAT).
+PAYE (employers and employees):
+- paye-employer-penalty: penalty for an employer's late PAYE/RTI filing (Full Payment Submission) or late PAYE payment.
+- paye-other: any other PAYE letter (tax code notice P2, employer PAYE reminders, P60/P11D queries, coding out).
+Corporation Tax and Companies House:
 - ct-late-filing: HMRC Corporation Tax (Company Tax Return) late filing penalty.
+- ct-other: any other Corporation Tax letter (notice to deliver a Company Tax Return CT603, interest, determination, payment reminder).
 - companies-house-late-filing: Companies House late filing penalty for annual accounts (not HMRC).
-- not-recognised: anything else, including compliance checks (CC/FS factsheets, "I'm checking your tax return"), agent letters, repayment security checks, or if unreadable.
+- companies-house-other: any other Companies House letter (confirmation statement or accounts reminder, strike-off notice, registered office).
+Other:
+- compliance-check: HMRC is checking or enquiring into a return or records (CC/FS factsheets, "I'm checking your tax return", information notice, enquiry under section 9A).
+- hmrc-other: any other HMRC letter (agent authorisation, repayment security check, CIS registration, Child Benefit, Inheritance Tax, Capital Gains, debt).
+- not-recognised: not from HMRC or Companies House, or unreadable.
 
 A notice can list several penalties (e.g. daily + 6-month). Put each in penalties[] and the total in penalty_total.
 If the notice says "We've given you more time to appeal ... You now have until [date]", put that date in extended_appeal_date.
@@ -72,6 +93,9 @@ const TOOL = {
       utr: { type: ["string", "null"], description: "10-digit UTR, digits only (labelled Tax Reference, UTR or Unique Taxpayer Reference, or the payment reference without the K)" },
       company_name: { type: ["string", "null"] },
       company_number: { type: ["string", "null"] },
+      vat_number: { type: ["string", "null"], description: "VAT registration number, if printed" },
+      employer_paye_ref: { type: ["string", "null"], description: "employer PAYE reference (e.g. 123/AB45678), if printed" },
+      period: { type: ["string", "null"], description: "VAT or PAYE period the letter is about, as printed" },
       hmrc_phone: { type: ["string", "null"] },
       return_address: { type: ["string", "null"], description: "HMRC address to write to, if printed" },
       notes: { type: ["string", "null"], description: "anything unusual, in one short English sentence" },

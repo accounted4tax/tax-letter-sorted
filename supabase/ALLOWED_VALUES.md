@@ -5,7 +5,7 @@ Dropdowns and code must use exactly these values. Re-run the pg_constraint check
 | Table.column | Allowed values |
 |---|---|
 | cases.language | en, ro, pl, bg, lt, ar, ur |
-| cases.letter_type | sa-late-filing-100, sa-late-filing-later, sa-late-payment, sa-notice-to-file, nudge-letters, p800, simple-assessment, ct-late-filing, companies-house-late-filing, not-recognised |
+| cases.letter_type | sa-late-filing-100, sa-late-filing-later, sa-late-payment, sa-notice-to-file, sa-other, nudge-letters, p800, simple-assessment, vat-late-submission, vat-late-payment, vat-other, paye-employer-penalty, paye-other, ct-late-filing, ct-other, companies-house-late-filing, companies-house-other, compliance-check, hmrc-other, not-recognised (re-checked 31 Oct 2026) |
 | cases.product | option1, option2, option3, call |
 | cases.status | uploaded, explained, questions, outcome, callback_requested, awaiting_payment, paid, awaiting_id, in_review, awaiting_signature, approved, sent, posted, closed, deleted |
 | cases.outcome_route | appeal, choice, callback, not_accepted, hmrc_check_first, explain_only |

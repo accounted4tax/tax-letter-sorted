@@ -14,3 +14,4 @@ Edge functions: upload-letter, cleanup-expired (source in functions/).
 - 006_move_pg_net.sql – 31 Oct 2026 (Claude, approved by Eduard). Security advisor warning cleared.
 
 Edge functions now: upload-letter (v2), cleanup-expired (v2), read-letter (v1 – needs the ANTHROPIC_API_KEY secret).
+- 007_more_letter_types.sql – 31 Oct 2026 (Claude). 20 letter types: VAT, PAYE, CT, Companies House, compliance check, other HMRC. Checked in pg_constraint.

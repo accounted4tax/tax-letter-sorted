@@ -81,11 +81,21 @@
     ["sa-late-filing-later", "letters.sa_late_filing_later.title"],
     ["sa-late-payment", "letters.sa_late_payment.title"],
     ["sa-notice-to-file", "letters.sa_notice_to_file.title"],
+    ["sa-other", "letters.sa_other.title"],
     ["nudge-letters", "letters.nudge.title"],
     ["p800", "letters.p800.title"],
     ["simple-assessment", "letters.simple_assessment.title"],
+    ["vat-late-submission", "letters.vat_late_submission.title"],
+    ["vat-late-payment", "letters.vat_late_payment.title"],
+    ["vat-other", "letters.vat_other.title"],
+    ["paye-employer-penalty", "letters.paye_employer_penalty.title"],
+    ["paye-other", "letters.paye_other.title"],
     ["ct-late-filing", "letters.ct_late_filing.title"],
+    ["ct-other", "letters.ct_other.title"],
     ["companies-house-late-filing", "letters.companies_house.title"],
+    ["companies-house-other", "letters.companies_house_other.title"],
+    ["compliance-check", "letters.compliance_check.title"],
+    ["hmrc-other", "letters.hmrc_other.title"],
     ["not-recognised", "letters.not_recognised.title"]
   ];
   var DEMO = { readable: true, letter_type: "sa-late-filing-later", issuer: "HMRC", form_code: "SA370", letter_date: "2026-03-17",
@@ -125,7 +135,7 @@
     $("plistWrap").hidden = pl.length < 2;
     $("plist").innerHTML = "";
     pl.forEach(function (p) { var li = document.createElement("li"); li.textContent = p.description + (p.amount != null ? " – £" + p.amount : ""); $("plist").appendChild(li); });
-    $("companyRow").hidden = !details.company_name && ["ct-late-filing", "companies-house-late-filing"].indexOf(sel.value) < 0;
+    $("companyRow").hidden = !details.company_name && ["ct-late-filing", "ct-other", "companies-house-late-filing", "companies-house-other", "vat-late-submission", "vat-late-payment", "vat-other", "paye-employer-penalty"].indexOf(sel.value) < 0;
     var notes = [];
     if (details.readable === false) notes.push(t("check.unreadable"));
     if (sel.value === "not-recognised") notes.push(t("check.not_recognised_note"));

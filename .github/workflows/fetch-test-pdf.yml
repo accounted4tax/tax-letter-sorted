@@ -1,19 +1,26 @@
 name: Fetch test PDF
 # Manual: downloads a TEST appeal PDF (fictional data only) from a short-lived signed link
-# so Claude can check the layout. Never use with a real client's case.
+# and pushes it to the throwaway "test-output" branch so Claude can check the layout.
+# Never use with a real client's case.
 on:
   workflow_dispatch:
     inputs:
       url:
         description: "Signed URL of a TEST appeal PDF"
         required: true
+permissions:
+  contents: write
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - run: curl -sSfL -o test-appeal.pdf "${{ inputs.url }}" && file test-appeal.pdf
-      - uses: actions/upload-artifact@v4
-        with:
-          name: test-appeal
-          path: test-appeal.pdf
-          retention-days: 1
+      - run: |
+          mkdir out && cd out
+          curl -sSfL -o test-appeal.pdf "${{ inputs.url }}"
+          file test-appeal.pdf
+          git init -q -b test-output
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add test-appeal.pdf
+          git commit -qm "Test appeal PDF (fictional data)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" test-output

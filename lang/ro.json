@@ -41,7 +41,6 @@
       "letters.paye_other.title",
       "letters.sa_late_filing_later.title",
       "letters.sa_notice_to_file.title",
-      "letters.sa_other.title",
       "letters.simple_assessment.title",
       "letters.vat_late_payment.title",
       "letters.vat_late_submission.title",
@@ -239,7 +238,7 @@
       "title": "Altceva / nu sunt sigur"
     },
     "sa_other": {
-      "title": "Altă scrisoare Self Assessment"
+      "title": "Alt tip de scrisoare privind Self Assessment"
     },
     "vat_late_submission": {
       "title": "Amendă sau puncte de penalizare pentru depunerea întârziată a declarației de TVA (VAT)"

@@ -20,3 +20,6 @@ Edge functions now: upload-letter (v2), cleanup-expired (v2), read-letter (v1 �
 
 Edge functions (31 Oct 2026): appeal v3, payments v1, cleanup-expired v6, case-flow v1, read-letter v4, upload-letter v2.
 Secrets set by Eduard in the dashboard: ANTHROPIC_API_KEY, STRIPE_SECRET_KEY (sandbox), BREVO_API_KEY (send-only).
+- 010_id_documents – applied 31 Oct 2026 (ID document kinds, doc_type, id_requested_at, id_reminders_sent, id_completed_at, authority_to_act_at)
+- 011_id_reminders_schedule – pg_cron 'id-reminders-10min' calls id-reminders every 10 minutes
+Edge functions added 31 Oct 2026: id-docs v1, id-reminders v1; read-letter v7 (address_on_letter).

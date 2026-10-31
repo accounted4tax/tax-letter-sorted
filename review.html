@@ -140,7 +140,7 @@
 
   function build() {
     if (started) return; started = true;
-    if (product === "option3") { $("loading").hidden = true; $("o3").hidden = false; return; }
+    if (product === "option3") { location.href = "id.html"; return; }   // Option 3: identity check next
     F.callFn("appeal", { action: "build" }).then(function (res) {
       if (res.status === 404) { location.href = "upload.html"; return; }
       if (res.j.error === "no_details") { location.href = "details.html"; return; }

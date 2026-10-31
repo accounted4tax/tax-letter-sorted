@@ -1,0 +1,40 @@
+{
+  "id": "id-documents",
+  "version": "0.1",
+  "status": "draft 31 Oct 2026 – from Eduard's instructions and the GOV.UK proof of identity checklist",
+  "source": "https://www.gov.uk/government/publications/proof-of-identity-checklist/proof-of-identity-checklist#proof-of-identity-checklist-for-individuals",
+  "applies_to": "Option 3 (accountant review) – customer due diligence",
+  "parts_individual": ["photo_id", "selfie", "proof_address"],
+  "parts_company": ["photo_id", "selfie", "proof_address", "incorporation"],
+  "company_types": ["ct-late-filing", "companies-house-late-filing"],
+  "rule_one_document_one_use": "You cannot use one form of identification for both name and address (GOV.UK). Documents with the same 'same_as' value cannot be used for both photo ID and proof of address. The same file cannot be uploaded twice.",
+  "photo_id": [
+    { "id": "passport", "label_key": "idd.passport", "same_as": null },
+    { "id": "driving_licence", "label_key": "idd.driving_licence_photo", "same_as": "driving_licence" },
+    { "id": "eea_id_card", "label_key": "idd.eea_id_card", "same_as": "eea_id_card" },
+    { "id": "national_id_card", "label_key": "idd.national_id_card", "same_as": "eea_id_card" },
+    { "id": "cis4_card", "label_key": "idd.cis4_card", "same_as": null },
+    { "id": "firearms_certificate", "label_key": "idd.firearms_certificate", "same_as": null },
+    { "id": "residence_permit", "label_key": "idd.residence_permit", "same_as": null }
+  ],
+  "photo_id_excluded_note": "Birth certificate, old-style paper driving licence and benefit letters are on GOV.UK's name list but have no photo, so they are not offered as photo ID (Eduard asked for photo ID).",
+  "proof_address": [
+    { "id": "utility_bill", "label_key": "idd.utility_bill", "same_as": null },
+    { "id": "council_tax", "label_key": "idd.council_tax", "same_as": null },
+    { "id": "bank_statement", "label_key": "idd.bank_statement", "same_as": null },
+    { "id": "mortgage_statement", "label_key": "idd.mortgage_statement", "same_as": null },
+    { "id": "solicitor_letter", "label_key": "idd.solicitor_letter", "same_as": null },
+    { "id": "tenancy", "label_key": "idd.tenancy", "same_as": null },
+    { "id": "hmrc_letter", "label_key": "idd.hmrc_letter", "same_as": null },
+    { "id": "benefit_letter", "label_key": "idd.benefit_letter", "same_as": null },
+    { "id": "electoral_register", "label_key": "idd.electoral_register", "same_as": null },
+    { "id": "nhs_gp_letter", "label_key": "idd.nhs_gp_letter", "same_as": null },
+    { "id": "driving_licence_address", "label_key": "idd.driving_licence_address", "same_as": "driving_licence" },
+    { "id": "eea_id_card_address", "label_key": "idd.eea_id_card_address", "same_as": "eea_id_card" }
+  ],
+  "not_accepted_address": ["provisional driving licence", "mobile phone bills", "credit card statements"],
+  "incorporation": [
+    { "id": "certificate_of_incorporation", "label_key": "idd.certificate_of_incorporation", "same_as": null }
+  ],
+  "reminders_hours": [1, 6, 12, 24, 48]
+}

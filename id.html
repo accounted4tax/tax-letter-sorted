@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Identity check – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Arriving from the emailed link: keep the private case link for this tab, then hide it from the address bar.
+  (function () {
+    var p = new URLSearchParams(location.search), c = p.get("case");
+    if (c && /^[0-9a-f]{40,80}$/.test(c)) { try { sessionStorage.setItem("tls_case", c); } catch (e) {} }
+  })();
+</script>
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+<style>
+  .part h2{font-size:17px}
+  .got{display:flex;align-items:center;gap:8px;color:#174F27;font-weight:600;font-size:15px}
+  .got::before{content:"✓";display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:12px;background:#E6F4EA}
+  .linkbtn{background:none;border:0;color:var(--teal);font:600 16px var(--sans);text-decoration:underline;min-height:44px;cursor:pointer}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+  </section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <section id="form" class="stack" hidden>
+    <div class="success" id="paidNote" hidden data-i18n="paid.thanks"></div>
+    <h1 data-i18n="id.title">Your case is with our accountant</h1>
+    <p class="lead" id="intro"></p>
+    <div id="parts" class="stack"></div>
+    <label class="check" id="authWrap">
+      <input type="checkbox" id="authority">
+      <span data-i18n="id.authority"></span>
+    </label>
+    <button class="btn" type="button" id="submit" data-i18n="id.submit">Send my documents</button>
+    <button class="linkbtn" type="button" id="later" data-i18n="id.later">I will upload later</button>
+    <p class="success" id="laterMsg" role="status" hidden></p>
+    <p class="note" data-i18n="id.privacy"></p>
+  </section>
+
+  <section id="done" class="stack" hidden>
+    <div class="success" role="status"><b data-i18n="id.done_title">Thank you, we have everything</b>
+      <p data-i18n="id.done_text" style="margin-top:6px"></p></div>
+    <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var cfg = window.TLS_CONFIG;
+  var cat = null, st = null, chosen = {}, busy = {}, partErr = {}, errKey = null;
+  function showErr(k) { errKey = k; $("error").textContent = k ? t(k) : ""; $("error").hidden = !k; }
+  if (new URLSearchParams(location.search).get("case")) history.replaceState(null, "", "id.html");
+
+  function api(payload) { return F.callFn("id-docs", payload); }
+  function sameGroup(part, id) { var e = (cat[part] || []).filter(function (x) { return x.id === id; })[0]; return e && e.same_as; }
+
+  // Photos are shrunk to 2000px JPEG (readable, quick to upload). PDFs are sent as they are.
+  function prepare(file) {
+    if (!/^image\//.test(file.type) || /heic|heif/i.test(file.type)) return Promise.resolve(file);
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var s = Math.min(1, 2000 / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+        var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (b) { resolve(b ? new File([b], "photo.jpg", { type: "image/jpeg" }) : file); }, "image/jpeg", 0.88);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+
+  function upload(part, file) {
+    if (part !== "selfie" && !chosen[part]) { partErr[part] = "id.err_type"; render(); return; }
+    if (file.size > 10 * 1024 * 1024 && !/^image\//.test(file.type)) { partErr[part] = "id.err_file"; render(); return; }
+    busy[part] = true; partErr[part] = null; render();
+    prepare(file).then(function (f) {
+      var fd = new FormData();
+      fd.append("case", F.get("tls_case")); fd.append("preview", window.TLS_VISIT.preview || "");
+      fd.append("part", part); fd.append("doc_type", part === "selfie" ? "selfie" : chosen[part]); fd.append("file", f);
+      return fetch(cfg.functionsUrl + "/id-docs", { method: "POST", body: fd })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); });
+    }).then(function (res) {
+      busy[part] = false;
+      if (res.ok) { st = res.j; }
+      else partErr[part] = res.j.error === "same_document" ? "id.same_document" : res.j.error === "same_file" ? "id.same_file"
+        : res.j.error === "file" ? "id.err_file" : res.j.error === "doc_type" ? "id.err_type" : "id.err_server";
+      render();
+    }).catch(function () { busy[part] = false; partErr[part] = "id.err_server"; render(); });
+  }
+
+  function partCard(part) {
+    var info = st.parts[part], got = info.received;
+    var kids = [el("h2", { text: t("id.part." + part) }), el("p", { class: "hint", text: t("id.hint." + part) })];
+    if (part !== "selfie") {
+      var sel = el("select", { onchange: function (e) { chosen[part] = e.target.value; partErr[part] = null; render(); } });
+      sel.appendChild(el("option", { value: "", text: t("q.choose_one") }));
+      var other = part === "photo_id" ? "proof_address" : part === "proof_address" ? "photo_id" : null;
+      var otherGroup = other && st.parts[other] && st.parts[other].doc_type ? sameGroup(other, st.parts[other].doc_type) : null;
+      (cat[part] || []).forEach(function (d) {
+        var blocked = otherGroup && d.same_as === otherGroup;   // e.g. driving licence already used for the other part
+        sel.appendChild(el("option", { value: d.id, text: t(d.label_key), disabled: !!blocked }));
+      });
+      sel.value = chosen[part] || info.doc_type || "";
+      kids.push(el("label", { class: "field" }, [el("span", { text: t("id.which_document") }), sel]));
+    }
+    if (got && !busy[part]) kids.push(el("p", { class: "got", text: t("id.received") }));
+    if (busy[part]) kids.push(el("p", { class: "note", text: t("id.uploading") }));
+    var mk = function (labelKey, capture, cls) {
+      var input = el("input", { type: "file", accept: part === "selfie" ? "image/*" : "image/*,application/pdf",
+        onchange: function (e) { if (e.target.files[0]) upload(part, e.target.files[0]); e.target.value = ""; } });
+      if (capture) input.setAttribute("capture", capture);
+      return el("label", { class: cls, style: "cursor:pointer" }, [el("span", { text: t(got ? "id.replace" : labelKey) }), input]);
+    };
+    if (!busy[part]) {
+      var row = el("div", { class: "two" });
+      if (got) row.appendChild(mk("id.replace", part === "selfie" ? "user" : null, "pick"));   // one "Replace" button
+      else if (part === "selfie") { row.appendChild(mk("id.take_selfie", "user", "pick")); }
+      else { row.appendChild(mk("id.take_photo", "environment", "pick")); row.appendChild(mk("id.choose_file", null, "pick")); }
+      kids.push(row);
+    }
+    if (partErr[part]) kids.push(el("p", { class: "error", role: "alert", text: t(partErr[part]) }));
+    return el("section", { class: "card part" + (partErr[part] ? " invalid" : "") }, kids);
+  }
+
+  function render() {
+    if (!st || !cat) return;
+    $("loading").hidden = true;
+    if (st.completed) { $("form").hidden = true; $("done").hidden = false; return; }
+    $("intro").textContent = t(st.company ? "id.intro_company" : "id.intro");
+    var box = $("parts"); box.innerHTML = "";
+    Object.keys(st.parts).forEach(function (p) { box.appendChild(partCard(p)); });
+    $("form").hidden = false;
+  }
+
+  $("submit").addEventListener("click", function () {
+    if (!st.all_received || !$("authority").checked) {
+      showErr("id.err_missing");
+      $("authWrap").classList.toggle("invalid", !$("authority").checked); return;
+    }
+    showErr(null); $("submit").disabled = true;
+    api({ action: "complete", authority: true }).then(function (res) {
+      $("submit").disabled = false;
+      if (res.ok) { $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0); }
+      else { $("error").textContent = t("id.err_missing"); $("error").hidden = false; }
+    }).catch(function () { $("submit").disabled = false; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
+  });
+
+  $("later").addEventListener("click", function () {
+    $("later").disabled = true;
+    api({ action: "later" }).then(function (res) {
+      $("later").disabled = false;
+      $("laterMsg").textContent = t(res.ok && res.j.sent ? "id.later_sent" : "id.later_failed"); $("laterMsg").hidden = false;
+    }).catch(function () { $("later").disabled = false; $("laterMsg").textContent = t("id.later_failed"); $("laterMsg").hidden = false; });
+  });
+
+  F.onLanguage(function () {
+    if (!F.get("tls_case")) { $("loading").hidden = true; $("error").textContent = t("id.not_found"); $("error").hidden = false; return; }
+    if (st && cat) { render(); if (errKey) showErr(errKey); return; }
+    Promise.all([
+      fetch("rules/id-documents.json").then(function (r) { return r.json(); }),
+      api({ action: "status" })
+    ]).then(function (r) {
+      cat = r[0];
+      if (!r[1].ok) { $("loading").hidden = true; $("error").textContent = t(r[1].status === 404 ? "id.not_found" : "id.err_server"); $("error").hidden = false; return; }
+      st = r[1].j;
+      $("paidNote").hidden = F.get("tls_just_paid") !== "1"; F.set("tls_just_paid", "");
+      render();
+    }).catch(function () { $("loading").hidden = true; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
+  });
+})();
+</script>
+</body>
+</html>

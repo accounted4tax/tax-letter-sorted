@@ -798,5 +798,79 @@
     "not_yet": "We haven't received your payment yet. If you've just paid, wait a moment and check again.",
     "check_again": "Check again",
     "thanks": "Thank you. Your payment is confirmed."
+  },
+  "idd": {
+    "passport": "Current signed passport",
+    "driving_licence_photo": "Current UK or EEA photocard driving licence",
+    "eea_id_card": "EEA member state identity card",
+    "national_id_card": "National identity card with your photo",
+    "cis4_card": "CIS4 photo registration card (construction industry)",
+    "firearms_certificate": "Firearms or shotgun certificate",
+    "residence_permit": "Residence permit issued by the Home Office",
+    "utility_bill": "Utility bill (gas, electricity, satellite TV, landline) from the last 3 months",
+    "council_tax": "Council tax bill for the current year",
+    "bank_statement": "Bank, building society or credit union statement from the last 3 months",
+    "mortgage_statement": "Mortgage statement from a recognised lender for the last full year",
+    "solicitor_letter": "Solicitor's letter from the last 3 months confirming a house purchase, or Land Registry confirmation",
+    "tenancy": "Council or housing association rent card or tenancy agreement for the current year",
+    "hmrc_letter": "HMRC Self Assessment letter or tax demand from the current tax year",
+    "benefit_letter": "Benefits letter or benefit book",
+    "electoral_register": "Electoral register entry",
+    "nhs_gp_letter": "NHS medical card or letter from your GP confirming registration",
+    "driving_licence_address": "Current full UK driving licence (only if not used as your photo ID)",
+    "eea_id_card_address": "EEA identity card showing your address (only if not used as your photo ID)",
+    "certificate_of_incorporation": "Certificate of incorporation"
+  },
+  "id": {
+    "title": "Your case is with our accountant",
+    "intro": "Before we can act for you, the law requires us to check your identity. Please upload the documents below.",
+    "intro_company": "Before we can act for the company, the law requires us to check the director's identity and the company. Please upload the documents below.",
+    "part": {
+      "photo_id": "1. Photo ID",
+      "selfie": "2. A photo of your face (selfie)",
+      "proof_address": "3. Proof of address",
+      "incorporation": "4. Certificate of incorporation"
+    },
+    "hint": {
+      "photo_id": "A clear photo of the whole document. Make sure every corner is visible.",
+      "selfie": "Face the camera in good light, without glasses or a hat. We compare it with your photo ID.",
+      "proof_address": "Must show your name and current address. Mobile phone bills, credit card statements and provisional driving licences are not accepted.",
+      "incorporation": "The PDF from Companies House is fine."
+    },
+    "which_document": "Which document?",
+    "take_photo": "Take a photo",
+    "choose_file": "Choose a file",
+    "take_selfie": "Take a selfie",
+    "uploading": "Uploading…",
+    "received": "Received",
+    "replace": "Replace",
+    "same_document": "You can't use the same document for photo ID and proof of address. Please choose a different document.",
+    "same_file": "This is the same file you uploaded for another part. Please upload a different document.",
+    "err_type": "Please choose which document this is first.",
+    "err_file": "This file can't be used. Please upload a photo (JPG, PNG) or a PDF up to 10 MB.",
+    "err_server": "Something went wrong. Please try again.",
+    "authority": "I authorise Accounted4Tax Ltd to act for me (or for the company) on this penalty appeal, and I agree to the Option 3 terms.",
+    "terms_link": "Read the terms",
+    "submit": "Send my documents",
+    "err_missing": "Please upload every document and tick the box.",
+    "later": "I will upload later",
+    "later_sent": "We've emailed you a link to upload your documents. We'll remind you if they're still missing.",
+    "later_failed": "We couldn't send the email just now. You can come back to this page using the same link.",
+    "done_title": "Thank you, we have everything",
+    "done_text": "A qualified accountant at Accounted4Tax will check your appeal and send it to you for e-signature within 48 hours.",
+    "privacy": "Your documents are stored securely in the UK and used only for our legal identity checks. We keep them for as long as the law requires.",
+    "not_found": "This link has expired or is not valid. Please contact us."
+  },
+  "email": {
+    "id": {
+      "subject": "Upload your ID to continue your appeal ({ref})",
+      "hello": "Hello {name},",
+      "body": "Thank you for choosing our accountant review. Before we can act for you, the law requires us to check your identity. Please upload your photo ID, a selfie and proof of address using the button below.",
+      "body_company": "Thank you for choosing our accountant review. Before we can act for the company, the law requires us to check the director's identity and the company. Please upload the director's photo ID, a selfie, proof of address and the certificate of incorporation using the button below.",
+      "reminder": "Reminder: we still need your documents before we can start on your appeal.",
+      "button": "Upload my documents",
+      "deadline": "Your appeal deadline is {date}.",
+      "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
+    }
   }
 }

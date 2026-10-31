@@ -29,22 +29,13 @@
       "ct.q_other_directors",
       "ct.q_role",
       "letters.companies_house.title",
-      "letters.companies_house_other.title",
-      "letters.compliance_check.title",
       "letters.ct_late_filing.title",
-      "letters.ct_other.title",
-      "letters.hmrc_other.title",
       "letters.not_recognised.title",
       "letters.nudge.title",
       "letters.p800.title",
-      "letters.paye_employer_penalty.title",
-      "letters.paye_other.title",
       "letters.sa_late_filing_later.title",
       "letters.sa_notice_to_file.title",
       "letters.simple_assessment.title",
-      "letters.vat_late_payment.title",
-      "letters.vat_late_submission.title",
-      "letters.vat_other.title",
       "p800.claim_refund",
       "upload.add_page",
       "upload.consent_needed",
@@ -247,25 +238,25 @@
       "title": "Amendă pentru plata întârziată a TVA (VAT)"
     },
     "vat_other": {
-      "title": "Altă scrisoare privind TVA (VAT)"
+      "title": "Alt tip de scrisoare privind TVA (VAT)"
     },
     "paye_employer_penalty": {
       "title": "Amendă PAYE pentru angajator – depunere sau plată întârziată"
     },
     "paye_other": {
-      "title": "Altă scrisoare PAYE (de ex. notificare de cod fiscal)"
+      "title": "Alt tip de scrisoare privind PAYE (de ex. notificare de cod fiscal)"
     },
     "ct_other": {
-      "title": "Altă scrisoare privind impozitul pe profit (Corporation Tax)"
+      "title": "Alt tip de scrisoare privind impozitul pe profit (Corporation Tax)"
     },
     "companies_house_other": {
-      "title": "Altă scrisoare de la Companies House"
+      "title": "Alt tip de scrisoare de la Companies House"
     },
     "compliance_check": {
       "title": "Verificare fiscală HMRC (compliance check)"
     },
     "hmrc_other": {
-      "title": "Altă scrisoare HMRC"
+      "title": "Alt tip de scrisoare HMRC"
     }
   },
   "q": {

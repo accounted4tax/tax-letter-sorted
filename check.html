@@ -179,7 +179,7 @@
       company_name: $("company_name").value.trim() || null
     };
     var ref = ""; try { ref = sessionStorage.getItem("tls_ref") || ""; } catch (x) {}
-    var finish = function () { $("form").hidden = true; $("done").textContent = t("check.saved", { ref: ref || "TLS-DEMO" }); $("done").hidden = false; };
+    var finish = function () { location.href = "explain.html" + (demo ? "?demo=1" : ""); };
     if (demo) { finish(); return; }
     call({ action: "confirm", details: d }).then(function (res) { if (res.ok) finish(); else showError("check.error"); })
       .catch(function () { showError("check.error"); });

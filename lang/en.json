@@ -144,7 +144,21 @@
     "btn_help_return": "Get help filing my tax return",
     "btn_check_appeal": "Check if I can appeal",
     "btn_how_to_pay": "How to pay the penalty",
-    "auto_note": "Explained automatically from your letter. Check the details against the letter itself. This is general information, not personal tax advice."
+    "auto_note": "Explained automatically from your letter. Check the details against the letter itself. This is general information, not personal tax advice.",
+    "loading": "Writing your explanation… this takes about 20 seconds.",
+    "error": "We couldn't write the explanation. Please try again.",
+    "appeal_by": "Appeal by {date}",
+    "pay_by": "Pay by {date}",
+    "deadline_passed": "This date has passed. You may still be able to act, but do it now.",
+    "key_points": "Key points",
+    "needs_accountant": "We recommend an accountant looks at this letter",
+    "btn_talk_accountant": "Request a free call with an accountant",
+    "btn_file_yourself": "File it yourself on GOV.UK",
+    "btn_dont_need_to_file": "Check if you need to file (GOV.UK)",
+    "btn_p800_claim": "Claim your refund (GOV.UK)",
+    "btn_p800_pay": "How to pay what you owe (GOV.UK)",
+    "demo": "Sample explanation – no letter was read.",
+    "ref": "Your case: {ref}"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -255,7 +269,19 @@
     "other_penalty_letters_same_year": "Have you had other penalty letters for the same tax year?",
     "add_letter": "Add another letter",
     "more_than_one_year": "Are your penalties for more than one tax year?",
-    "had_payment_plan": "Did you have a payment plan with HMRC before this penalty?"
+    "had_payment_plan": "Did you have a payment plan with HMRC before this penalty?",
+    "filed_company": "Has the company filed the return now?",
+    "filed_accounts": "Have the accounts been filed now?",
+    "reason_company": "What stopped the company filing on time?",
+    "continue_not_filed": "I understand HMRC expects my return first. I still want to continue with the appeal.",
+    "paid_as_soon_as_able": "Did you pay as soon as you could once it ended?",
+    "choose_one": "Choose one",
+    "sending": "Checking your answers… this takes about 15 seconds.",
+    "late_appeal_title": "Your 30-day appeal deadline has passed.",
+    "story_hint": "Include what happened, when, and how it stopped you. Only what's true.",
+    "err_required": "Please answer the questions marked in red.",
+    "err_server": "Something went wrong. Please try again.",
+    "no_questions": "There are no appeal questions for this type of letter yet."
   },
   "warn": {
     "return_not_filed": "HMRC usually won't decide your appeal until your return is filed. My appeal may be delayed or refused until then. I understand and want to continue."
@@ -278,7 +304,21 @@
       "stopped_before_year": "Stopped self-employment before that tax year",
       "other": "Other (write your reason)"
     },
-    "something_else": "Something else"
+    "something_else": "Something else",
+    "ch": {
+      "unforeseen_event": "An unforeseen event at a critical time, such as a fire destroying the records just before the deadline",
+      "director_illness_death": "Serious illness or death of a director at a critical time, when no one else could file",
+      "system_failure": "Companies House's online service failed on the day",
+      "dormant": "The company is dormant",
+      "cant_afford": "The company can't afford to pay",
+      "relied_accountant": "We relied on our accountant, or the accountant was ill",
+      "first_accounts": "These were the company's first accounts",
+      "not_familiar": "We didn't know the rules or deadlines",
+      "financial_difficulty": "Financial difficulties, including insolvency",
+      "post": "Post was delayed or lost",
+      "overseas": "Directors were living or travelling abroad",
+      "other_director": "Another director was responsible"
+    }
   },
   "nnf": {
     "hmrc_check_first": "HMRC's own letter says: if you didn't need to send a tax return, tell HMRC using its free online checker. If HMRC agrees, it cancels the penalty. Try this first, before the 30-day appeal deadline.",
@@ -313,7 +353,24 @@
     "o3_b3": "Sent to you for e-signature",
     "o3_b4": "ID check needed, as required by law",
     "o3_cta": "Choose Option 3 · £39",
-    "call_alt": "Not sure? Book a 15-minute call with an accountant · £19"
+    "call_alt": "Not sure? Book a 15-minute call with an accountant · £19",
+    "step": "Your options",
+    "o2_b1_letter": "Appeal letter filled in, in English",
+    "coming_soon": "Payment opens in January 2027. This is a preview.",
+    "late_appeal": "Your 30-day deadline has passed. Your appeal will include your reason for appealing late. HMRC decides whether to accept it.",
+    "explain_only_title": "Contact HMRC about this penalty",
+    "ch_note": "Companies House decides late filing penalty appeals, not HMRC.",
+    "note": {
+      "penalty_may_be_wrong": "From the date you filed, the daily penalty may have been charged by mistake. An accountant should check it before you pay or appeal.",
+      "higher_12m_penalty": "The 12-month penalty is higher than the usual £300. An accountant should look at it with you.",
+      "more_than_one_year": "Penalties for more than one tax year are best handled together by an accountant.",
+      "not_director": "Appeals for a company are usually made by a director or the company secretary.",
+      "ct_high_or_tax_geared": "This penalty is £1,000 or more, or is based on the tax due. An accountant should look at it with you.",
+      "another_director_could_file": "Another director could have filed the return, so HMRC may not accept one director's illness on its own.",
+      "problem_not_at_deadline": "The problem wasn't happening at the deadline, which makes the appeal weaker.",
+      "not_filed_as_soon_as_able": "The return wasn't filed as soon as the problem ended, which makes the appeal weaker."
+    },
+    "reason_other": "the reason you gave"
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -381,7 +438,15 @@
     "dates": "Dates",
     "evidence": "Evidence",
     "declaration": "These facts are true and complete. I understand a false statement to HMRC can lead to further penalties.",
-    "submit": "Confirm and check my appeal"
+    "submit": "Confirm and check my appeal",
+    "loading": "Loading your answers…",
+    "no_answers": "We couldn't find your answers. Please answer the questions again.",
+    "err_declaration": "Please tick the box to confirm.",
+    "label_story": "What happened",
+    "label_why_late": "Why the appeal is late",
+    "label_nnf_other_text": "Why you didn't need to file",
+    "label_something_else_text": "Your reason",
+    "none": "None"
   },
   "details": {
     "title": "Your details",
@@ -635,10 +700,27 @@
   },
   "ct": {
     "q_role": "What is your role in the company?",
-    "q_other_directors": "Is there another director who could have filed the return?"
+    "q_other_directors": "Is there another director who could have filed the return?",
+    "role_opt": {
+      "director": "Director",
+      "secretary": "Company secretary",
+      "other": "Something else"
+    }
   },
   "ch": {
     "pay_online": "Pay the penalty online",
     "ask_instalments": "Ask Companies House to pay in instalments"
+  },
+  "contact": {
+    "callback_title": "Request a free call",
+    "callback_intro": "A qualified accountant at Accounted4Tax will call you, usually within one working day. No obligation.",
+    "best_time": "Best time to call",
+    "sending": "Sending…",
+    "err_missing": "Please enter your name and phone number.",
+    "err_missing_help": "Please enter your name and an email address or phone number.",
+    "err_email": "Please check your email address.",
+    "err_consent": "Please tick the box so we can contact you.",
+    "err_server": "Something went wrong. Please try again, or email {email}.",
+    "privacy_note": "We use your details only to contact you about this request."
   }
 }

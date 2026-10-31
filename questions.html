@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your circumstances – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span><span data-i18n="common.step_of" data-i18n-vars="n=4,total=6">Step 4 of 6</span> · <span data-i18n="q.step">Your circumstances</span></span>
+    <a href="explain.html" id="backLink" data-i18n="common.back">Back</a>
+  </div>
+
+  <div class="stack">
+    <h1 data-i18n="q.title">What happened?</h1>
+    <p class="lead" data-i18n="q.intro">Answer in your own words, in any language. Only tell us what's true.</p>
+  </div>
+
+  <p class="error" id="error" role="alert" hidden></p>
+  <form id="form" class="stack" novalidate></form>
+
+  <section id="sending" class="stack" style="text-align:center;padding:30px 0" hidden>
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" data-i18n="q.sending">Checking your answers…</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var FILING = ["sa-late-filing-100", "sa-late-filing-later"];
+  var APPEAL = FILING.concat(["sa-late-payment", "ct-late-filing", "companies-house-late-filing"]);
+  var EVIDENCE = ["discharge_letter", "doctor_letter", "death_certificate", "repair_receipt", "police_report", "other", "none"];
+
+  if (F.demo && !F.getJSON("tls_explain")) F.setJSON("tls_explain", { letter_type: "sa-late-filing-100", appeal_deadline: "2026-12-20", ref: "TLS-DEMO" });
+  var ctx = F.getJSON("tls_explain");
+  if (!ctx || (!F.get("tls_case") && !F.demo)) { location.href = "upload.html"; return; }
+  if (F.demo) $("backLink").href = "explain.html?demo=1";
+
+  var T = ctx.letter_type;
+  var isFiling = FILING.indexOf(T) > -1, isPay = T === "sa-late-payment", isCT = T === "ct-late-filing", isCH = T === "companies-house-late-filing";
+  var isSA = T.indexOf("sa-") === 0;
+  var lateAppeal = !!ctx.appeal_deadline && F.today() > ctx.appeal_deadline;
+
+  var a = F.getJSON("tls_q_state") || { evidence: [] };
+  var rules = null, reasons = [], notAccepted = [], ready = false, showErrors = false;
+
+  function save() { F.setJSON("tls_q_state", a); }
+
+  // ---------- small builders ----------
+  function q(name, legendKey, kids, extraClass) {
+    var fs = el("fieldset", { class: "q" + (extraClass ? " " + extraClass : ""), id: "q_" + name, "data-q": name }, [el("legend", { text: t(legendKey) })].concat(kids));
+    return fs;
+  }
+  function radio(name, value, label) {
+    return el("label", { class: "opt" }, [
+      el("input", { type: "radio", name: name, value: value, checked: a[name] === value, onchange: function () { a[name] = value; save(); render(); } }),
+      el("span", { text: label })
+    ]);
+  }
+  function yn(name, legendKey) {
+    return q(name, legendKey, [el("div", { class: "yn" }, [radio(name, "yes", t("common.yes")), radio(name, "no", t("common.no"))])]);
+  }
+  function dateInput(name, labelKey) {
+    return el("label", { class: "field", id: "q_" + name, "data-q": name }, [el("span", { text: t(labelKey) }),
+      el("input", { type: "date", max: F.today(), value: a[name] || "", oninput: function (e) { a[name] = e.target.value; save(); } })]);
+  }
+  function textArea(name, labelKey, hintKey) {
+    return el("label", { class: "field", id: "q_" + name, "data-q": name }, [el("span", { text: t(labelKey) }),
+      hintKey ? el("span", { class: "hint", text: t(hintKey) }) : null,
+      el("textarea", { maxlength: "4000", oninput: function (e) { a[name] = e.target.value; save(); } }, a[name] || "")]);
+  }
+  function tick(name, labelKey) {
+    return el("label", { class: "check", id: "q_" + name, "data-q": name }, [
+      el("input", { type: "checkbox", checked: a[name] === "yes", onchange: function (e) { a[name] = e.target.checked ? "yes" : ""; save(); if (name === "continue_not_filed") render(); } }),
+      el("span", { text: t(labelKey) })]);
+  }
+
+  function currentReason() {
+    var r = reasons.filter(function (x) { return x.id === a.reason; })[0];
+    if (r) return { r: r, na: false };
+    var n = notAccepted.filter(function (x) { return x.id === a.reason; })[0];
+    return n ? { r: n, na: true } : null;
+  }
+
+  // ---------- which questions are showing ----------
+  function plan() {
+    var p = {};
+    if (!isPay) p.filed = true;
+    if (a.filed === "yes" && !isPay) p.filed_date = true;
+    var blocked = false;
+    if (isFiling && a.filed === "no") { p.continue_not_filed = true; blocked = a.continue_not_filed !== "yes"; }
+    if (blocked) return p;
+    if (isCT) { p.role = true; p.other_directors = true; }
+    p.reason = true;
+    var cr = currentReason();
+    if (!cr) return p;
+    var r = cr.r;
+    if (!cr.na) {
+      if (r.sub_options) { p.nnf = true; if (a.nnf === "other") p.nnf_other_text = true; }
+      if (r.free_text) p.something_else_text = true;
+      if (r.health_consent) p.health_consent = true;
+      if (r.needs_dates) { p.date_from = true; p.date_to = true; p.at_deadline = true; p.filed_asap = true; p.evidence = true; }
+      if (!r.sub_options && !r.free_text) p.story = true;
+      if (lateAppeal) p.why_late = true;
+      if (isSA) p.more_than_one_year = true;
+    }
+    if (isPay) p.had_payment_plan = true;
+    return p;
+  }
+
+  function missing(p) {
+    var m = [];
+    var need = function (k, ok) { if (p[k] && !ok) m.push(k); };
+    need("filed", a.filed);
+    need("filed_date", a.filed_date);
+    need("continue_not_filed", a.continue_not_filed === "yes");
+    need("role", a.role);
+    need("other_directors", a.other_directors);
+    need("reason", currentReason());
+    need("nnf", a.nnf);
+    need("nnf_other_text", (a.nnf_other_text || "").trim());
+    need("something_else_text", (a.something_else_text || "").trim());
+    need("health_consent", a.health_consent === "yes");
+    need("date_from", a.date_from);
+    need("at_deadline", a.at_deadline);
+    need("filed_asap", a.filed_asap);
+    need("story", (a.story || "").trim().length >= 10);
+    need("why_late", (a.why_late || "").trim());
+    need("more_than_one_year", a.more_than_one_year);
+    need("had_payment_plan", a.had_payment_plan);
+    // a "not filed" client must tick continue before anything else counts
+    if (p.continue_not_filed && a.continue_not_filed !== "yes" && m.indexOf("continue_not_filed") < 0) m.push("continue_not_filed");
+    return m;
+  }
+
+  // ---------- render ----------
+  function render() {
+    if (!ready) return;
+    var focusedName = document.activeElement && document.activeElement.name;
+    var f = $("form"); f.innerHTML = "";
+    if (APPEAL.indexOf(T) < 0) { f.appendChild(el("p", { class: "callout", text: t("q.no_questions") })); return; }
+    var p = plan();
+
+    if (lateAppeal) f.appendChild(el("div", { class: "callout" }, [el("b", { text: t("q.late_appeal_title") }), " ", t("q.why_late_note")]));
+
+    if (p.filed) f.appendChild(yn("filed", isCT ? "q.filed_company" : isCH ? "q.filed_accounts" : "q.filed"));
+    if (p.filed_date) f.appendChild(dateInput("filed_date", "q.filed_date"));
+    if (p.continue_not_filed) {
+      f.appendChild(el("div", { class: "card" }, [
+        el("p", { text: t("q.not_filed_note") }),
+        el("a", { class: "btn", href: "contact.html?kind=help" + (F.demo ? "&demo=1" : ""), text: t("q.file_first") }),
+        el("a", { class: "btn secondary", href: "https://www.gov.uk/log-in-file-self-assessment-tax-return", target: "_blank", rel: "noopener", text: t("q.file_yourself") }),
+        tick("continue_not_filed", "q.continue_not_filed")
+      ]));
+    }
+    if (p.role) f.appendChild(q("role", "ct.q_role", [radio("role", "director", t("ct.role_opt.director")), radio("role", "secretary", t("ct.role_opt.secretary")), radio("role", "other", t("ct.role_opt.other"))]));
+    if (p.other_directors) f.appendChild(yn("other_directors", "ct.q_other_directors"));
+
+    if (p.reason) {
+      var acc = reasons.filter(function (r) { return r.gov_uk_listed || (isCH && r.route === "appeal"); });
+      var other = reasons.filter(function (r) { return acc.indexOf(r) < 0; });
+      var kids = [el("p", { class: "grouptitle", text: t("q.reasons_accepted") })];
+      acc.forEach(function (r) { kids.push(radio("reason", r.id, t(r.label_key))); });
+      kids.push(el("p", { class: "grouptitle", text: t("q.reasons_other") }));
+      notAccepted.forEach(function (r) { kids.push(radio("reason", r.id, t(r.label_key))); });
+      other.forEach(function (r) { kids.push(radio("reason", r.id, t(r.label_key))); });
+      f.appendChild(q("reason", isPay ? "q.reason_paying" : (isCT || isCH) ? "q.reason_company" : "q.reason", kids));
+    }
+    var cr = currentReason();
+    if (p.nnf) f.appendChild(q("nnf", "q.nnf_why", cr.r.sub_options.map(function (s) { return radio("nnf", s.id, t(s.label_key)); })));
+    if (p.nnf_other_text) f.appendChild(textArea("nnf_other_text", "q.something_else_text"));
+    if (p.something_else_text) f.appendChild(textArea("something_else_text", "q.something_else_text"));
+    if (p.health_consent) f.appendChild(el("div", { class: "callout stack" }, [el("b", { text: t("q.health_title") }), tick("health_consent", "q.health_consent")]));
+    if (p.date_from) {
+      f.appendChild(q("dates", "q.problem_from_to", [el("div", { class: "two" }, [dateInput("date_from", "common.from"), dateInput("date_to", "common.to")])]));
+      f.appendChild(yn("at_deadline", "q.problem_at_deadline"));
+      f.appendChild(yn("filed_asap", isPay ? "q.paid_as_soon_as_able" : "q.filed_as_soon_as_able"));
+    }
+    if (p.story) f.appendChild(textArea("story", "q.what_happened", "q.story_hint"));
+    if (p.evidence) {
+      f.appendChild(q("evidence", "q.evidence", EVIDENCE.map(function (k) {
+        return el("label", { class: "opt" }, [
+          el("input", { type: "checkbox", checked: (a.evidence || []).indexOf(k) > -1, onchange: function (e) {
+            var ev = (a.evidence || []).filter(function (x) { return x !== k; });
+            if (e.target.checked) { if (k === "none") ev = []; else ev = ev.filter(function (x) { return x !== "none"; }); ev.push(k); }
+            a.evidence = ev; save(); render();
+          } }),
+          el("span", { text: t("q.evidence_opt." + k) })]);
+      }).concat([el("p", { class: "hint", text: t("q.keep_evidence") })])));
+    }
+    if (p.why_late) f.appendChild(textArea("why_late", "q.why_late", "q.why_late_note"));
+    if (p.more_than_one_year) f.appendChild(yn("more_than_one_year", "q.more_than_one_year"));
+    if (p.had_payment_plan) f.appendChild(yn("had_payment_plan", "q.had_payment_plan"));
+
+    if (!p.continue_not_filed || a.continue_not_filed === "yes") {
+      f.appendChild(el("button", { class: "btn", type: "submit", text: t("common.continue") }));
+    }
+
+    if (showErrors) {
+      if (!missing(p).length) $("error").hidden = true;
+      missing(p).forEach(function (k) { var n = $("q_" + k); if (n) n.classList.add("invalid"); });
+      if (missing(p).indexOf("date_from") > -1) $("q_dates") && $("q_dates").classList.add("invalid");
+    }
+    if (focusedName) { var back = f.querySelector('input[name="' + focusedName + '"]:checked'); if (back) back.focus(); }
+  }
+
+  // ---------- submit ----------
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var p = plan(), m = missing(p);
+    if (m.length) {
+      showErrors = true; render();
+      $("error").textContent = t("q.err_required"); $("error").hidden = false;
+      var first = document.querySelector(".invalid"); if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    $("error").hidden = true;
+    var out = {};
+    Object.keys(p).forEach(function (k) { if (a[k] != null && a[k] !== "") out[k] = a[k]; });
+    if (p.evidence) out.evidence = a.evidence || [];
+    if (out.health_consent !== "yes") delete out.health_consent;
+
+    F.set("tls_outcome", "");
+    if (F.demo) { F.setJSON("tls_answers", demoResult(out)); go(demoResult(out).route); return; }
+
+    $("form").hidden = true; $("sending").hidden = false;
+    F.call({ action: "submit_answers", answers: out }).then(function (res) {
+      if (!res.ok) {
+        $("form").hidden = false; $("sending").hidden = true;
+        if (res.status === 404) { location.href = "upload.html"; return; }
+        $("error").textContent = t("q.err_server"); $("error").hidden = false; return;
+      }
+      F.setJSON("tls_answers", res.j); F.set("tls_outcome", "");
+      go(res.j.route);
+    }).catch(function () {
+      $("form").hidden = false; $("sending").hidden = true;
+      $("error").textContent = t("q.err_server"); $("error").hidden = false;
+    });
+  });
+
+  function go(route) {
+    var needsConfirm = ["appeal", "choice", "hmrc_check_first"].indexOf(route) > -1;
+    location.href = (needsConfirm ? "confirm.html" : "outcome.html") + (F.demo ? "?demo=1" : "");
+  }
+
+  function demoResult(out) {
+    var cr = currentReason();
+    var route = cr.na ? "not_accepted" : (cr.r.route || "appeal");
+    if (out.reason === "never_needed_to_file") route = "hmrc_check_first";
+    var texts = {}; ["story", "why_late", "nnf_other_text", "something_else_text"].forEach(function (k) { if (out[k]) texts[k] = out[k]; });
+    return { route: route, route_note: null, reason: out.reason, reason_label_key: cr.r.label_key, original: texts, english: texts,
+      facts: { filed_date: out.filed_date || null, date_from: out.date_from || null, date_to: out.date_to || null, evidence: out.evidence || [] },
+      late_appeal: lateAppeal, demo: true };
+  }
+
+  // ---------- start ----------
+  F.onLanguage(function () {
+    if (rules || APPEAL.indexOf(T) < 0) { ready = true; render(); return; }
+    F.loadRules(T).then(function (r) {
+      rules = r;
+      var exclude = r.exclude_reasons || [];
+      reasons = (r.reasons_list || r.reasons || []).filter(function (x) { return exclude.indexOf(x.id) < 0; });
+      notAccepted = r.not_accepted_list || r.not_accepted || [];
+      ready = true; render();
+    }).catch(function () { $("error").textContent = t("q.err_server"); $("error").hidden = false; });
+  });
+})();
+</script>
+</body>
+</html>

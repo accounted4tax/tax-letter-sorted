@@ -10,6 +10,82 @@
       "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
       "Names: 'Nume și prenume' (surname first, as in Romania).",
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege)."
+    ],
+    "to_review": [
+      "explain.loading",
+      "explain.error",
+      "explain.appeal_by",
+      "explain.pay_by",
+      "explain.deadline_passed",
+      "explain.key_points",
+      "explain.needs_accountant",
+      "explain.btn_talk_accountant",
+      "explain.btn_file_yourself",
+      "explain.btn_dont_need_to_file",
+      "explain.btn_p800_claim",
+      "explain.btn_p800_pay",
+      "explain.demo",
+      "explain.ref",
+      "q.filed_company",
+      "q.filed_accounts",
+      "q.reason_company",
+      "q.continue_not_filed",
+      "q.paid_as_soon_as_able",
+      "q.choose_one",
+      "q.sending",
+      "q.late_appeal_title",
+      "q.story_hint",
+      "q.err_required",
+      "q.err_server",
+      "q.no_questions",
+      "ct.role_opt.director",
+      "ct.role_opt.secretary",
+      "ct.role_opt.other",
+      "reason.ch.unforeseen_event",
+      "reason.ch.director_illness_death",
+      "reason.ch.system_failure",
+      "reason.ch.dormant",
+      "reason.ch.cant_afford",
+      "reason.ch.relied_accountant",
+      "reason.ch.first_accounts",
+      "reason.ch.not_familiar",
+      "reason.ch.financial_difficulty",
+      "reason.ch.post",
+      "reason.ch.overseas",
+      "reason.ch.other_director",
+      "confirm.loading",
+      "confirm.no_answers",
+      "confirm.err_declaration",
+      "confirm.label_story",
+      "confirm.label_why_late",
+      "confirm.label_nnf_other_text",
+      "confirm.label_something_else_text",
+      "confirm.none",
+      "outcome.step",
+      "outcome.o2_b1_letter",
+      "outcome.coming_soon",
+      "outcome.late_appeal",
+      "outcome.explain_only_title",
+      "outcome.ch_note",
+      "outcome.note.penalty_may_be_wrong",
+      "outcome.note.higher_12m_penalty",
+      "outcome.note.more_than_one_year",
+      "outcome.note.not_director",
+      "outcome.note.ct_high_or_tax_geared",
+      "outcome.note.another_director_could_file",
+      "outcome.note.problem_not_at_deadline",
+      "outcome.note.not_filed_as_soon_as_able",
+      "outcome.reason_other",
+      "contact.callback_title",
+      "contact.callback_intro",
+      "contact.best_time",
+      "contact.sending",
+      "contact.err_missing",
+      "contact.err_missing_help",
+      "contact.err_email",
+      "contact.err_consent",
+      "contact.err_server",
+      "contact.privacy_note"
     ]
   },
   "common": {
@@ -149,7 +225,21 @@
     "btn_help_return": "Ajutor la depunerea declarației fiscale",
     "btn_check_appeal": "Verifică dacă pot contesta",
     "btn_how_to_pay": "Cum plătesc amenda",
-    "auto_note": "Explicație generată automat din scrisoarea dvs. Verificați detaliile cu scrisoarea originală. Aceasta este o informare generală, nu consultanță fiscală personală."
+    "auto_note": "Explicație generată automat din scrisoarea dvs. Verificați detaliile cu scrisoarea originală. Aceasta este o informare generală, nu consultanță fiscală personală.",
+    "loading": "Pregătim explicația… durează aproximativ 20 de secunde.",
+    "error": "Nu am putut pregăti explicația. Vă rugăm să încercați din nou.",
+    "appeal_by": "Contestați până la {date}",
+    "pay_by": "Plătiți până la {date}",
+    "deadline_passed": "Această dată a trecut. Este posibil să mai puteți face ceva, dar acționați acum.",
+    "key_points": "Pe scurt",
+    "needs_accountant": "Vă recomandăm ca un contabil să analizeze această scrisoare",
+    "btn_talk_accountant": "Solicită un apel gratuit de la un contabil",
+    "btn_file_yourself": "Depune-o singur pe GOV.UK",
+    "btn_dont_need_to_file": "Verifică dacă trebuie să depui declarația (GOV.UK)",
+    "btn_p800_claim": "Solicită rambursarea (GOV.UK)",
+    "btn_p800_pay": "Cum plătesc suma datorată (GOV.UK)",
+    "demo": "Explicație de probă – nu a fost citită nicio scrisoare.",
+    "ref": "Dosarul dvs.: {ref}"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -260,7 +350,19 @@
     "other_penalty_letters_same_year": "Ați mai primit alte scrisori cu amenzi pentru același an fiscal?",
     "add_letter": "Adăugați altă scrisoare",
     "more_than_one_year": "Amenzile dvs. sunt pentru mai mulți ani fiscali?",
-    "had_payment_plan": "Ați avut un plan de plată cu HMRC înainte de această amendă?"
+    "had_payment_plan": "Ați avut un plan de plată cu HMRC înainte de această amendă?",
+    "filed_company": "Firma a depus declarația între timp?",
+    "filed_accounts": "Situațiile financiare (accounts) au fost depuse între timp?",
+    "reason_company": "Ce a împiedicat firma să depună la timp?",
+    "continue_not_filed": "Înțeleg că HMRC așteaptă mai întâi declarația. Vreau totuși să continui cu contestația.",
+    "paid_as_soon_as_able": "Ați plătit imediat ce ați putut, după ce s-a terminat?",
+    "choose_one": "Alegeți o variantă",
+    "sending": "Verificăm răspunsurile… durează aproximativ 15 secunde.",
+    "late_appeal_title": "Termenul de 30 de zile pentru contestație a trecut.",
+    "story_hint": "Spuneți ce s-a întâmplat, când și cum v-a împiedicat. Doar ce este adevărat.",
+    "err_required": "Vă rugăm să răspundeți la întrebările marcate cu roșu.",
+    "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
+    "no_questions": "Încă nu avem întrebări pentru contestarea acestui tip de scrisoare."
   },
   "warn": {
     "return_not_filed": "De obicei, HMRC nu decide asupra contestației până nu este depusă declarația. Contestația mea poate fi amânată sau respinsă până atunci. Înțeleg și vreau să continui."
@@ -283,7 +385,21 @@
       "stopped_before_year": "Am încetat activitatea independentă înainte de acel an fiscal",
       "other": "Altceva (scrieți motivul)"
     },
-    "something_else": "Altceva"
+    "something_else": "Altceva",
+    "ch": {
+      "unforeseen_event": "Un eveniment neprevăzut într-un moment critic, de exemplu un incendiu care a distrus documentele chiar înainte de termen",
+      "director_illness_death": "Boala gravă sau decesul unui director într-un moment critic, când nimeni altcineva nu putea depune",
+      "system_failure": "Serviciul online al Companies House nu a funcționat în acea zi",
+      "dormant": "Firma este inactivă (dormant)",
+      "cant_afford": "Firma nu își permite să plătească",
+      "relied_accountant": "Ne-am bazat pe contabil sau contabilul a fost bolnav",
+      "first_accounts": "Acestea au fost primele situații financiare ale firmei",
+      "not_familiar": "Nu cunoșteam regulile sau termenele",
+      "financial_difficulty": "Dificultăți financiare, inclusiv insolvență",
+      "post": "Corespondența a întârziat sau s-a pierdut",
+      "overseas": "Directorii locuiau sau călătoreau în străinătate",
+      "other_director": "Un alt director era responsabil"
+    }
   },
   "nnf": {
     "hmrc_check_first": "Scrisoarea de la HMRC spune: dacă nu trebuia să trimiteți o declarație, anunțați HMRC prin instrumentul online gratuit de verificare. Dacă HMRC este de acord, se va anula amenda. Încercați mai întâi această variantă, înainte de termenul de 30 de zile pentru contestație.",
@@ -318,7 +434,24 @@
     "o3_b3": "Vă este trimisă pentru semnătură electronică",
     "o3_b4": "Este necesară verificarea identității, conform legii",
     "o3_cta": "Alege Opțiunea 3 · 39 £",
-    "call_alt": "Nu sunteți sigur? Programați o discuție de 15 minute cu un contabil · 19 £"
+    "call_alt": "Nu sunteți sigur? Programați o discuție de 15 minute cu un contabil · 19 £",
+    "step": "Opțiunile dvs.",
+    "o2_b1_letter": "Scrisoarea de contestație completată în engleză",
+    "coming_soon": "Plata se deschide în ianuarie 2027. Aceasta este o previzualizare.",
+    "late_appeal": "Termenul de 30 de zile a trecut. Contestația va include motivul întârzierii. HMRC decide dacă o acceptă.",
+    "explain_only_title": "Contactați HMRC în legătură cu această amendă",
+    "ch_note": "Contestațiile pentru amenzile de depunere întârziată sunt decise de Companies House, nu de HMRC.",
+    "note": {
+      "penalty_may_be_wrong": "Față de data la care ați depus declarația, este posibil ca amenda zilnică să fi fost aplicată din greșeală. Un contabil ar trebui să o verifice înainte să plătiți sau să contestați.",
+      "higher_12m_penalty": "Amenda de 12 luni este mai mare decât suma obișnuită de 300 £. Un contabil ar trebui să o analizeze împreună cu dvs.",
+      "more_than_one_year": "Amenzile pentru mai mulți ani fiscali este bine să fie tratate împreună de un contabil.",
+      "not_director": "Contestațiile pentru o firmă sunt făcute de obicei de un director sau de secretarul firmei.",
+      "ct_high_or_tax_geared": "Această amendă este de 1.000 £ sau mai mult, ori este calculată în funcție de impozitul datorat. Un contabil ar trebui să o analizeze împreună cu dvs.",
+      "another_director_could_file": "Un alt director ar fi putut depune declarația, așa că este posibil ca HMRC să nu accepte doar boala unui singur director.",
+      "problem_not_at_deadline": "Problema nu exista la momentul termenului, ceea ce face contestația mai slabă.",
+      "not_filed_as_soon_as_able": "Declarația nu a fost depusă imediat după ce problema s-a terminat, ceea ce face contestația mai slabă."
+    },
+    "reason_other": "motivul indicat de dvs."
   },
   "ne": {
     "title": "O contestație are puține șanse de reușită",
@@ -386,7 +519,15 @@
     "dates": "Perioada",
     "evidence": "Dovezi",
     "declaration": "Aceste fapte sunt adevărate și complete. Înțeleg că o declarație falsă către HMRC poate duce la alte amenzi.",
-    "submit": "Confirm și verific contestația"
+    "submit": "Confirm și verific contestația",
+    "loading": "Încărcăm răspunsurile…",
+    "no_answers": "Nu am găsit răspunsurile dvs. Vă rugăm să răspundeți din nou la întrebări.",
+    "err_declaration": "Bifați căsuța pentru a confirma.",
+    "label_story": "Ce s-a întâmplat",
+    "label_why_late": "De ce contestația este depusă cu întârziere",
+    "label_nnf_other_text": "De ce nu trebuia să depuneți declarația",
+    "label_something_else_text": "Motivul dvs.",
+    "none": "Niciuna"
   },
   "details": {
     "title": "Datele dvs.",
@@ -640,10 +781,27 @@
   },
   "ct": {
     "q_role": "Ce funcție aveți în firmă?",
-    "q_other_directors": "Mai există un alt director care ar fi putut depune declarația?"
+    "q_other_directors": "Mai există un alt director care ar fi putut depune declarația?",
+    "role_opt": {
+      "director": "Director (administrator)",
+      "secretary": "Secretar al firmei (company secretary)",
+      "other": "Altceva"
+    }
   },
   "ch": {
     "pay_online": "Plătește amenda online",
     "ask_instalments": "Solicită plata în rate la Companies House"
+  },
+  "contact": {
+    "callback_title": "Solicitați un apel gratuit",
+    "callback_intro": "Un contabil calificat de la Accounted4Tax vă va suna, de obicei într-o zi lucrătoare. Fără nicio obligație.",
+    "best_time": "Cel mai bun moment pentru a vă suna",
+    "sending": "Se trimite…",
+    "err_missing": "Vă rugăm să introduceți numele și numărul de telefon.",
+    "err_missing_help": "Vă rugăm să introduceți numele și o adresă de email sau un număr de telefon.",
+    "err_email": "Vă rugăm să verificați adresa de email.",
+    "err_consent": "Bifați căsuța ca să vă putem contacta.",
+    "err_server": "A apărut o eroare. Încercați din nou sau scrieți-ne la {email}.",
+    "privacy_note": "Folosim datele dvs. doar pentru a vă contacta în legătură cu această solicitare."
   }
 }

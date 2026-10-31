@@ -143,5 +143,8 @@
       "url": "https://www.gov.uk/government/publications/corporation-tax-penalty-determinations-ct211-notes/corporation-tax-penalty-determinations-ct211-notes",
       "checked": "listed, not read"
     }
+  ],
+  "exclude_reasons": [
+    "never_needed_to_file"
   ]
 }

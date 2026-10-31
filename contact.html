@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Contact an accountant – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span id="stepName"></span>
+    <a href="javascript:history.back()" data-i18n="common.back">Back</a>
+  </div>
+
+  <form id="form" class="stack" novalidate>
+    <h1 id="title"></h1>
+    <p class="lead" id="intro"></p>
+    <div class="card">
+      <label class="field"><span data-i18n="common.full_name">Full name</span>
+        <input id="full_name" autocomplete="name" maxlength="120"></label>
+      <label class="field"><span data-i18n="common.mobile">Mobile number</span>
+        <input id="phone" type="tel" autocomplete="tel" maxlength="40"></label>
+      <label class="field"><span><span data-i18n="common.email">Email</span> <span class="hint" id="emailOpt" data-i18n="common.optional">(optional)</span></span>
+        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
+      <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
+        <select id="tax_year"></select></label>
+      <label class="field"><span><span id="noteLabel"></span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <textarea id="note" maxlength="1000" style="min-height:90px"></textarea></label>
+    </div>
+    <label class="check" id="consentWrap">
+      <input type="checkbox" id="consent">
+      <span id="consentText"></span>
+    </label>
+    <p class="error" id="error" role="alert" hidden></p>
+    <button class="btn" type="submit" id="submit"></button>
+    <p class="note" data-i18n="contact.privacy_note">We use your details only to contact you about this request.</p>
+    <p class="note" id="retention" hidden></p>
+  </form>
+
+  <section id="sent" class="stack" hidden>
+    <div class="success" role="status"><b id="sentTitle"></b><p id="sentText" style="margin-top:6px"></p></div>
+    <div class="card" id="waitCard"><b data-i18n="help.wait_title">While you wait</b><p data-i18n="help.wait_text"></p></div>
+    <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var kind = new URLSearchParams(location.search).get("kind") === "help" ? "help" : "callback";
+  var ctx = F.getJSON("tls_explain") || {};
+  var isHelp = kind === "help";
+
+  function taxYears() {
+    var d = new Date(), y = d.getFullYear() - ((d.getMonth() < 3 || (d.getMonth() === 3 && d.getDate() < 6)) ? 1 : 0);
+    var out = []; for (var i = 1; i <= 4; i++) { var s = y - i; out.push(s + "-" + String(s + 1).slice(2)); }
+    return out;
+  }
+
+  function render() {
+    $("stepName").textContent = t(isHelp ? "help.title" : "contact.callback_title");
+    $("title").textContent = t(isHelp ? "help.title" : "contact.callback_title");
+    $("intro").textContent = t(isHelp ? "help.intro" : "contact.callback_intro");
+    $("noteLabel").textContent = t(isHelp ? "help.notes" : "contact.best_time");
+    $("consentText").textContent = t(isHelp ? "help.consent" : "talk.consent");
+    $("submit").textContent = t(isHelp ? "help.submit" : "talk.submit");
+    $("emailOpt").hidden = false;
+    $("yearRow").hidden = !isHelp;
+    if (isHelp) {
+      var sel = $("tax_year"), cur = sel.value || ctx.tax_year || "";
+      sel.innerHTML = "";
+      taxYears().forEach(function (y) { sel.appendChild(el("option", { value: y, text: y })); });
+      sel.appendChild(el("option", { value: "earlier", text: t("help.earlier_years") }));
+      if (cur) sel.value = cur;
+    }
+    var hasCase = !!F.get("tls_case");
+    $("retention").hidden = isHelp || !hasCase || !ctx.appeal_deadline;
+    if (!$("retention").hidden) $("retention").textContent = t("talk.retention", { date: F.fmtDate(ctx.appeal_deadline) });
+    $("sentTitle").textContent = t(isHelp ? "help.sent_title" : "callback.title");
+    $("sentText").textContent = t(isHelp ? "help.sent_text" : "callback.text");
+  }
+
+  function err(key) { $("error").textContent = t(key); $("error").hidden = false; }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("full_name").value.trim(), phone = $("phone").value.trim(), email = $("email").value.trim();
+    if (!name || (isHelp ? !(phone || email) : !phone)) return err(isHelp ? "contact.err_missing_help" : "contact.err_missing");
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return err("contact.err_email");
+    if (!$("consent").checked) { $("consentWrap").classList.add("invalid"); return err("contact.err_consent"); }
+    $("error").hidden = true;
+    var done = function () { $("form").hidden = true; $("sent").hidden = false; window.scrollTo(0, 0); };
+    if (F.demo) { done(); return; }
+    $("submit").disabled = true; $("submit").textContent = t("contact.sending");
+    var body = { action: "contact", kind: kind, full_name: name, phone: phone, email: email, consent: true, note: $("note").value.trim() };
+    if (isHelp) body.tax_year = $("tax_year").value;
+    if (!F.get("tls_case")) body.case = null;
+    F.call(body).then(function (res) {
+      if (res.status === 404 && body.case !== null) { body.case = null; return F.call(body); }   // case already deleted
+      return res;
+    }).then(function (res) {
+      $("submit").disabled = false; render();
+      if (res.ok) done(); else err(res.j.error === "email" ? "contact.err_email" : "contact.err_server");
+    }).catch(function () { $("submit").disabled = false; render(); err("contact.err_server"); });
+  });
+
+  F.onLanguage(render);
+})();
+</script>
+</body>
+</html>

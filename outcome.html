@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your options – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span><span data-i18n="common.step_of" data-i18n-vars="n=6,total=6">Step 6 of 6</span> · <span data-i18n="outcome.step">Your options</span></span>
+    <a href="questions.html" id="backLink" data-i18n="common.back">Back</a>
+  </div>
+  <div id="out" class="stack"></div>
+  <p class="note" data-translation-note hidden data-i18n="common.english_authoritative">This page is a translation.</p>
+  <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var ans = F.getJSON("tls_answers"), done = F.getJSON("tls_outcome");
+  var ctx = F.getJSON("tls_explain") || {};
+  var state = F.getJSON("tls_q_state") || {};
+  if (!ans && !done) { location.href = "upload.html"; return; }
+  var qs = F.demo ? "?demo=1" : "";
+  $("backLink").href = "questions.html" + qs;
+
+  var res = done || ans;
+  var route = res.route, note = res.route_note || (ans && ans.route_note);
+  var T = ctx.letter_type || res.letter_type || "";
+  var isSA = T.indexOf("sa-") === 0, isCH = T === "companies-house-late-filing", isCT = T === "ct-late-filing", isPay = T === "sa-late-payment";
+  var deadline = ctx.appeal_deadline || res.appeal_deadline;
+  var amount = ctx.penalty_amount || res.penalty_amount;
+  var SA_PHONE = "0300 200 3820";   // rules/sa-late-payment.json payment_help (recheck before launch)
+  var showOffers = route !== "choice";
+
+  function reasonText() { return ans && ans.reason_label_key ? t(ans.reason_label_key) : t("outcome.reason_other"); }
+  function link(cls, href, key, external) {
+    var a = { class: cls, href: href, text: t(key) };
+    if (external) { a.target = "_blank"; a.rel = "noopener"; }
+    return el("a", a);
+  }
+  function deadlineBox(extraKey) {
+    if (!deadline) return null;
+    var left = F.daysUntil(deadline);
+    return el("div", { class: "deadline" + (left < 0 ? " passed" : "") }, [
+      el("b", { text: t("common.deadline", { date: F.fmtDate(deadline) }) }),
+      el("span", { text: left < 0 ? t("explain.deadline_passed") : t("common.days_left", { days: left }) }),
+      extraKey ? el("span", { text: t(extraKey) }) : null
+    ]);
+  }
+  function noteBox() {
+    if (!note) return null;
+    var k = "outcome.note." + note, txt = t(k);
+    return txt === k ? null : el("p", { class: "callout", text: txt });
+  }
+  function offer(featured, titleKey, bullets, ctaKey) {
+    return el("div", { class: "offer" + (featured ? " featured" : "") }, [
+      el("h2", { text: t(titleKey) }),
+      el("ul", {}, bullets.map(function (k) { return el("li", { text: t(k) }); })),
+      el("a", { class: "btn", href: "#", "aria-disabled": "true", tabindex: "-1", text: t(ctaKey) })
+    ]);
+  }
+  function offers() {
+    return el("section", { class: "stack", id: "offers" }, [
+      offer(false, "outcome.o2_title", [isSA ? "outcome.o2_b1" : "outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta"),
+      offer(true, "outcome.o3_title", ["outcome.o3_b1", "outcome.o3_b2", "outcome.o3_b3", "outcome.o3_b4"], "outcome.o3_cta"),
+      el("p", { class: "soon", text: t("outcome.coming_soon") }),
+      isSA ? el("p", { class: "note", text: t("outcome.online_alt") }) : null,
+      link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "outcome.call_alt")
+    ]);
+  }
+  var callBtn = function (key) { return link("btn", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), key || "talk.request_call"); };
+
+  function render() {
+    var o = $("out"); o.innerHTML = "";
+    var add = function (n) { if (n) o.appendChild(n); };
+    var late = ans && ans.late_appeal;
+
+    if (route === "appeal") {
+      add(el("h1", { text: t("outcome.yes_title") }));
+      add(el("p", { class: "lead", text: t("outcome.yes_text", { reason: reasonText() }) }));
+      if (late) add(el("p", { class: "callout", text: t("outcome.late_appeal") }));
+      if (isCH) add(el("p", { class: "callout", text: t("outcome.ch_note") }));
+      add(deadlineBox());
+      add(offers());
+    } else if (route === "choice") {
+      add(el("h1", { text: t("talk.title") }));
+      add(el("p", { class: "lead", text: t("talk.text_choice", { reason: reasonText() }) }));
+      add(noteBox());
+      if (late) add(el("p", { class: "callout", text: t("outcome.late_appeal") }));
+      add(deadlineBox());
+      add(callBtn());
+      if (!showOffers) add(el("button", { class: "btn secondary", type: "button", text: t("talk.appeal_now"), onclick: function () { showOffers = true; render(); } }));
+      else add(offers());
+    } else if (route === "callback") {
+      add(el("h1", { text: t("talk.title") }));
+      add(el("p", { class: "lead", text: t("talk.text_callback") }));
+      add(noteBox());
+      add(deadlineBox("common.deadline_still_applies"));
+      add(callBtn());
+      if (deadline) add(el("p", { class: "note", text: t("talk.retention", { date: F.fmtDate(deadline) }) }));
+    } else if (route === "hmrc_check_first") {
+      add(el("h1", { text: t("reason.never_needed_to_file") }));
+      add(el("p", { class: "lead", text: t("nnf.hmrc_check_first") }));
+      add(deadlineBox());
+      add(link("btn", "https://www.gov.uk/check-if-you-need-tax-return", "nnf.use_hmrc_checker", true));
+      add(el("h2", { text: t("nnf.appeal_instead") }));
+      add(offers());
+    } else if (route === "explain_only") {
+      add(el("h1", { text: t("outcome.explain_only_title") }));
+      add(el("p", { class: "lead", text: t("lp.contact_hmrc_about_plan") }));
+      add(el("div", { class: "card" }, [el("b", { text: t("pay.call_hmrc", { phone: SA_PHONE }) }), el("span", { class: "hint", text: t("pay.hours") })]));
+      add(deadlineBox());
+      add(link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "ne.talk_to_us"));
+    } else { // not_accepted
+      add(el("h1", { text: t("ne.title") }));
+      add(el("p", { class: "lead", text: t("ne.text", { reason: reasonText() }) }));
+      add(el("p", { class: "success", text: t("ne.no_charge") }));
+      add(el("h2", { text: t("ne.what_you_can_do") }));
+      var box = el("div", { class: "btnrow" });
+      if (isCH) {
+        box.appendChild(link("btn", "https://www.gov.uk/government/publications/late-filing-penalties/late-filing-penalties", "ch.pay_online", true));
+        box.appendChild(link("btn secondary", "mailto:enquiries@companieshouse.gov.uk", "ch.ask_instalments"));
+      } else if (isPay) {
+        if (amount && deadline) box.appendChild(el("p", { text: t("ne.pay_by", { amount: F.money(amount), date: F.fmtDate(deadline) }) }));
+        box.appendChild(link("btn", "https://www.gov.uk/pay-self-assessment-tax-bill", "pay.pay_now", true));
+        box.appendChild(link("btn secondary", "https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments", "pay.payment_plan", true));
+        box.appendChild(el("p", { class: "note", text: t("pay.call_hmrc", { phone: SA_PHONE }) + " · " + t("pay.hours") }));
+      } else if (isCT) {
+        box.appendChild(link("btn", "https://www.gov.uk/pay-corporation-tax", "na.option.pay_penalty", true));
+      } else {
+        if (state.filed === "no") {
+          box.appendChild(el("p", { text: t("na.file_to_stop_more_penalties") }));
+          box.appendChild(link("btn", "contact.html?kind=help" + (F.demo ? "&demo=1" : ""), "na.option.file_return"));
+        }
+        box.appendChild(link(state.filed === "no" ? "btn secondary" : "btn", "https://www.gov.uk/pay-self-assessment-tax-bill", "na.option.pay_penalty", true));
+      }
+      add(box);
+      add(el("p", { class: "note", text: t("ne.change_answers_hint") }));
+      add(link("btn secondary", "questions.html" + qs, "ne.change_answers"));
+      add(el("div", { class: "card" }, [el("b", { text: t("ne.not_sure") }), el("p", { text: t("ne.not_sure_text") }), link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "ne.talk_to_us")]));
+    }
+  }
+
+  F.onLanguage(render);
+})();
+</script>
+</body>
+</html>

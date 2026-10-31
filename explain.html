@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your letter explained – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span><span data-i18n="common.step_of" data-i18n-vars="n=3,total=6">Step 3 of 6</span> · <span data-i18n="explain.step">Explanation</span></span>
+    <a href="check.html" data-i18n="common.back">Back</a>
+  </div>
+
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="lead" role="status" data-i18n="explain.loading">Writing your explanation…</p>
+  </section>
+
+  <div id="errorBox" class="stack" hidden>
+    <p class="error" id="error" role="alert"></p>
+    <button class="btn secondary" type="button" id="retry" data-i18n="check.try_again">Try again</button>
+  </div>
+
+  <article id="content" class="stack" hidden>
+    <span class="badge" id="demo" hidden data-i18n="explain.demo">Sample explanation</span>
+    <h1 id="headline"></h1>
+    <div id="deadline" class="deadline" hidden><b id="dlMain"></b><span id="dlLeft"></span><span id="dlNote"></span></div>
+
+    <section class="section">
+      <h2 data-i18n="explain.what_it_means">What this letter means</h2>
+      <p id="what"></p>
+    </section>
+    <section class="section" id="keyWrap">
+      <h2 data-i18n="explain.key_points">Key points</h2>
+      <ul class="list" id="key"></ul>
+    </section>
+    <section class="section" id="nothingWrap">
+      <h2 data-i18n="explain.if_nothing">If you do nothing</h2>
+      <ul class="list" id="nothing"></ul>
+    </section>
+    <section class="section" id="nextWrap">
+      <h2 data-i18n="explain.next_steps">What to do next</h2>
+      <ul class="list" id="next"></ul>
+    </section>
+
+    <div class="callout" id="accountant" hidden>
+      <b data-i18n="explain.needs_accountant">We recommend an accountant looks at this letter</b>
+      <p id="accReason" style="margin-top:4px"></p>
+    </div>
+
+    <div class="btnrow" id="actions"></div>
+
+    <p class="note" data-i18n="explain.auto_note">Explained automatically from your letter.</p>
+    <p class="note" data-translation-note hidden data-i18n="common.english_authoritative">This page is a translation.</p>
+    <p class="note" id="ref"></p>
+    <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var data = null, loadingFor = null;
+
+  var DEMO = {
+    ref: "TLS-DEMO", letter_type: "sa-late-filing-100", notice_date: "2026-02-17", appeal_deadline: "2026-12-20", extended: false,
+    pay_by_date: null, penalty_amount: 100, tax_year: "2024-25", issuer: "HMRC",
+    actions: [{ id: "check_appeal" }, { id: "help_return" }, { id: "how_to_pay", url: "https://www.gov.uk/pay-self-assessment-tax-bill" }],
+    can_appeal_here: true,
+    explanation: {
+      headline: "Late filing penalty: £100 for the 2024-25 tax return",
+      what_it_means: "HMRC has charged a £100 penalty because your 2024-25 tax return arrived after 31 January 2026. You pay this even if you owe no tax.",
+      key_points: ["The penalty is £100.", "You can appeal within 30 days of the date on the letter if you had a reasonable excuse."],
+      if_you_do_nothing: ["The £100 stays due and interest is added.", "If your return still isn't filed after 3 months, daily penalties of £10 a day start."],
+      next_steps: ["If you haven't filed yet, file your return now.", "If something serious stopped you filing on time, check if you can appeal."],
+      needs_accountant: false, accountant_reason: null
+    }
+  };
+
+  var ACTION_LABEL = {
+    check_appeal: "explain.btn_check_appeal", help_return: "explain.btn_help_return", how_to_pay: "explain.btn_how_to_pay",
+    talk_accountant: "explain.btn_talk_accountant", file_yourself: "explain.btn_file_yourself",
+    dont_need_to_file: "explain.btn_dont_need_to_file", p800_claim: "explain.btn_p800_claim", p800_pay: "explain.btn_p800_pay"
+  };
+  var ACTION_PAGE = { check_appeal: "questions.html", help_return: "contact.html?kind=help", talk_accountant: "contact.html?kind=callback" };
+
+  function list(id, items) {
+    var ul = $(id); ul.innerHTML = "";
+    (items || []).forEach(function (s) { ul.appendChild(el("li", { text: s })); });
+    $(id + "Wrap") && ($(id + "Wrap").hidden = !(items && items.length));
+  }
+
+  function render() {
+    var x = data.explanation || {};
+    $("loading").hidden = true; $("errorBox").hidden = true;
+    $("demo").hidden = !F.demo;
+    $("headline").textContent = x.headline || "";
+    $("what").textContent = x.what_it_means || "";
+    list("key", x.key_points); list("nothing", x.if_you_do_nothing); list("next", x.next_steps);
+    $("keyWrap").hidden = !(x.key_points || []).length;
+    $("nothingWrap").hidden = !(x.if_you_do_nothing || []).length;
+    $("nextWrap").hidden = !(x.next_steps || []).length;
+
+    // Deadline box: the appeal deadline for penalties, otherwise the pay-by date
+    var dl = data.appeal_deadline, isPay = false;
+    if (!dl && data.pay_by_date) { dl = data.pay_by_date; isPay = true; }
+    $("deadline").hidden = !dl;
+    if (dl) {
+      var left = F.daysUntil(dl);
+      $("dlMain").textContent = t(isPay ? "explain.pay_by" : "explain.appeal_by", { date: F.fmtDate(dl) });
+      $("deadline").classList.toggle("passed", left < 0);
+      $("dlLeft").textContent = left < 0 ? t("explain.deadline_passed") : t("common.days_left", { days: left });
+      $("dlNote").textContent = isPay ? "" : data.extended ? t("explain.extended_note", { date: F.fmtDate(dl) }) : t("explain.days_note");
+    }
+
+    $("accountant").hidden = !x.needs_accountant;
+    $("accReason").textContent = x.accountant_reason || "";
+
+    var box = $("actions"); box.innerHTML = "";
+    var acts = (data.actions || []).slice();
+    if (x.needs_accountant && !acts.some(function (a) { return a.id === "talk_accountant"; })) acts.push({ id: "talk_accountant" });
+    acts.forEach(function (a, i) {
+      var label = t(ACTION_LABEL[a.id] || a.id);
+      var attrs = { class: i === 0 ? "btn" : "btn secondary", text: label };
+      if (a.url) { attrs.href = a.url; attrs.target = "_blank"; attrs.rel = "noopener"; }
+      else attrs.href = demoLink(ACTION_PAGE[a.id] || "#");
+      box.appendChild(el("a", attrs));
+    });
+    $("ref").textContent = data.ref ? t("explain.ref", { ref: data.ref }) : "";
+    $("content").hidden = false;
+  }
+
+  function demoLink(h) { return F.demo && h !== "#" ? h + (h.indexOf("?") > -1 ? "&" : "?") + "demo=1" : h; }
+
+  function showError(key) {
+    $("loading").hidden = true; $("content").hidden = true;
+    $("error").textContent = t(key); $("errorBox").hidden = false;
+  }
+
+  function load() {
+    var l = F.lang();
+    if (F.demo) { data = DEMO; F.setJSON("tls_explain", strip(DEMO)); render(); return; }
+    if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+    if (loadingFor === l) return;
+    loadingFor = l;
+    $("content").hidden = true; $("errorBox").hidden = true; $("loading").hidden = false;
+    F.call({ action: "explain" }).then(function (res) {
+      if (loadingFor !== l) return;
+      loadingFor = null;
+      if (res.status === 404) { location.href = "upload.html"; return; }
+      if (!res.ok) { showError(res.j.error === "not_configured" ? "check.not_configured" : "explain.error"); return; }
+      data = res.j; F.setJSON("tls_explain", strip(data)); render();
+    }).catch(function () { loadingFor = null; showError("explain.error"); });
+  }
+  // What later screens need (no explanation text)
+  function strip(d) {
+    return { ref: d.ref, letter_type: d.letter_type, appeal_deadline: d.appeal_deadline, pay_by_date: d.pay_by_date,
+      penalty_amount: d.penalty_amount, tax_year: d.tax_year, notice_date: d.notice_date };
+  }
+
+  $("retry").addEventListener("click", load);
+  F.onLanguage(function () { load(); });
+})();
+</script>
+</body>
+</html>

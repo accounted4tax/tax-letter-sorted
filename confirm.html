@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Confirm your facts – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="stepline">
+    <span><span data-i18n="common.step_of" data-i18n-vars="n=5,total=6">Step 5 of 6</span> · <span data-i18n="confirm.step">Confirm facts</span></span>
+    <a href="questions.html" class="changeLink" data-i18n="common.back">Back</a>
+  </div>
+
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <form id="form" class="stack" novalidate hidden>
+    <h1 data-i18n="confirm.title">Check your facts in English</h1>
+    <p class="lead" data-i18n="confirm.intro">HMRC needs your appeal in English.</p>
+
+    <section class="card">
+      <h2 data-i18n="confirm.key_facts">Your key facts</h2>
+      <dl class="facts" id="facts"></dl>
+    </section>
+
+    <div id="texts" class="stack"></div>
+
+    <a class="btn secondary changeLink" href="questions.html" data-i18n="confirm.change">Change my answers</a>
+
+    <label class="check" id="declWrap">
+      <input type="checkbox" id="declaration">
+      <span data-i18n="confirm.declaration">These facts are true and complete.</span>
+    </label>
+    <button class="btn" type="submit" id="submit" data-i18n="confirm.submit">Confirm and check my appeal</button>
+  </form>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var ans = F.getJSON("tls_answers");
+  var ctx = F.getJSON("tls_explain") || {};
+  if (F.demo) document.querySelectorAll(".changeLink").forEach(function (a) { a.href = "questions.html?demo=1"; });
+
+  function render() {
+    if (!ans) { $("error").textContent = t("confirm.no_answers"); $("error").hidden = false; return; }
+    var fx = ans.facts || {}, dl = $("facts"); dl.innerHTML = "";
+    var add = function (k, v) { if (v) { dl.appendChild(el("dt", { text: t(k) })); dl.appendChild(el("dd", { text: v })); } };
+    add("confirm.reason", ans.reason_label_key ? t(ans.reason_label_key) : "");
+    add("confirm.return_filed", fx.filed_date ? F.fmtDate(fx.filed_date) : "");
+    add("confirm.dates", fx.date_from ? F.fmtDate(fx.date_from) + (fx.date_to ? " – " + F.fmtDate(fx.date_to) : "") : "");
+    if (fx.date_from || (fx.evidence || []).length) {
+      add("confirm.evidence", (fx.evidence || []).length ? fx.evidence.map(function (k) { return t("q.evidence_opt." + k); }).join(", ") : t("confirm.none"));
+    }
+
+    var box = $("texts"); box.innerHTML = "";
+    var orig = ans.original || {}, eng = ans.english || {};
+    Object.keys(eng).forEach(function (k) {
+      var same = F.lang() === "en" || (orig[k] || "").trim() === (eng[k] || "").trim();
+      box.appendChild(el("section", { class: "section" }, [
+        el("h2", { text: t("confirm.label_" + k) }),
+        el("div", { class: "compare" }, same
+          ? [el("div", {}, [el("small", { text: t("confirm.english_for_hmrc") }), eng[k]])]
+          : [el("div", {}, [el("small", { text: t("confirm.you_wrote") }), orig[k] || ""]),
+             el("div", {}, [el("small", { text: t("confirm.english_for_hmrc") }), eng[k]])])
+      ]));
+    });
+    $("form").hidden = false;
+  }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!$("declaration").checked) {
+      $("declWrap").classList.add("invalid");
+      $("error").textContent = t("confirm.err_declaration"); $("error").hidden = false; return;
+    }
+    $("error").hidden = true;
+    if (F.demo || ans.demo) {
+      F.setJSON("tls_outcome", { route: ans.route, route_note: ans.route_note, reason: ans.reason, appeal_deadline: ctx.appeal_deadline, penalty_amount: ctx.penalty_amount, letter_type: ctx.letter_type });
+      location.href = "outcome.html?demo=1"; return;
+    }
+    $("submit").disabled = true;
+    F.call({ action: "confirm_answers", declaration: true }).then(function (res) {
+      $("submit").disabled = false;
+      if (!res.ok) {
+        if (res.status === 404) { location.href = "upload.html"; return; }
+        $("error").textContent = t(res.j.error === "no_answers" ? "confirm.no_answers" : "q.err_server"); $("error").hidden = false; return;
+      }
+      F.setJSON("tls_outcome", res.j);
+      location.href = "outcome.html";
+    }).catch(function () { $("submit").disabled = false; $("error").textContent = t("q.err_server"); $("error").hidden = false; });
+  });
+
+  F.onLanguage(render);
+})();
+</script>
+</body>
+</html>

@@ -11,6 +11,6 @@ Applied to project tax-letter-sorted (pmngappuatunbhodqipn):
 
 Edge functions: upload-letter, cleanup-expired (source in functions/).
 - 005_letter_reading.sql – 30 Oct 2026 (Claude). Temporary letter_text / extracted columns (cleared by the clean-up job).
-- PENDING approval: move pg_net out of the public schema (Supabase security advisor warning).
+- 006_move_pg_net.sql – 31 Oct 2026 (Claude, approved by Eduard). Security advisor warning cleared.
 
 Edge functions now: upload-letter (v2), cleanup-expired (v2), read-letter (v1 – needs the ANTHROPIC_API_KEY secret).

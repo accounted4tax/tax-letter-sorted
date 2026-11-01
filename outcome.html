@@ -96,7 +96,7 @@
     // or the appeal free with the annual accounts + Corporation Tax return (Eduard, 1 Nov 2026).
     if (isCT || isCH) {
       return el("section", { class: "stack", id: "offers" }, [
-        offer(true, "outcome.co_o3_title", ["outcome.co_o3_b1", "outcome.co_o3_b2", "outcome.co_o3_b3", "outcome.co_o3_b4"], "outcome.co_o3_cta", "option3"),
+        offer(true, "outcome.co_o3_title", ["outcome.co_o3_b1", "outcome.co_o3_b2", "outcome.co_o3_b3"], "outcome.co_o3_cta", "option3"),
         el("div", { class: "offer" }, [
           el("h2", { text: t("outcome.co_pkg_title") }),
           el("ul", {}, ["outcome.co_pkg_b1", "outcome.co_pkg_b2", "outcome.co_pkg_b3"].map(function (k) { return el("li", { text: t(k) }); })),

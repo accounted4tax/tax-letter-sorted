@@ -229,7 +229,18 @@
       "email.code.meanwhile",
       "email.code.button",
       "contact.ch_auth_code",
-      "contact.ch_auth_code_hint"
+      "contact.ch_auth_code_hint",
+      "email.appeal.subject",
+      "email.appeal.subject_copy",
+      "email.appeal.hello",
+      "email.appeal.intro",
+      "email.appeal.intro_copy",
+      "email.appeal.post",
+      "email.appeal.online_ch",
+      "email.appeal.deadline",
+      "email.appeal.evidence",
+      "email.appeal.keep",
+      "email.appeal.footer"
     ]
   },
   "common": {
@@ -774,7 +785,7 @@
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
     "approved_title": "Contestația dvs. este gata",
     "download": "Descarcă contestația (PDF)",
-    "email_soon": "Vă vom trimite-o și pe email. (Trimiterea pe email se deschide în ianuarie 2027.)",
+    "email_soon": "V-am trimis-o și pe email, ca să aveți o copie.",
     "next_title": "Ce aveți de făcut acum",
     "post_1": "Tipăriți formularul.",
     "post_2": "Semnați și datați de mână pe pagina 2, cu pix negru sau albastru.",
@@ -1141,6 +1152,19 @@
       "action": "Când primiți scrisoarea, vă rugăm să ne trimiteți codul imediat, folosind butonul de mai jos. Codul este valabil doar o perioadă limitată.",
       "meanwhile": "Între timp pregătim contestația, ca să nu fie depășit termenul.",
       "button": "Trimiteți codul HMRC"
+    },
+    "appeal": {
+      "subject": "Contestația dvs. este gata ({ref})",
+      "subject_copy": "O copie a contestației companiei ({ref})",
+      "hello": "Bună ziua, {name},",
+      "intro": "Contestația dvs. este atașată ca PDF. Vă rugăm să o mai verificați o dată înainte de a o trimite.",
+      "intro_copy": "Atașat găsiți o copie a contestației pe care am pregătit-o pentru companie. Vă rugăm să o păstrați în evidențele companiei. Vă anunțăm când a fost depusă și când primim un răspuns.",
+      "post": "Tipăriți-o, semnați-o și trimiteți-o prin poștă la: {address}. Cereți la Post Office o dovadă de expediere gratuită (certificate of posting).",
+      "online_ch": "Depuneți-o prin serviciul online de contestații al Companies House: {address}",
+      "deadline": "Termenul pentru contestație este {date}.",
+      "evidence": "Dacă aveți dovezi (de exemplu o scrisoare de la spital), trimiteți copii, niciodată originalele.",
+      "keep": "Păstrăm acest PDF 14 zile, apoi îl ștergem. Vă rugăm să salvați o copie.",
+      "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
     }
   },
   "fu": {

@@ -3,13 +3,15 @@
 //   save_details  – stores name, address, phone, company details; chooses Option 2 or 3
 //   build         – fills the SA370 (Self Assessment) or writes the appeal letter (CT, Companies House),
 //                   stores it privately and returns a short-lived link to view it
-//   approve       – the client approves the exact PDF (checked by its SHA-256 fingerprint)
+//   approve       – the client approves the exact PDF (checked by its SHA-256 fingerprint); Option 2: the PDF is emailed to them
+//   admin_build / admin_send – called only by the admin function (x-admin-secret): Eduard's own wording, email to the client
 // Building needs a paid case, or the private preview code while the site is not live.
 import { createClient } from "npm:@supabase/supabase-js@2";
 import * as PDFLib from "npm:pdf-lib@1.17.1";
 import { fillSA370, sa370Row } from "./sa370-fill.js";
 import { buildLetter } from "./letter-fill.js";
 import { composeAppeal } from "./appeal-text.js";
+import { sendAppealEmail } from "./email.ts";
 
 const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
 const APPEAL_ROUTES = ["appeal", "choice", "hmrc_check_first"];
@@ -98,7 +100,8 @@ async function buildPdf(c: Obj) {
   const penalties = ((ext.penalties ?? []) as Obj[]).filter((p) => p && (p.amount != null || p.description));
   const reason = String(ae.reason ?? a.reason ?? "");
 
-  const text = composeAppeal({
+  // Eduard's own wording (admin page) replaces the automatic wording when he has written one
+  const text = c.admin_appeal_text ? String(c.admin_appeal_text) : composeAppeal({
     letter_type: t, reason, tax_year: c.tax_year ?? ext.tax_year, penalty_count: Math.max(1, penalties.length),
     story: eng.story, why_late: eng.why_late, nnf_other_text: eng.nnf_other_text, something_else_text: eng.something_else_text,
     date_from: a.date_from, date_to: a.date_to, filed_date: a.filed_date, filed_asap: a.filed_asap, evidence: a.evidence ?? [],
@@ -155,6 +158,51 @@ async function signedUrl(path: string, seconds = 900) {
   return data?.signedUrl ?? null;
 }
 
+// Builds the PDF, stores it privately (older versions removed, fingerprints kept) and records it
+async function storePdf(c: Obj) {
+  const { bytes, kind, send } = await buildPdf(c);
+  const hash = await sha256(bytes);
+  const path = `${c.id}/appeal-${hash.slice(0, 12)}.pdf`;
+  const up = await db.storage.from("appeals").upload(path, bytes, { contentType: "application/pdf", upsert: true });
+  if (up.error) throw new Error("storage:" + up.error.message);
+  const { data: old } = await db.from("case_files").select("id, storage_path").eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
+  const oldPaths = (old ?? []).map((f) => f.storage_path.replace(/^appeals\//, "")).filter((p) => p !== path);
+  if (oldPaths.length) await db.storage.from("appeals").remove(oldPaths);
+  await db.from("case_files").update({ deleted_at: new Date().toISOString() }).eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
+  await db.from("case_files").insert({ case_id: c.id, kind: "appeal_pdf", storage_path: `appeals/${path}`, sha256: hash });
+  await db.from("cases").update({ pdf_built_at: new Date().toISOString(), approved_at: null }).eq("id", c.id);
+  return { path, hash, kind, send, bytes };
+}
+// Emails the latest PDF to the client. Option 2: the case data is deleted 14 days after sending.
+async function emailLatest(c: Obj, actor: string) {
+  const { data: f } = await db.from("case_files").select("storage_path, sha256").eq("case_id", c.id)
+    .eq("kind", "appeal_pdf").is("deleted_at", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  if (!f) return { ok: false, error: "no_pdf" };
+  const dl = await db.storage.from("appeals").download(f.storage_path.replace(/^appeals\//, ""));
+  if (dl.error || !dl.data) return { ok: false, error: "no_pdf" };
+  const bytes = new Uint8Array(await dl.data.arrayBuffer());
+  const { send } = await sendInfo(c);
+  const copy = COMPANY_TYPES.includes(String(c.letter_type)) && c.product === "option3";
+  const r = await sendAppealEmail(db, c, bytes, String(f.sha256), send, copy);
+  if (r.ok) {
+    const now = new Date();
+    const upd: Obj = { sent_at: now.toISOString(), status: "sent" };
+    if (c.product === "option2") upd.delete_after = new Date(now.getTime() + 14 * 864e5).toISOString();
+    await db.from("cases").update(upd).eq("id", c.id);
+  }
+  await db.from("audit_log").insert({ actor, action: r.ok ? "appeal_emailed" : "appeal_email_failed", case_id: c.id, detail: { sha256: f.sha256, error: r.ok ? null : r.error } });
+  return { ...r, sha256: f.sha256 };
+}
+// Where the appeal goes (without building the PDF again)
+async function sendInfo(c: Obj) {
+  const t = String(c.letter_type);
+  if (SA_TYPES.includes(t)) { const { map } = await sa370Template(); return { send: { how: "post", to: String(map.send_to) } }; }
+  if (t === "companies-house-late-filing") return { send: { how: "online", to: CH_APPEAL_URL } };
+  const r = await rules(t);
+  return { send: { how: "post", to: String(((r?.appeal_output ?? {}) as Obj).post_to ?? "Corporation Tax Services, HM Revenue and Customs, BX9 1AX") } };
+}
+const CASE_COLUMNS = "id, ref, language, status, product, letter_type, outcome_route, facts_confirmed_at, notice_date, appeal_deadline, penalty_amount, tax_year, extracted, utr, details, details_saved_at, approved_at, sent_at, admin_appeal_text, data_deleted_at";
+
 // ---------- entry point ----------
 Deno.serve(async (req) => {
   const { data: settings } = await db.from("app_settings").select("*").eq("id", 1).single();
@@ -170,6 +218,33 @@ Deno.serve(async (req) => {
     new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
   if (req.method !== "POST") return reply(405, { error: "method" });
+
+  // ---- server-to-server: the admin function (Eduard signed in) ----
+  const adminSecret = req.headers.get("x-admin-secret") ?? "";
+  if (adminSecret) {
+    if (!settings?.cron_secret || adminSecret !== settings.cron_secret) return reply(403, { error: "forbidden" });
+    let ab: Obj;
+    try { ab = await req.json(); } catch { return reply(400, { error: "bad_request" }); }
+    const { data: ac } = await db.from("cases").select(CASE_COLUMNS).eq("id", String(ab.case_id ?? "")).maybeSingle();
+    if (!ac || ac.data_deleted_at) return reply(404, { error: "not_found" });
+    if (!ac.details) return reply(400, { error: "no_details" });
+    try {
+      if (ab.action === "admin_build") {
+        const r = await storePdf(ac as Obj);
+        await db.from("audit_log").insert({ actor: "admin:" + String(ab.actor ?? ""), action: "appeal_pdf_built", case_id: ac.id, detail: { kind: r.kind, sha256: r.hash, own_text: !!ac.admin_appeal_text } });
+        return reply(200, { url: await signedUrl(r.path, 1800), sha256: r.hash, kind: r.kind, send: r.send });
+      }
+      if (ab.action === "admin_send") {
+        const r = await emailLatest(ac as Obj, "admin:" + String(ab.actor ?? ""));
+        return reply(r.ok ? 200 : 502, r);
+      }
+      return reply(400, { error: "action" });
+    } catch (e) {
+      await db.from("audit_log").insert({ actor: "system", action: "appeal_error", case_id: ac.id, detail: { action: ab.action, error: String((e as Error).message ?? e).slice(0, 300) } });
+      return reply(502, { error: "server" });
+    }
+  }
+
   if (!okOrigin) return reply(403, { error: "origin" });
 
   let body: Obj;
@@ -182,7 +257,7 @@ Deno.serve(async (req) => {
   const token = String(body.case ?? "");
   if (!/^[0-9a-f]{40,80}$/.test(token)) return reply(400, { error: "bad_request" });
   const { data: c } = await db.from("cases")
-    .select("id, ref, language, status, product, letter_type, outcome_route, facts_confirmed_at, notice_date, appeal_deadline, penalty_amount, tax_year, extracted, utr, details, details_saved_at, approved_at, data_deleted_at")
+    .select(CASE_COLUMNS)
     .eq("private_token", token).single();
   if (!c || c.data_deleted_at) return reply(404, { error: "not_found" });
   const ext = (c.extracted ?? {}) as Obj;
@@ -225,18 +300,7 @@ Deno.serve(async (req) => {
     }
 
     if (body.action === "build") {
-      const { bytes, kind, send } = await buildPdf(c as Obj);
-      const hash = await sha256(bytes);
-      const path = `${c.id}/appeal-${hash.slice(0, 12)}.pdf`;
-      const up = await db.storage.from("appeals").upload(path, bytes, { contentType: "application/pdf", upsert: true });
-      if (up.error) throw new Error("storage:" + up.error.message);
-      // older versions of the PDF: remove the file, keep the record (with its fingerprint)
-      const { data: old } = await db.from("case_files").select("id, storage_path").eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
-      const oldPaths = (old ?? []).map((f) => f.storage_path.replace(/^appeals\//, "")).filter((p) => p !== path);
-      if (oldPaths.length) await db.storage.from("appeals").remove(oldPaths);
-      await db.from("case_files").update({ deleted_at: new Date().toISOString() }).eq("case_id", c.id).eq("kind", "appeal_pdf").is("deleted_at", null);
-      await db.from("case_files").insert({ case_id: c.id, kind: "appeal_pdf", storage_path: `appeals/${path}`, sha256: hash });
-      await db.from("cases").update({ pdf_built_at: new Date().toISOString(), approved_at: null }).eq("id", c.id);
+      const { path, hash, kind, send, bytes } = await storePdf(c as Obj);
       await db.from("audit_log").insert({ actor: "system", action: "appeal_pdf_built", case_id: c.id, detail: { kind, sha256: hash, bytes: bytes.length } });
       return reply(200, { url: await signedUrl(path), sha256: hash, kind, send, product: c.product, ref: c.ref, preview: preview && !mustPay });
     }
@@ -252,6 +316,10 @@ Deno.serve(async (req) => {
         await db.from("cases").update({ approved_at: new Date().toISOString(), status: "approved" }).eq("id", c.id);
         await db.from("audit_log").insert({ actor: "client", action: "appeal_approved", case_id: c.id, detail: { sha256: f.sha256 } });
         await funnel(body.visit_id, "approved", c);
+        // Option 2: email the approved PDF to the client (attached), then delete the case data 14 days later
+        let emailed = false;
+        if (c.product === "option2" && !c.sent_at) emailed = (await emailLatest(c as Obj, "system")).ok;
+        return reply(200, { url: await signedUrl(path, 3600), sha256: f.sha256, emailed });
       } else {
         await funnel(body.visit_id, "downloaded", c);
       }

@@ -9,5 +9,5 @@ window.TLS_CONFIG = {
   functionsUrl: "https://pmngappuatunbhodqipn.supabase.co/functions/v1",
   languages: ["en", "ro"],
   defaultLanguage: "en",
-  prices: { option2: "£19", option3: "£39", call: "£19" }
+  prices: { option2: "£19", option3: "£39", option3_company: "£59", call: "£19" }
 };

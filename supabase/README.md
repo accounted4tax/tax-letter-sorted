@@ -26,3 +26,6 @@ Edge functions added 31 Oct 2026: id-docs v1, id-reminders v1; read-letter v7 (a
 - 012_review_contacts – applied 1 Nov 2026 (company £39 reviews: phone/email preference and call availability)
 Edge function added 1 Nov 2026: review-contact v1 (saves the preference, emails letters@ an alert).
 - 013_company_agent_service – applied 1 Nov 2026 (company £59: authority_name/version, hmrc_code + dates; email types hmrc_code_request, appeal_ready; statuses awaiting_hmrc_code, submitted)
+- 014_admin – applied 1 Nov 2026 (app_settings.admin_emails, cases.admin_appeal_text / admin_notes, help_requests.admin_notes)
+Edge functions 1 Nov 2026: payments v2 (£59 for companies), id-docs v3 (authority to act, HMRC code, code email), appeal v4 (admin build/send, emails the approved PDF), admin v1 (admin page).
+Admin sign-in: Supabase Auth email + password; the user must be created in the dashboard (Authentication → Users → Add user) with an email listed in app_settings.admin_emails.

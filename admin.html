@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<style>
+  body{background:var(--bg)}
+  .awrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  .topbar .awrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
+  .who{font-size:13px;color:#C9D2E3;display:flex;gap:12px;align-items:center}
+  .who button{background:none;border:1px solid #5B6B8C;color:#fff;border-radius:8px;padding:6px 10px;font:600 13px var(--sans);cursor:pointer}
+  nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:18px 0 14px;border-bottom:1px solid var(--line)}
+  nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:600 15px var(--sans);color:var(--muted);cursor:pointer}
+  nav.tabs button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--teal)}
+  nav.tabs .count{display:inline-block;min-width:20px;padding:1px 6px;margin-left:6px;border-radius:10px;background:#B42318;color:#fff;font-size:12px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .kpi b{display:block;font-size:24px}
+  .kpi span{font-size:13px;color:var(--muted)}
+  table.t{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+  table.t th,table.t td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  table.t th{background:#F0F2F6;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  table.t tr.click{cursor:pointer}
+  table.t tr.click:hover td{background:#F7F9FB}
+  .tablebox{overflow-x:auto}
+  .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;background:#E8ECF2;color:#3E4A5C;white-space:nowrap;margin:1px 2px 1px 0}
+  .pill.red{background:#FDECEA;color:#8A1C12}.pill.green{background:#E6F4EA;color:#174F27}.pill.amber{background:#FFF4DB;color:#7A4D00}.pill.teal{background:var(--teal-tint);color:var(--teal-dark)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .sbtn{min-height:38px;padding:0 14px;border-radius:8px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:600 14px var(--sans);cursor:pointer}
+  .sbtn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+  .sbtn.danger{border-color:#B42318;color:#B42318}
+  .sbtn[disabled]{opacity:.5;cursor:not-allowed}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr}}
+  .kv{display:grid;grid-template-columns:170px 1fr;gap:4px 12px;font-size:14px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0;overflow-wrap:anywhere}
+  textarea.big{width:100%;min-height:300px;border:1px solid #9AA6B8;border-radius:10px;padding:12px;font:400 15px/1.5 var(--sans)}
+  textarea.small{width:100%;min-height:80px;border:1px solid #9AA6B8;border-radius:10px;padding:10px;font:400 14px/1.45 var(--sans)}
+  select.sm,input.sm{min-height:38px;border:1px solid #9AA6B8;border-radius:8px;padding:0 10px;font:400 14px var(--sans);background:#fff}
+  .code{font:600 22px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:3px;background:#F0F2F6;padding:10px 14px;border-radius:8px;display:inline-block}
+  .muted{color:var(--muted);font-size:13px}
+  .back{background:none;border:0;color:var(--teal);font:600 15px var(--sans);cursor:pointer;padding:6px 0}
+  h2.sec{font-size:17px;margin:0}
+  .msg{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:9}
+  pre.ans{white-space:pre-wrap;font:400 13px/1.45 ui-monospace,Menlo,Consolas,monospace;background:#F7F9FB;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto;margin:0}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="awrap">
+    <span class="brand"><b>Tax Letter Sorted</b><span>Admin · Accounted4Tax</span></span>
+    <span class="who" id="who" hidden><span id="whoEmail"></span><button type="button" id="signout">Sign out</button></span>
+  </div>
+</header>
+
+<main class="awrap" style="padding-bottom:60px">
+  <!-- Sign in -->
+  <section id="signin" class="stack" style="max-width:420px;margin:40px auto" hidden>
+    <h1>Admin sign-in</h1>
+    <form id="signinForm" class="card" novalidate>
+      <label class="field"><span>Email</span><input id="siEmail" type="email" autocomplete="username"></label>
+      <label class="field"><span>Password</span><input id="siPass" type="password" autocomplete="current-password"></label>
+      <p class="error" id="siErr" hidden></p>
+      <button class="btn" type="submit" id="siBtn">Sign in</button>
+    </form>
+    <p class="note">Only the accounts listed for the admin page can sign in.</p>
+  </section>
+
+  <section id="app" hidden>
+    <nav class="tabs" role="tablist">
+      <button type="button" data-tab="queue" aria-selected="true">Work queue<span class="count" id="cQueue" hidden></span></button>
+      <button type="button" data-tab="cases">Cases</button>
+      <button type="button" data-tab="requests">Requests<span class="count" id="cReq" hidden></span></button>
+      <button type="button" data-tab="emails">Emails<span class="count" id="cMail" hidden></span></button>
+      <button type="button" data-tab="funnel">Funnel</button>
+      <button type="button" data-tab="data">Export &amp; data</button>
+    </nav>
+    <div id="view"></div>
+  </section>
+</main>
+
+<script type="module">
+import { composeAppeal } from "./js/appeal-text.js";
+
+const CFG = window.TLS_CONFIG;
+const SB = CFG.functionsUrl.replace(/\/functions\/v1$/, "");
+// Public (anon) key: safe in the page – it only allows sign-in. All data access goes through the admin function.
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtbmdhcHB1YXR1bmJob2RxaXBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3ODcxOTMsImV4cCI6MjEwODM2MzE5M30.fj8PdtESWntg0v_BCzLbfiCVkrT7-f1t7wdi83UmYXc";
+// Allowed values copied from pg_constraint (cases_status_check, help_requests_status_check, callbacks_status_check) on 1 Nov 2026
+const STATUSES = ["uploaded","explained","questions","outcome","callback_requested","awaiting_payment","paid","awaiting_id","in_review","awaiting_hmrc_code","awaiting_signature","approved","sent","submitted","posted","closed","deleted"];
+const REQ_STATUSES = ["new","contacted","client","closed"];
+const CB_STATUSES = ["new","called","link_sent","no_appeal","closed"];
+const TYPE = { "sa-late-filing-100": "SA late filing £100", "sa-late-filing-later": "SA late filing (later)", "sa-late-payment": "SA late payment",
+  "ct-late-filing": "Corporation Tax late filing", "companies-house-late-filing": "Companies House late filing" };
+const PRODUCT = { option1: "Free", option2: "£19 self-serve", option3: "Accountant review", call: "Call" };
+const TODO = { id_not_started: ["ID not started", "amber"], waiting_for_id: ["Waiting for ID", "amber"], confirm_call: ["Confirm call time", "red"],
+  request_hmrc_code: ["Request HMRC code", "red"], hmrc_code_received: ["HMRC code received", "green"], write_appeal: ["Write appeal", "teal"] };
+
+const $ = (id) => document.getElementById(id);
+function el(tag, attrs, kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "text") n.textContent = v; else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (v === true) n.setAttribute(k, ""); else if (v !== false && v != null) n.setAttribute(k, v);
+  }
+  for (const c of [].concat(kids ?? [])) if (c != null && c !== false) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  return n;
+}
+const pill = (t, cls) => el("span", { class: "pill " + (cls || ""), text: t });
+const d = (iso) => iso ? new Date(String(iso).length === 10 ? iso + "T00:00:00Z" : iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const dt = (iso) => iso ? new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "–";
+const money = (p) => p == null ? "–" : "£" + (p / 100).toFixed(2);
+const daysLeft = (iso) => iso ? Math.ceil((new Date(iso + "T23:59:59Z") - new Date()) / 864e5) : null;
+function toast(t) { const m = el("div", { class: "msg", role: "status", text: t }); document.body.appendChild(m); setTimeout(() => m.remove(), 2600); }
+function store(k, v) { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+
+// ---------- sign-in (Supabase Auth, email + password) ----------
+async function auth(grant, body) {
+  const r = await fetch(`${SB}/auth/v1/token?grant_type=${grant}`, { method: "POST", headers: { "Content-Type": "application/json", apikey: ANON }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.access_token) throw new Error(j.error_description || j.msg || "Sign-in failed");
+  store("tls_admin_at", j.access_token); store("tls_admin_rt", j.refresh_token);
+  return j;
+}
+async function api(action, payload = {}, retry = true) {
+  const r = await fetch(`${CFG.functionsUrl}/admin`, { method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + (load("tls_admin_at") || "") }, body: JSON.stringify({ action, ...payload }) });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && retry && load("tls_admin_rt")) {
+    try { await auth("refresh_token", { refresh_token: load("tls_admin_rt") }); return api(action, payload, false); } catch (e) {}
+  }
+  if (r.status === 401 || r.status === 403) { showSignin(r.status === 403 ? "This account is not allowed to use the admin page." : null); throw new Error("signin"); }
+  if (!r.ok) throw new Error(j.error || "server");
+  return j;
+}
+function showSignin(msg) {
+  store("tls_admin_at", null); store("tls_admin_rt", null);
+  $("app").hidden = true; $("who").hidden = true; $("signin").hidden = false;
+  $("siErr").hidden = !msg; $("siErr").textContent = msg || "";
+}
+$("signinForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); $("siBtn").disabled = true; $("siErr").hidden = true;
+  try { await auth("password", { email: $("siEmail").value.trim(), password: $("siPass").value }); $("siPass").value = ""; await start(); }
+  catch (err) { if (err.message !== "signin") { $("siErr").textContent = "Email or password not recognised."; $("siErr").hidden = false; } }
+  $("siBtn").disabled = false;
+});
+$("signout").addEventListener("click", () => showSignin(null));
+
+// ---------- tabs ----------
+let tab = "queue";
+document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => { openTab(b.dataset.tab); }));
+function openTab(name) {
+  tab = name;
+  document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+  ({ queue: showQueue, cases: showCases, requests: showRequests, emails: showEmails, funnel: showFunnel, data: showData })[name]();
+}
+function busy() { $("view").innerHTML = ""; $("view").appendChild(el("div", { class: "spinner", style: "margin:40px auto" })); }
+function fail(e) { if (e.message !== "signin") { $("view").innerHTML = ""; $("view").appendChild(el("p", { class: "error", text: "Something went wrong (" + e.message + "). Try again." })); } }
+
+async function start() {
+  const me = await api("me");
+  $("whoEmail").textContent = me.email + (me.live ? "" : " · preview (not live)") + (me.payments_test ? " · Stripe test" : "");
+  $("signin").hidden = true; $("who").hidden = false; $("app").hidden = false;
+  openTab("queue");
+}
+
+// ---------- Work queue ----------
+async function showQueue() {
+  busy();
+  try {
+    const o = await api("overview");
+    const v = $("view"); v.innerHTML = "";
+    $("cQueue").hidden = !o.queue.length; $("cQueue").textContent = o.queue.length;
+    $("cReq").hidden = !(o.new_requests + o.new_callbacks); $("cReq").textContent = o.new_requests + o.new_callbacks;
+    $("cMail").hidden = !o.email_problems; $("cMail").textContent = o.email_problems;
+    v.appendChild(el("div", { class: "kpis" }, [
+      el("div", { class: "kpi" }, [el("b", { text: String(o.queue.length) }), el("span", { text: "Accountant reviews open" })]),
+      el("div", { class: "kpi" }, [el("b", { text: String(o.new_requests + o.new_callbacks) }), el("span", { text: "New requests / call-backs" })]),
+      el("div", { class: "kpi" }, [el("b", { text: String(o.option2_unsent) }), el("span", { text: "£19 paid, appeal not emailed yet" })]),
+      el("div", { class: "kpi" }, [el("b", { text: String(o.email_problems) }), el("span", { text: "Email problems (bounced / failed)" })]),
+      el("div", { class: "kpi" }, [el("b", { text: money(o.takings_30d_pence) }), el("span", { text: "Paid in the last 30 days" })]),
+    ]));
+    if (!o.queue.length) { v.appendChild(el("p", { class: "success", text: "Nothing waiting. All accountant reviews are done." })); return; }
+    const rows = o.queue.map((q) => {
+      const left = daysLeft(q.appeal_deadline);
+      const contact = q.contact ? (q.contact.method === "phone"
+        ? `Call ${q.contact.phone || ""}${q.contact.confirmed_at ? " (confirmed)" : ""}` : `Email ${q.contact.email || ""}`) : "–";
+      return el("tr", { class: "click", onclick: () => openCase(q.ref) }, [
+        el("td", {}, [el("b", { text: q.ref })]),
+        el("td", { text: q.company || q.name || "–" }),
+        el("td", { text: TYPE[q.letter_type] || q.letter_type }),
+        el("td", {}, [el("span", { text: d(q.appeal_deadline) }), left != null ? el("div", { class: "muted", text: left < 0 ? "passed" : left + " days left" }) : null]),
+        el("td", {}, q.todo.map((k) => pill((TODO[k] || [k])[0], (TODO[k] || [])[1]))),
+        el("td", { text: contact }),
+      ]);
+    });
+    v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [
+      el("thead", {}, [el("tr", {}, ["Case", "Client", "Letter", "Deadline", "To do", "Contact"].map((h) => el("th", { text: h })))]),
+      el("tbody", {}, rows)])]));
+    v.appendChild(el("p", { class: "muted", style: "margin-top:8px", text: "Sorted by appeal deadline. Click a case to open it." }));
+  } catch (e) { fail(e); }
+}
+
+// ---------- Cases ----------
+let caseFilter = "paid";
+async function showCases() {
+  busy();
+  try {
+    const { cases } = await api("cases", { filter: caseFilter });
+    const v = $("view"); v.innerHTML = "";
+    const sel = el("select", { class: "sm", onchange: (e) => { caseFilter = e.target.value; showCases(); } },
+      [["paid", "Paid options (£19 / review)"], ["option3", "Accountant reviews"], ["option2", "£19 self-serve"], ["active", "All with data"], ["all", "All (latest 300)"]]
+        .map(([k, t]) => el("option", { value: k, text: t, selected: k === caseFilter })));
+    const search = el("input", { class: "sm", placeholder: "Search ref, name, email, company", style: "min-width:260px" });
+    v.appendChild(el("div", { class: "row", style: "margin-bottom:12px" }, [sel, search]));
+    const body = el("tbody");
+    const render = () => {
+      const q = search.value.trim().toLowerCase();
+      body.innerHTML = "";
+      cases.filter((c) => !q || [c.ref, c.name, c.email, c.company].some((x) => String(x || "").toLowerCase().includes(q))).forEach((c) => {
+        const flags = [];
+        if (c.data_deleted_at) flags.push(pill("data deleted"));
+        if (c.last_email && ["bounced", "failed", "complaint"].includes(c.last_email.status)) flags.push(pill("email " + c.last_email.status, "red"));
+        if (c.product === "option3" && c.paid_pence && !c.id_completed_at) flags.push(pill("no ID yet", "amber"));
+        if (c.hmrc_code_at) flags.push(pill("HMRC code", "green"));
+        if (c.sent_at) flags.push(pill("appeal emailed", "green"));
+        body.appendChild(el("tr", { class: "click", onclick: () => openCase(c.ref) }, [
+          el("td", {}, [el("b", { text: c.ref }), el("div", { class: "muted", text: d(c.created_at) })]),
+          el("td", {}, [el("span", { text: c.company || c.name || "–" }), el("div", { class: "muted", text: c.email || "" })]),
+          el("td", { text: TYPE[c.letter_type] || c.letter_type || "–" }),
+          el("td", {}, [el("span", { text: PRODUCT[c.product] || c.product || "–" }), el("div", { class: "muted", text: c.paid_pence ? "paid " + money(c.paid_pence) : "" })]),
+          el("td", {}, [pill(c.status || "–")]),
+          el("td", { text: d(c.appeal_deadline) }),
+          el("td", {}, flags),
+        ]));
+      });
+    };
+    search.addEventListener("input", render); render();
+    v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [
+      el("thead", {}, [el("tr", {}, ["Case", "Client", "Letter", "Option", "Status", "Deadline", ""].map((h) => el("th", { text: h })))]), body])]));
+  } catch (e) { fail(e); }
+}
+
+// ---------- One case ----------
+async function openCase(ref) {
+  busy();
+  let r;
+  try { r = await api("case", { ref }); } catch (e) { return fail(e); }
+  const c = r.case, det = c.details || {}, v = $("view"); v.innerHTML = "";
+  const company = c.letter_type === "ct-late-filing" || c.letter_type === "companies-house-late-filing";
+  const paid = r.payments.find((p) => p.status === "paid");
+  v.appendChild(el("button", { class: "back", type: "button", text: "← Back", onclick: () => openTab(tab) }));
+  v.appendChild(el("div", { class: "row", style: "margin:6px 0 14px" }, [
+    el("h1", { style: "margin:0", text: c.ref }), pill(PRODUCT[c.product] || c.product || "–", "teal"), pill(c.status || "–"),
+    c.data_deleted_at ? pill("data deleted " + d(c.data_deleted_at), "red") : null,
+  ]));
+  const grid = el("div", { class: "grid2" }); v.appendChild(grid);
+  const left = el("div", { class: "stack" }), right = el("div", { class: "stack" });
+  grid.appendChild(left); grid.appendChild(right);
+
+  // Summary
+  const kv = (pairs) => el("dl", { class: "kv" }, pairs.filter(Boolean).flatMap(([k, val]) => [el("dt", { text: k }), el("dd", { text: val == null || val === "" ? "–" : String(val) })]));
+  left.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Case" }), kv([
+    ["Letter", TYPE[c.letter_type] || c.letter_type], ["Language", c.language], ["Tax year", c.tax_year], ["Notice date", d(c.notice_date)],
+    ["Appeal deadline", d(c.appeal_deadline) + (daysLeft(c.appeal_deadline) != null ? ` (${daysLeft(c.appeal_deadline)} days)` : "")],
+    ["Penalty", c.penalty_amount != null ? "£" + Number(c.penalty_amount).toFixed(2) : null], ["Outcome", c.outcome_route],
+    ["Paid", paid ? money(paid.amount_pence) + " · " + dt(paid.paid_at) + (paid.stripe_mode === "test" ? " (test)" : "") : "not paid"],
+    ["Approved by client", dt(c.approved_at)], ["Appeal emailed", dt(c.sent_at)], ["Data deleted after", dt(c.delete_after)],
+  ])]));
+
+  // Client
+  left.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: company ? "Company and director" : "Client" }), kv([
+    company && ["Company", det.company_name], company && ["Company number", det.company_number], company && ["Penalty reference", det.penalty_reference],
+    ["Name", det.full_name], company && ["Role", det.role], ["Email", det.email], ["Phone", det.phone],
+    ["Address", [...(det.address_lines || []), det.postcode].filter(Boolean).join(", ")],
+    [company ? "CT UTR" : "UTR", det.utr], !company && ["NI number", det.ni_number], ["Marketing consent", det.marketing_consent ? "yes" : "no"],
+  ])]));
+
+  // Contact preference (companies)
+  if (r.contacts.length) {
+    const rc = r.contacts[r.contacts.length - 1];
+    const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "How they want to be contacted" })]);
+    if (rc.method === "phone") {
+      box.appendChild(el("p", { text: "Phone: " + (rc.phone || "–") }));
+      const slots = (rc.availability || []).map((s) => `${d(s.date)} ${s.slot}`);
+      box.appendChild(el("p", { class: "muted", text: "Available: " + (slots.join(" · ") || "–") }));
+      if (rc.confirmed_at) box.appendChild(el("p", { class: "success", text: "Call confirmed: " + (rc.confirmed_slot || "") + " (" + dt(rc.confirmed_at) + ")" }));
+      else {
+        const s = el("select", { class: "sm" }, slots.map((x) => el("option", { value: x, text: x })));
+        box.appendChild(el("div", { class: "row" }, [s, el("button", { class: "sbtn primary", type: "button", text: "Mark call time confirmed", onclick: async () => {
+          await api("update_case", { ref: c.ref, confirm_contact: { id: rc.id, slot: s.value } }); toast("Call time confirmed. Email the client to let them know."); openCase(c.ref); } })]));
+        box.appendChild(el("p", { class: "muted", text: "Email the client from your own mailbox to confirm the time, then mark it here." }));
+      }
+    } else box.appendChild(el("p", { text: "By email: " + (rc.email || det.email || "–") }));
+    if (rc.note) box.appendChild(el("p", { class: "muted", text: "Note: " + rc.note }));
+    left.appendChild(box);
+  }
+
+  // Documents
+  const files = r.files.filter((f) => !f.deleted_at);
+  const KIND = { letter: "HMRC letter", id_photo: "Photo ID", id_selfie: "Selfie", id_address: "Proof of address", incorporation_cert: "Certificate of incorporation", appeal_pdf: "Appeal PDF", evidence: "Evidence", signed_pdf: "Signed PDF" };
+  const docs = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Documents" })]);
+  if (c.product === "option3") docs.appendChild(el("p", { class: "muted", text: c.id_completed_at ? "ID check completed " + dt(c.id_completed_at) : (c.id_requested_at ? "Client chose to upload later (" + c.id_reminders_sent + " reminders sent)" : "ID not uploaded yet") }));
+  if (company && c.product === "option3") docs.appendChild(el("p", { class: c.authority_to_act_at ? "success" : "callout",
+    text: c.authority_to_act_at ? `Authority to act signed by ${c.authority_name} on ${dt(c.authority_to_act_at)} (${c.authority_version})` : "Authority to act not signed yet" }));
+  if (!files.length) docs.appendChild(el("p", { class: "muted", text: "No files stored." }));
+  files.forEach((f) => docs.appendChild(el("div", { class: "row" }, [
+    el("span", { style: "flex:1", text: (KIND[f.kind] || f.kind) + (f.doc_type && f.doc_type !== "selfie" ? " – " + f.doc_type.replace(/_/g, " ") : "") }),
+    el("span", { class: "muted", text: dt(f.created_at) }),
+    el("button", { class: "sbtn", type: "button", text: "View", onclick: async () => {
+      const w = window.open("", "_blank");
+      try { const u = await api("file_url", { file_id: f.id }); if (w) w.location = u.url; else location.href = u.url; } catch (e) { if (w) w.close(); toast("Could not open the file"); }
+    } })])));
+  if (r.links.id_upload && c.product === "option3" && !c.id_completed_at) docs.appendChild(el("div", { class: "row" }, [
+    el("button", { class: "sbtn", type: "button", text: "Copy the client's upload link", onclick: () => navigator.clipboard.writeText(r.links.id_upload).then(() => toast("Link copied")) })]));
+  left.appendChild(docs);
+
+  // HMRC agent authorisation code (Corporation Tax)
+  if (c.letter_type === "ct-late-filing" && c.product === "option3") {
+    const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "HMRC agent authorisation (Corporation Tax)" })]);
+    box.appendChild(el("p", { class: "muted", text: c.hmrc_code_requested_at ? "You requested the code on " + dt(c.hmrc_code_requested_at) : "Not requested yet. Request it in your agent services account, then mark it here." }));
+    box.appendChild(el("div", { class: "row" }, [
+      !c.hmrc_code_requested_at ? el("button", { class: "sbtn primary", type: "button", text: "I've requested the code from HMRC", onclick: async () => { await api("update_case", { ref: c.ref, hmrc_code_requested: true }); toast("Saved"); openCase(c.ref); } })
+        : el("button", { class: "sbtn", type: "button", text: "Undo 'requested'", onclick: async () => { await api("update_case", { ref: c.ref, hmrc_code_requested: false }); openCase(c.ref); } }),
+      r.links.hmrc_code ? el("button", { class: "sbtn", type: "button", text: "Copy the client's code link", onclick: () => navigator.clipboard.writeText(r.links.hmrc_code).then(() => toast("Link copied")) }) : null,
+    ]));
+    if (c.hmrc_code) {
+      box.appendChild(el("div", {}, [el("div", { class: "muted", text: "Code from the client (" + dt(c.hmrc_code_at) + "):" }), el("span", { class: "code", text: c.hmrc_code })]));
+      box.appendChild(el("button", { class: "sbtn danger", type: "button", text: "I've used it – delete the code", onclick: async () => { await api("update_case", { ref: c.ref, clear_hmrc_code: true }); toast("Code deleted"); openCase(c.ref); } }));
+    } else if (c.hmrc_code_at) box.appendChild(el("p", { class: "muted", text: "Code received " + dt(c.hmrc_code_at) + " and deleted after use." }));
+    left.appendChild(box);
+  }
+
+  // Answers
+  if (r.answers) {
+    const eng = (r.answers.answers_english || {}).texts || {};
+    const a = r.answers.answers || {};
+    left.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Client's answers" }),
+      kv([["Reason", (r.answers.answers_english || {}).reason || a.reason], ["From", d(a.date_from)], ["To", d(a.date_to)], ["Filed / paid", d(a.filed_date)], ["Evidence", (a.evidence || []).join(", ")]]),
+      Object.keys(eng).length ? el("pre", { class: "ans", text: Object.entries(eng).map(([k, t]) => k + ":\n" + t).join("\n\n") }) : null]));
+  }
+
+  // ---- Right column: write and send the appeal ----
+  const ap = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Write the appeal" })]);
+  if (c.data_deleted_at) ap.appendChild(el("p", { class: "muted", text: "The case data has been deleted." }));
+  else {
+    ap.appendChild(el("p", { class: "muted", text: company && c.product === "option3"
+      ? "Company review: the client gets a copy by email; you submit it as agent."
+      : "The client gets the PDF by email to print, sign and post." }));
+    const f = {};
+    const field = (label, key, val) => { f[key] = el("input", { class: "sm", value: val || "", style: "width:100%" }); return el("label", { class: "field" }, [el("span", { text: label }), f[key]]); };
+    const fields = [field("Name", "full_name", det.full_name),
+      company ? field("Company name", "company_name", det.company_name) : null, company ? field("Company number", "company_number", det.company_number) : null,
+      company ? field("Penalty reference", "penalty_reference", det.penalty_reference) : null,
+      field(company ? "CT UTR" : "UTR", "utr", det.utr), !company ? field("NI number", "ni_number", det.ni_number) : null,
+      field("Address line 1", "a1", (det.address_lines || [])[0]), field("Address line 2", "a2", (det.address_lines || [])[1]), field("Town", "a3", (det.address_lines || [])[2]),
+      field("Postcode", "postcode", det.postcode), field("Phone", "phone", det.phone), field("Email (the PDF goes here)", "email", det.email)];
+    ap.appendChild(el("details", {}, [el("summary", { text: "Client details on the appeal (click to edit)" }), el("div", { class: "stack", style: "margin-top:10px" }, fields)]));
+    const ta = el("textarea", { class: "big", lang: "en", placeholder: "Write the appeal in English. Leave empty to use the automatic wording from the client's answers." });
+    ta.value = c.admin_appeal_text || "";
+    const auto = () => {
+      const a = (r.answers || {}).answers || {}, ae = (r.answers || {}).answers_english || {}, eng = ae.texts || {}, ext = c.extracted || {};
+      const pens = (ext.penalties || []).filter((p) => p && (p.amount != null || p.description));
+      return composeAppeal({ letter_type: c.letter_type, reason: ae.reason || a.reason, tax_year: c.tax_year || ext.tax_year, penalty_count: Math.max(1, pens.length),
+        story: eng.story, why_late: eng.why_late, nnf_other_text: eng.nnf_other_text, something_else_text: eng.something_else_text,
+        date_from: a.date_from, date_to: a.date_to, filed_date: a.filed_date, filed_asap: a.filed_asap, evidence: a.evidence || [] });
+    };
+    ap.appendChild(el("div", { class: "row" }, [
+      el("button", { class: "sbtn", type: "button", text: "Start from the client's wording", onclick: () => { if (!ta.value.trim() || confirm("Replace what you've written?")) ta.value = auto(); } }),
+      el("span", { class: "muted", text: "Only use facts the client has confirmed." })]));
+    ap.appendChild(ta);
+    const status = el("p", { class: "muted" });
+    const preview = el("div", { class: "row" });
+    const save = async () => {
+      const addr = [f.a1.value, f.a2.value, f.a3.value].map((s) => s.trim()).filter(Boolean);
+      const details = { address_lines: addr };
+      for (const k of ["full_name", "company_name", "company_number", "penalty_reference", "utr", "ni_number", "postcode", "phone", "email"]) if (f[k]) details[k] = f[k].value;
+      await api("save_appeal", { ref: c.ref, details, appeal_text: ta.value });
+    };
+    const sendBtn = el("button", { class: "sbtn primary", type: "button", text: "Send to client by email", disabled: true, onclick: async () => {
+      if (!confirm(`Email the appeal PDF to ${f.email.value || "the client"}?`)) return;
+      sendBtn.disabled = true; status.textContent = "Sending…";
+      try { const s = await api("send_appeal", { ref: c.ref }); status.textContent = s.ok ? "Sent. The email log will show delivery." : "Not sent: " + (s.error || ""); toast(s.ok ? "Appeal emailed" : "Email failed"); if (s.ok) openCase(c.ref); }
+      catch (e) { status.textContent = "Not sent (" + e.message + ")."; sendBtn.disabled = false; }
+    } });
+    ap.appendChild(el("div", { class: "row" }, [
+      el("button", { class: "sbtn", type: "button", text: "Save", onclick: async () => { try { await save(); toast("Saved"); } catch (e) { toast("Not saved: " + e.message); } } }),
+      el("button", { class: "sbtn primary", type: "button", text: "Save and build the PDF", onclick: async (ev) => {
+        ev.target.disabled = true; status.textContent = "Building…"; preview.innerHTML = "";
+        try {
+          await save(); const b = await api("build_appeal", { ref: c.ref });
+          status.textContent = "PDF ready. Check it before you send it.";
+          preview.appendChild(el("a", { class: "sbtn", href: b.url, target: "_blank", rel: "noopener", text: "Open the PDF", style: "display:inline-flex;align-items:center;text-decoration:none" }));
+          preview.appendChild(el("span", { class: "muted", text: b.send && b.send.how === "online" ? "Goes through the Companies House online service" : "Post to: " + (b.send ? b.send.to : "") }));
+          sendBtn.disabled = false;
+        } catch (e) { status.textContent = "Could not build the PDF (" + e.message + ")."; }
+        ev.target.disabled = false;
+      } }), sendBtn]));
+    ap.appendChild(status); ap.appendChild(preview);
+    if (c.sent_at) ap.appendChild(el("p", { class: "success", text: "Appeal emailed to the client on " + dt(c.sent_at) + "." }));
+  }
+  right.appendChild(ap);
+
+  // Status and notes
+  const st = el("select", { class: "sm" }, STATUSES.map((s) => el("option", { value: s, text: s, selected: s === c.status })));
+  const notes = el("textarea", { class: "small", placeholder: "Your private notes for this case" }); notes.value = c.admin_notes || "";
+  right.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Status and notes" }),
+    el("div", { class: "row" }, [st, el("button", { class: "sbtn", type: "button", text: "Save status", onclick: async () => { await api("update_case", { ref: c.ref, status: st.value }); toast("Status saved"); } })]),
+    notes, el("button", { class: "sbtn", type: "button", text: "Save notes", onclick: async () => { await api("update_case", { ref: c.ref, notes: notes.value }); toast("Notes saved"); } })]));
+
+  // Emails and history
+  right.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Emails" }),
+    r.emails.length ? el("div", { class: "tablebox" }, [el("table", { class: "t" }, [el("tbody", {}, r.emails.map((m) => el("tr", {}, [
+      el("td", { text: dt(m.sent_at) }), el("td", { text: m.email_type }), el("td", { text: m.recipient }),
+      el("td", {}, [pill(m.status, ["bounced", "failed", "complaint"].includes(m.status) ? "red" : m.status === "delivered" ? "green" : "")])])))])])
+      : el("p", { class: "muted", text: "No emails yet." })]));
+  right.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "History" }),
+    el("pre", { class: "ans", text: r.history.map((h) => `${dt(h.at)}  ${h.actor}  ${h.action}`).join("\n") || "–" })]));
+}
+
+// ---------- Requests ----------
+async function showRequests() {
+  busy();
+  try {
+    const { help, callbacks } = await api("requests");
+    const v = $("view"); v.innerHTML = "";
+    const block = (title, rows, table, statuses, cols) => {
+      v.appendChild(el("h2", { class: "sec", style: "margin:16px 0 8px", text: title }));
+      if (!rows.length) { v.appendChild(el("p", { class: "muted", text: "None yet." })); return; }
+      v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [
+        el("thead", {}, [el("tr", {}, [...cols.map(([h]) => el("th", { text: h })), el("th", { text: "Status" }), el("th", { text: "Your notes" })])]),
+        el("tbody", {}, rows.map((x) => {
+          const s = el("select", { class: "sm", onchange: async () => { await api("update_request", { table, id: x.id, status: s.value }); toast("Saved"); } },
+            statuses.map((o) => el("option", { value: o, text: o, selected: o === x.status })));
+          const n = el("textarea", { class: "small", style: "min-height:50px;min-width:180px" }); n.value = (table === "callbacks" ? x.call_notes : x.admin_notes) || "";
+          n.addEventListener("change", async () => { await api("update_request", { table, id: x.id, notes: n.value }); toast("Notes saved"); });
+          return el("tr", {}, [...cols.map(([, fn]) => el("td", {}, [fn(x)])), el("td", {}, [s]), el("td", {}, [n])]);
+        }))])]));
+    };
+    const txt = (t, sub) => el("div", {}, [el("span", { text: t || "–" }), sub ? el("div", { class: "muted", text: sub }) : null]);
+    block("Help and quote requests", help, "help_requests", REQ_STATUSES, [
+      ["Received", (x) => txt(dt(x.created_at))], ["Who", (x) => txt(x.full_name, [x.email, x.phone].filter(Boolean).join(" · "))],
+      ["Type", (x) => x.tax_year === "package" ? pill("Accounts + CT quote", "teal") : txt("Help · " + (x.tax_year || ""))],
+      ["Message", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.note || "–" })]]);
+    block("Call-back requests", callbacks, "callbacks", CB_STATUSES, [
+      ["Received", (x) => txt(dt(x.created_at))], ["Who", (x) => txt(x.full_name, [x.phone, x.email].filter(Boolean).join(" · "))],
+      ["About", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.reason_summary || "–" })]]);
+  } catch (e) { fail(e); }
+}
+
+// ---------- Emails ----------
+async function showEmails() {
+  busy();
+  try {
+    const { emails } = await api("emails");
+    const v = $("view"); v.innerHTML = "";
+    const probs = emails.filter((e) => e.problem);
+    if (probs.length) v.appendChild(el("p", { class: "error", text: `${probs.length} email(s) bounced or failed. Check the address with the client.` }));
+    v.appendChild(el("p", { class: "muted", text: "Delivery status updates arrive from Brevo once its webhook is set up. SHA-256 = fingerprint of the PDF that was sent." }));
+    v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [
+      el("thead", {}, [el("tr", {}, ["Sent", "Case", "Type", "To", "Status", "PDF fingerprint"].map((h) => el("th", { text: h })))]),
+      el("tbody", {}, emails.map((m) => el("tr", { class: m.ref ? "click" : "", onclick: m.ref ? () => openCase(m.ref) : null }, [
+        el("td", { text: dt(m.sent_at) }), el("td", { text: m.ref || "–" }), el("td", { text: m.email_type }), el("td", { text: m.recipient }),
+        el("td", {}, [pill(m.status, m.problem ? "red" : m.status === "delivered" ? "green" : ""), m.status_at ? el("div", { class: "muted", text: dt(m.status_at) }) : null]),
+        el("td", { class: "muted", text: m.pdf_sha256 ? m.pdf_sha256.slice(0, 16) + "…" : "" })])))])]));
+  } catch (e) { fail(e); }
+}
+
+// ---------- Funnel ----------
+async function showFunnel(days = 30) {
+  busy();
+  try {
+    const f = await api("funnel", { days });
+    const v = $("view"); v.innerHTML = "";
+    v.appendChild(el("div", { class: "row", style: "margin-bottom:12px" }, [el("span", { text: "Period:" }),
+      ...[7, 30, 90, 365].map((n) => el("button", { class: "sbtn" + (n === days ? " primary" : ""), type: "button", text: n + " days", onclick: () => showFunnel(n) }))]));
+    const order = ["home", "uploaded", "recognised", "explanation", "questions_started", "questions_finished", "outcome", "option_chosen", "stripe_opened", "paid", "approved", "downloaded", "callback_requested", "help_requested"];
+    const top = Math.max(1, ...Object.values(f.steps));
+    v.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Visitors reaching each step" }),
+      ...order.map((s) => el("div", { class: "row" }, [el("span", { style: "width:170px", text: s.replace(/_/g, " ") }),
+        el("div", { style: `height:14px;border-radius:7px;background:var(--teal);width:${Math.round(((f.steps[s] || 0) / top) * 60)}%;min-width:2px` }),
+        el("b", { text: String(f.steps[s] || 0) })]))]));
+    v.appendChild(el("div", { class: "grid2", style: "margin-top:14px" }, [
+      el("section", { class: "card" }, [el("h2", { class: "sec", text: "Letters recognised" }),
+        el("dl", { class: "kv" }, Object.entries(f.letter_types).flatMap(([k, n]) => [el("dt", { text: TYPE[k] || k }), el("dd", { text: String(n) })]))]),
+      el("section", { class: "card" }, [el("h2", { class: "sec", text: "Languages" }),
+        el("dl", { class: "kv" }, Object.entries(f.languages).flatMap(([k, n]) => [el("dt", { text: k.toUpperCase() }), el("dd", { text: String(n) })]))])]));
+  } catch (e) { fail(e); }
+}
+
+// ---------- Export and data requests ----------
+function csv(rows) {
+  if (!rows.length) return "";
+  const cols = Object.keys(rows[0]);
+  const q = (x) => { const s = x == null ? "" : typeof x === "object" ? JSON.stringify(x) : String(x); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  return [cols.join(","), ...rows.map((r) => cols.map((c) => q(r[c])).join(","))].join("\n");
+}
+function showData() {
+  const v = $("view"); v.innerHTML = "";
+  v.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "Export to CSV" }),
+    el("p", { class: "muted", text: "Opens in Excel. Keep exported files somewhere safe – they contain personal data." }),
+    el("div", { class: "row" }, ["customers", "cases", "payments", "emails"].map((w) => el("button", { class: "sbtn", type: "button", text: "Download " + w, onclick: async () => {
+      try {
+        const { rows } = await api("export", { what: w });
+        const blob = new Blob(["﻿" + csv(rows)], { type: "text/csv;charset=utf-8" });
+        const a = el("a", { href: URL.createObjectURL(blob), download: `tax-letter-sorted-${w}-${new Date().toISOString().slice(0, 10)}.csv` });
+        document.body.appendChild(a); a.click(); a.remove(); toast(rows.length + " rows");
+      } catch (e) { toast("Export failed"); }
+    } })))]));
+
+  const em = el("input", { class: "sm", type: "email", placeholder: "client@example.com", style: "min-width:260px" });
+  const out = el("div", { class: "stack" });
+  const box = el("section", { class: "card", style: "margin-top:14px" }, [el("h2", { class: "sec", text: "Delete a person's data (GDPR request)" }),
+    el("p", { class: "muted", text: "Find everything held for an email address first. Accountant-review cases (paid) are client engagements and are kept for the AML period unless you tick the box." }),
+    el("div", { class: "row" }, [em, el("button", { class: "sbtn", type: "button", text: "Find", onclick: find })]), out]);
+  v.appendChild(box);
+  async function find() {
+    out.innerHTML = "";
+    let r; try { r = await api("find_person", { email: em.value.trim() }); } catch (e) { out.appendChild(el("p", { class: "error", text: e.message === "email" ? "Enter a full email address." : "Search failed." })); return; }
+    out.appendChild(el("p", { text: `Found: ${r.customers.length} customer record(s), ${r.cases.length} case(s), ${r.help_requests} help request(s), ${r.callbacks} call-back request(s).` }));
+    r.cases.forEach((c) => out.appendChild(el("div", { class: "row" }, [el("b", { text: c.ref }), el("span", { text: (TYPE[c.letter_type] || c.letter_type || "") + " · " + (PRODUCT[c.product] || c.product || "") + " · " + d(c.created_at) }),
+      c.kept_for_aml ? pill("kept for AML", "amber") : null, c.data_deleted_at ? pill("already deleted") : null])));
+    if (!r.customers.length && !r.cases.length && !r.help_requests && !r.callbacks) return;
+    const inc = el("input", { type: "checkbox" });
+    out.appendChild(el("label", { class: "check" }, [inc, el("span", { text: "Also delete accountant-review records (only if you've checked you don't need to keep them)" })]));
+    out.appendChild(el("button", { class: "sbtn danger", type: "button", text: "Delete this person's data", onclick: async () => {
+      if (!confirm("This cannot be undone. Delete the data for " + em.value.trim() + "?")) return;
+      try {
+        const x = await api("delete_person", { email: em.value.trim(), include_kept: inc.checked });
+        out.innerHTML = "";
+        out.appendChild(el("p", { class: "success", text: `Done. ${x.cases_wiped} case(s) wiped.` + (x.kept_for_aml.length ? ` Kept for AML: ${x.kept_for_aml.join(", ")} (marketing switched off).` : "") + (x.customer_deleted ? " Customer record deleted." : "") }));
+      } catch (e) { toast("Delete failed"); }
+    } }));
+  }
+}
+
+// ---------- go ----------
+if (load("tls_admin_at")) start().catch(() => {}); else showSignin(null);
+</script>
+</body>
+</html>

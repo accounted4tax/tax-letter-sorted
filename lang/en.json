@@ -550,7 +550,7 @@
     "err_server": "Something went wrong. Please try again.",
     "approved_title": "Your appeal is ready",
     "download": "Download my appeal (PDF)",
-    "email_soon": "We'll also email it to you. (Email sending opens in January 2027.)",
+    "email_soon": "We've also emailed it to you, so you have a copy.",
     "next_title": "What to do now",
     "post_1": "Print the form.",
     "post_2": "Sign and date it by hand on page 2, in black or blue ink.",
@@ -909,6 +909,19 @@
       "action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
       "meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
       "button": "Send the HMRC code"
+    },
+    "appeal": {
+      "subject": "Your penalty appeal is ready ({ref})",
+      "subject_copy": "A copy of the company's penalty appeal ({ref})",
+      "hello": "Hello {name},",
+      "intro": "Your appeal is attached as a PDF. Please check it once more before you send it.",
+      "intro_copy": "Attached is a copy of the appeal we have prepared for the company. Please keep it with the company's records. We'll let you know when it has been submitted and when there is a reply.",
+      "post": "Print it, sign it and post it to: {address}. Get a free certificate of posting from the Post Office.",
+      "online_ch": "Submit it through Companies House's online appeal service: {address}",
+      "deadline": "Your appeal deadline is {date}.",
+      "evidence": "If you have evidence (for example a hospital letter), send copies, never originals.",
+      "keep": "We keep this PDF for 14 days, then delete it. Please save a copy.",
+      "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
     }
   },
   "fu": {

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How should we contact you? – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+<style>
+  .slots{width:100%;border-collapse:collapse;font-size:14px}
+  .slots th,.slots td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}
+  .slots th:first-child,.slots td:first-child{text-align:left;font-weight:600}
+  .slots input{width:24px;height:24px;accent-color:var(--teal)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="form" class="stack">
+    <h1 data-i18n="fu.title">How should we contact you?</h1>
+    <p class="lead" data-i18n="fu.intro"></p>
+
+    <fieldset class="q" id="methodQ">
+      <div class="yn">
+        <label class="opt"><input type="radio" name="method" value="phone"><span data-i18n="fu.by_phone">By phone</span></label>
+        <label class="opt"><input type="radio" name="method" value="email"><span data-i18n="fu.by_email">By email</span></label>
+      </div>
+    </fieldset>
+
+    <div class="card" id="phoneBox" hidden>
+      <label class="field" id="phoneRow"><span data-i18n="fu.phone">Phone number</span>
+        <input id="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+      <div id="slotsRow">
+        <p style="font-weight:600;font-size:14px;margin-bottom:6px" data-i18n="fu.when"></p>
+        <table class="slots" id="slots"></table>
+      </div>
+      <p class="hint" data-i18n="fu.call_note"></p>
+    </div>
+
+    <div class="card" id="emailBox" hidden>
+      <label class="field" id="emailRow"><span data-i18n="fu.email">Email address</span>
+        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
+      <p class="hint" data-i18n="fu.email_note"></p>
+    </div>
+
+    <label class="field" id="noteRow" hidden><span data-i18n="fu.note">Anything we should know? (optional)</span>
+      <textarea id="note" maxlength="1000" style="min-height:90px"></textarea></label>
+
+    <p class="error" id="error" role="alert" hidden></p>
+    <button class="btn" type="button" id="submit" data-i18n="fu.submit">Send</button>
+    <p class="note" id="deadline"></p>
+  </section>
+
+  <section id="done" class="stack" hidden>
+    <div class="success" role="status"><b data-i18n="fu.done_title">Thank you, we've got it</b><p id="doneText" style="margin-top:6px"></p></div>
+    <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Company appeals (£39): after paying, the client chooses phone (with available times) or email.
+  var F = window.TLS_FLOW, t = F.t, el = F.el;
+  var $ = function (id) { return document.getElementById(id); };
+  var ctx = F.getJSON("tls_explain") || {};
+  var SLOTS = ["morning", "afternoon", "evening"];
+  var picked = {}, errKey = null, sentMethod = null, info = null;
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+
+  // the next 5 working days (Monday to Friday), starting tomorrow
+  function workingDays() {
+    var out = [], d = new Date(); d.setHours(12, 0, 0, 0);
+    while (out.length < 5) {
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0 && d.getDay() !== 6) out.push(new Date(d));
+    }
+    return out;
+  }
+  function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+
+  function method() { var r = document.querySelector('input[name=method]:checked'); return r ? r.value : null; }
+
+  function render() {
+    var m = method();
+    $("phoneBox").hidden = m !== "phone"; $("emailBox").hidden = m !== "email"; $("noteRow").hidden = !m;
+    var tb = $("slots"); tb.innerHTML = "";
+    var head = el("tr", {}, [el("th", { text: "" })].concat(SLOTS.map(function (s) { return el("th", { text: t("fu." + s) }); })));
+    tb.appendChild(head);
+    workingDays().forEach(function (d) {
+      var label = d.toLocaleDateString(F.lang() === "ro" ? "ro-RO" : "en-GB", { weekday: "short", day: "numeric", month: "short" });
+      tb.appendChild(el("tr", {}, [el("td", { text: label })].concat(SLOTS.map(function (s) {
+        var k = iso(d) + "|" + s;
+        return el("td", {}, [el("input", { type: "checkbox", "aria-label": label + " " + t("fu." + s), checked: !!picked[k],
+          onchange: function (e) {
+            if (e.target.checked) picked[k] = true; else delete picked[k];
+            if (errKey === "fu.err_slots" && e.target.checked) { errKey = null; $("error").hidden = true; $("slotsRow").classList.remove("invalid"); }
+          } })]);
+      }))));
+    });
+    $("deadline").textContent = ctx.appeal_deadline ? t("fu.deadline", { date: F.fmtDate(ctx.appeal_deadline) }) : "";
+    if (errKey) { $("error").textContent = t(errKey); $("error").hidden = false; } else $("error").hidden = true;
+    if (sentMethod) $("doneText").textContent = t(sentMethod === "phone" ? "fu.done_phone" : "fu.done_email");
+  }
+  function err(k, rowId) {
+    errKey = k; render();
+    document.querySelectorAll(".invalid").forEach(function (n) { n.classList.remove("invalid"); });
+    if (rowId) $(rowId).classList.add("invalid");
+  }
+
+  document.querySelectorAll('input[name=method]').forEach(function (r) { r.addEventListener("change", function () { errKey = null; render(); }); });
+
+  $("submit").addEventListener("click", function () {
+    var m = method();
+    if (!m) return err("fu.err_choose", "methodQ");
+    var body = { action: "save", method: m, note: $("note").value.trim() };
+    if (m === "phone") {
+      body.phone = $("phone").value.trim();
+      if (!/^[+\d][\d\s()-]{8,}$/.test(body.phone)) return err("fu.err_phone", "phoneRow");
+      body.availability = Object.keys(picked).map(function (k) { var p = k.split("|"); return { date: p[0], slot: p[1] }; });
+      if (!body.availability.length) return err("fu.err_slots", "slotsRow");
+    } else {
+      body.email = $("email").value.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(body.email)) return err("fu.err_email", "emailRow");
+    }
+    errKey = null; render(); $("submit").disabled = true;
+    F.callFn("review-contact", body).then(function (res) {
+      $("submit").disabled = false;
+      if (!res.ok) return err(res.j.error === "phone" ? "fu.err_phone" : res.j.error === "email" ? "fu.err_email"
+        : res.j.error === "availability" ? "fu.err_slots" : "fu.err_server");
+      sentMethod = m; render();
+      $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
+    }).catch(function () { $("submit").disabled = false; err("fu.err_server"); });
+  });
+
+  F.onLanguage(function () {
+    render();
+    if (info) return;
+    F.callFn("review-contact", { action: "get" }).then(function (res) {
+      if (!res.ok) return;
+      info = res.j;
+      if (!$("phone").value && info.phone) $("phone").value = info.phone;
+      if (!$("email").value && info.email) $("email").value = info.email;
+    }).catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

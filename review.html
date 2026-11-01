@@ -140,7 +140,9 @@
 
   function build() {
     if (started) return; started = true;
-    if (product === "option3") { location.href = "id.html"; return; }   // Option 3: identity check next
+    if (product === "option3") {   // Option 3: identity check next; companies: contact preference (no ID at this stage)
+      location.href = ["ct-late-filing", "companies-house-late-filing"].indexOf(ctx.letter_type) > -1 ? "followup.html" : "id.html"; return;
+    }
     F.callFn("appeal", { action: "build" }).then(function (res) {
       if (res.status === 404) { location.href = "upload.html"; return; }
       if (res.j.error === "no_details") { location.href = "details.html"; return; }

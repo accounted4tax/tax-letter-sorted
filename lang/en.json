@@ -376,7 +376,18 @@
     "reason_other": "the reason you gave",
     "note_ch": {
       "not_filed_as_soon_as_able": "The accounts weren't filed as soon as the problem ended, which may reduce the chance of the appeal being accepted."
-    }
+    },
+    "co_o3_title": "Accountant review · £39",
+    "co_o3_b1": "A qualified accountant (MAAT) reviews the company's case",
+    "co_o3_b2": "We speak to you by phone or email to get the full picture",
+    "co_o3_b3": "We prepare the appeal letter for the director to sign",
+    "co_o3_b4": "If you then choose us for the annual accounts and Corporation Tax return, we take the £39 off the price",
+    "co_o3_cta": "Choose accountant review · £39",
+    "co_pkg_title": "Free appeal with your annual accounts and Corporation Tax return",
+    "co_pkg_b1": "We prepare and file the company's annual accounts and Corporation Tax return",
+    "co_pkg_b2": "Your penalty appeal is included free",
+    "co_pkg_b3": "No-obligation quote, usually within one working day",
+    "co_pkg_cta": "Get a free quote"
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -793,7 +804,13 @@
     "err_consent": "Please tick the box so we can contact you.",
     "err_server": "Something went wrong. Please try again, or email {email}.",
     "privacy_note": "We use your details only to contact you about this request.",
-    "consent_note": "By sending this form, you agree that Accounted4Tax can contact you about your request."
+    "consent_note": "By sending this form, you agree that Accounted4Tax can contact you about your request.",
+    "package_title": "Free appeal with your accounts",
+    "package_intro": "Tell us about the company and we'll send you a no-obligation quote for the annual accounts and Corporation Tax return, with your penalty appeal included free.",
+    "package_submit": "Request a quote",
+    "package_sent_title": "Request sent",
+    "package_sent_text": "A qualified accountant at Accounted4Tax will contact you with a quote, usually within one working day. Your appeal deadline still applies.",
+    "company_name": "Company name"
   },
   "paid": {
     "checking": "Checking your payment…",
@@ -872,5 +889,30 @@
       "deadline": "Your appeal deadline is {date}.",
       "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
     }
+  },
+  "fu": {
+    "title": "How should we contact you?",
+    "intro": "Your payment is confirmed. Our accountant will need a few details from you to prepare the company's appeal. Choose how you'd like us to contact you.",
+    "by_phone": "By phone",
+    "by_email": "By email",
+    "phone": "Phone number",
+    "when": "When can we call you? Tick every time that suits you.",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "call_note": "We'll email you to confirm the call time.",
+    "email": "Email address",
+    "email_note": "We'll email you with any questions, usually within one working day.",
+    "note": "Anything we should know? (optional)",
+    "submit": "Send",
+    "err_choose": "Please choose phone or email.",
+    "err_phone": "Please check your phone number.",
+    "err_slots": "Please tick at least one time.",
+    "err_email": "Please check your email address.",
+    "err_server": "Something went wrong. Please try again.",
+    "done_title": "Thank you, we've got it",
+    "done_phone": "We'll email you to confirm a call time from the ones you chose.",
+    "done_email": "We'll be in touch by email shortly.",
+    "deadline": "Your appeal deadline is {date}."
   }
 }

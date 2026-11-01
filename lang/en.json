@@ -377,11 +377,11 @@
     "note_ch": {
       "not_filed_as_soon_as_able": "The accounts weren't filed as soon as the problem ended, which may reduce the chance of the appeal being accepted."
     },
-    "co_o3_title": "Accountant review · £39",
-    "co_o3_b1": "A qualified accountant (MAAT) reviews the company's case",
+    "co_o3_title": "Accountant review · £59",
+    "co_o3_b1": "A qualified accountant (MAAT) acts as the company's agent and submits the appeal for you",
     "co_o3_b2": "We speak to you by phone or email to get the full picture",
-    "co_o3_b3": "We prepare the appeal letter for the director to sign",
-    "co_o3_cta": "Choose accountant review · £39",
+    "co_o3_b3": "Director's ID check and a signed authority to act, as required by law",
+    "co_o3_cta": "Choose accountant review · £59",
     "co_pkg_title": "Free appeal with your annual accounts and Corporation Tax return",
     "co_pkg_b1": "We prepare and file the company's annual accounts and Corporation Tax return",
     "co_pkg_b2": "Your penalty appeal is included free",
@@ -389,7 +389,15 @@
     "co_pkg_cta": "Get a free quote",
     "copied": "Copied. Paste it into the appeal box in your HMRC online account.",
     "copy_failed": "Copying didn't work on this device. Select the text below and copy it.",
-    "online_open": "Open HMRC's appeal page"
+    "online_open": "Open HMRC's appeal page",
+    "co_free_title": "Appeal yourself, free",
+    "co_free_ct": "Copy the wording below. A director can appeal online in the company's HMRC business tax account, or print it, sign it and post it to the address on the penalty notice.",
+    "co_free_ch": "Copy the wording below and paste it into Companies House's online appeal service. You'll need the company number and the penalty reference, and you can upload evidence.",
+    "co_free_open_ct": "How to appeal (GOV.UK)",
+    "co_free_open_ch": "Open the Companies House appeal service",
+    "co_copied": "Copied. Paste it into the appeal, then check it before you send it.",
+    "co_o3_b4_ct": "We need the company's UTR. HMRC will post an authorisation code to the company (about 2 weeks)",
+    "co_o3_b4_ch": "We need the company number and the penalty reference"
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -514,7 +522,9 @@
     "err_server": "Something went wrong. Please try again.",
     "err_not_ready": "Please confirm your facts first.",
     "preview_note": "Preview: no real money is taken. If asked to pay, use the Stripe test card 4242 4242 4242 4242, any future date and any 3 digits.",
-    "cancelled": "Payment cancelled. You haven't been charged."
+    "cancelled": "Payment cancelled. You haven't been charged.",
+    "option3_company": "Accountant review · £59",
+    "ct_utr_hint": "10 digits. It's on the company's Corporation Tax letters from HMRC."
   },
   "review": {
     "step": "Review your appeal",
@@ -812,7 +822,9 @@
     "package_submit": "Request a quote",
     "package_sent_title": "Request sent",
     "package_sent_text": "A qualified accountant at Accounted4Tax will contact you with a quote, usually within one working day. Your appeal deadline still applies.",
-    "company_name": "Company name"
+    "company_name": "Company name",
+    "ch_auth_code": "Companies House authentication code",
+    "ch_auth_code_hint": "6 characters. We need it to file the accounts and confirmation statement. If you don't have it, Companies House can post it to the registered office."
   },
   "paid": {
     "checking": "Checking your payment…",
@@ -890,11 +902,18 @@
       "button": "Upload my documents",
       "deadline": "Your appeal deadline is {date}.",
       "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
+    },
+    "code": {
+      "subject": "HMRC will post an authorisation code to the company ({ref})",
+      "body": "Thank you, we have the documents and the signed authority. We are asking HMRC for authorisation to act for the company's Corporation Tax. HMRC will post a letter with an authorisation code to the company's registered office, usually within about 2 weeks.",
+      "action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
+      "meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
+      "button": "Send the HMRC code"
     }
   },
   "fu": {
     "title": "How should we contact you?",
-    "intro": "Your payment is confirmed. Our accountant will need a few details from you to prepare the company's appeal. Choose how you'd like us to contact you.",
+    "intro": "Thank you, we have your documents. Our accountant will need a few details from you to prepare the company's appeal. Choose how you'd like us to contact you.",
     "by_phone": "By phone",
     "by_email": "By email",
     "phone": "Phone number",
@@ -915,6 +934,35 @@
     "done_title": "Thank you, we've got it",
     "done_phone": "We'll email you to confirm a call time from the ones you chose.",
     "done_email": "We'll be in touch by email shortly.",
-    "deadline": "Your appeal deadline is {date}."
+    "deadline": "Your appeal deadline is {date}.",
+    "code_note": "We've also emailed you about the authorisation code HMRC will post to the company."
+  },
+  "auth": {
+    "title": "Authority to act",
+    "intro": "I, {director}, a director of {company} (company number {number}), authorise Accounted4Tax Ltd, trading as Tax Letter Sorted, to act as the company's agent for this penalty appeal. This includes:",
+    "item1_ct": "dealing with HM Revenue and Customs about the Corporation Tax penalty, including asking HMRC for agent authorisation for the company's Corporation Tax;",
+    "item1_ch": "dealing with Companies House about the late filing penalty;",
+    "item2": "preparing and submitting the appeal, and receiving and replying to letters about it;",
+    "item3": "keeping copies of the identity documents and records for as long as the law requires.",
+    "scope": "This authority covers only this penalty appeal. Any other work needs a separate engagement letter. I confirm that I am a director of the company and that the information I have given is true.",
+    "withdraw": "You can withdraw this authority at any time by emailing letters@accounted4tax.co.uk. The English version is the one that applies.",
+    "type_name": "Type your full name to sign",
+    "agree": "I am a director of the company and I give this authority.",
+    "sign": "Sign the authority",
+    "signed": "Signed by {name}",
+    "err_name": "Please type your full name.",
+    "err_agree": "Please tick the box to confirm.",
+    "err_unsigned": "Please sign the authority to act before you send your documents."
+  },
+  "code": {
+    "title": "Send us the HMRC authorisation code",
+    "intro": "HMRC has posted a letter to the company with an authorisation code. It lets us act for the company's Corporation Tax. Type the code exactly as it appears in the letter.",
+    "ref": "Case {ref} · {company}",
+    "label": "Authorisation code",
+    "hint": "Letters and numbers only. The code is only valid for a limited time, so please send it as soon as the letter arrives.",
+    "submit": "Send the code",
+    "err_code": "Please check the code. It should be 4 to 20 letters and numbers.",
+    "done_title": "Thank you, we have the code",
+    "done_text": "Our accountant will use it to finish the authorisation with HMRC. We'll be in touch about the appeal."
   }
 }

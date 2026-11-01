@@ -25,3 +25,4 @@ Secrets set by Eduard in the dashboard: ANTHROPIC_API_KEY, STRIPE_SECRET_KEY (sa
 Edge functions added 31 Oct 2026: id-docs v1, id-reminders v1; read-letter v7 (address_on_letter).
 - 012_review_contacts – applied 1 Nov 2026 (company £39 reviews: phone/email preference and call availability)
 Edge function added 1 Nov 2026: review-contact v1 (saves the preference, emails letters@ an alert).
+- 013_company_agent_service – applied 1 Nov 2026 (company £59: authority_name/version, hmrc_code + dates; email types hmrc_code_request, appeal_ready; statuses awaiting_hmrc_code, submitted)

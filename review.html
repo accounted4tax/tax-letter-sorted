@@ -141,7 +141,7 @@
   function build() {
     if (started) return; started = true;
     if (product === "option3") {   // Option 3: identity check next; companies: contact preference (no ID at this stage)
-      location.href = ["ct-late-filing", "companies-house-late-filing"].indexOf(ctx.letter_type) > -1 ? "followup.html" : "id.html"; return;
+      location.href = "id.html"; return;   // individuals: ID; companies: ID + authority to act, then contact preference
     }
     F.callFn("appeal", { action: "build" }).then(function (res) {
       if (res.status === 404) { location.href = "upload.html"; return; }

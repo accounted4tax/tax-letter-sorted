@@ -48,6 +48,7 @@
     <h1 data-i18n="id.title">Your case is with our accountant</h1>
     <p class="lead" id="intro"></p>
     <div id="parts" class="stack"></div>
+    <div id="authority"></div>
     <button class="btn" type="button" id="submit" data-i18n="id.submit">Send my documents</button>
     <button class="linkbtn" type="button" id="later" data-i18n="id.later">I will upload later</button>
     <p class="success" id="laterMsg" role="status" hidden></p>
@@ -149,23 +150,63 @@
     return el("section", { class: "card part" + (partErr[part] ? " invalid" : "") }, kids);
   }
 
+  // Companies (£59): we act as agent, so the director signs the authority to act on screen.
+  var authName = "", authAgree = false, authErr = null, authBusy = false;
+  function authorityCard() {
+    var box = $("authority"); box.innerHTML = "";
+    if (!st.company) return;
+    var vars = { director: st.director || "", company: st.company_name || "", number: st.company_number || "" };
+    var kids = [el("h2", { text: t("auth.title") }), el("p", { text: t("auth.intro", vars) }),
+      el("ol", { class: "list" }, ["auth.item1" + (st.needs_hmrc_code ? "_ct" : "_ch"), "auth.item2", "auth.item3"].map(function (k) { return el("li", { text: t(k) }); })),
+      el("p", { text: t("auth.scope") }), el("p", { class: "hint", text: t("auth.withdraw") })];
+    if (st.authority) {
+      kids.push(el("p", { class: "got", text: t("auth.signed", { name: st.authority_name || "" }) }));
+    } else {
+      kids.push(el("label", { class: "field" }, [el("span", { text: t("auth.type_name") }),
+        el("input", { id: "authName", autocomplete: "name", maxlength: "120", value: authName, oninput: function (e) { authName = e.target.value; } })]));
+      kids.push(el("label", { class: "check" }, [el("input", { type: "checkbox", id: "authAgree", checked: authAgree, onchange: function (e) { authAgree = e.target.checked; } }),
+        el("span", { text: t("auth.agree") })]));
+      kids.push(el("button", { class: "btn secondary", type: "button", disabled: authBusy, text: t("auth.sign"), onclick: signAuthority }));
+    }
+    if (authErr) kids.push(el("p", { class: "error", role: "alert", text: t(authErr) }));
+    box.appendChild(el("section", { class: "card part" + (authErr ? " invalid" : "") }, kids));
+    if (!st.authority) { var n = $("authName"); if (n && document.activeElement !== n) n.value = authName; }
+  }
+  function signAuthority() {
+    if (authName.trim().length < 2) { authErr = "auth.err_name"; render(); return; }
+    if (!authAgree) { authErr = "auth.err_agree"; render(); return; }
+    authErr = null; authBusy = true; render();
+    api({ action: "authority", name: authName.trim(), agree: true }).then(function (res) {
+      authBusy = false;
+      if (res.ok) { st = res.j; if (errKey === "auth.err_unsigned") showErr(null); } else authErr = res.j.error === "name" ? "auth.err_name" : res.j.error === "agree" ? "auth.err_agree" : "id.err_server";
+      render();
+    }).catch(function () { authBusy = false; authErr = "id.err_server"; render(); });
+  }
+  function finished() {
+    // companies: next, how they'd like us to contact them (phone or email)
+    if (st && st.company) { location.href = "followup.html"; return; }
+    $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
+  }
+
   function render() {
     if (!st || !cat) return;
     $("loading").hidden = true;
-    if (st.completed) { $("form").hidden = true; $("done").hidden = false; return; }
+    if (st.completed) { finished(); return; }
     $("intro").textContent = t(st.company ? "id.intro_company" : "id.intro");
     var box = $("parts"); box.innerHTML = "";
     Object.keys(st.parts).forEach(function (p) { box.appendChild(partCard(p)); });
+    authorityCard();
     $("form").hidden = false;
   }
 
   $("submit").addEventListener("click", function () {
     if (!st.all_received) { showErr("id.err_missing"); return; }
+    if (st.company && !st.authority) { authErr = "auth.err_unsigned"; render(); showErr("auth.err_unsigned"); return; }
     showErr(null); $("submit").disabled = true;
     api({ action: "complete" }).then(function (res) {
       $("submit").disabled = false;
-      if (res.ok) { $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0); }
-      else { $("error").textContent = t("id.err_missing"); $("error").hidden = false; }
+      if (res.ok) finished();
+      else showErr(res.j.error === "authority" ? "auth.err_unsigned" : "id.err_missing");
     }).catch(function () { $("submit").disabled = false; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
   });
 

@@ -1,4 +1,4 @@
-// payments: Stripe Checkout for Option 2 (£19) and Option 3 (£39).
+// payments: Stripe Checkout for Option 2 (£19), Option 3 (£39) and the company accountant review (£59).
 //   checkout  – creates a Stripe Checkout page for the case and returns its address
 //   confirm   – after Stripe sends the client back, checks with Stripe that the payment went through,
 //               then records the payment and the long-term customer record
@@ -9,7 +9,10 @@ const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
 const PRICES: Record<string, { pence: number; name: string }> = {
   option2: { pence: 1900, name: "Tax Letter Sorted – Option 2: appeal prepared for you to sign and send" },
   option3: { pence: 3900, name: "Tax Letter Sorted – Option 3: appeal reviewed by a qualified accountant" },
+  // Companies (Corporation Tax, Companies House): ID, authority to act, appeal submitted by Accounted4Tax as agent (Eduard, 1 Nov 2026)
+  option3_company: { pence: 5900, name: "Tax Letter Sorted – company penalty appeal by a qualified accountant (as agent)" },
 };
+const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },
@@ -71,7 +74,9 @@ Deno.serve(async (req) => {
     if (body.action === "checkout") {
       if (!c.details_saved_at) return reply(400, { error: "no_details" });
       const product = String(c.product);
-      const price = PRICES[product];
+      const company = COMPANY_TYPES.includes(String(c.letter_type));
+      if (company && product !== "option3") return reply(400, { error: "product" });   // no £19 option for companies
+      const price = PRICES[company ? "option3_company" : product];
       if (!price) return reply(400, { error: "product" });
       const lang = c.language === "ro" ? "ro" : "en-GB";
       const q = (s: string) => `${SITE}/${s}`;

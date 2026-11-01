@@ -48,7 +48,7 @@
     F.callFn("payments", { action: "confirm", session: session }).then(function (res) {
       busy = false;
       if (res.ok && res.j.paid) { F.set("tls_product", res.j.product); F.set("tls_just_paid", "1"); var co = ["ct-late-filing", "companies-house-late-filing"].indexOf((F.getJSON("tls_explain") || {}).letter_type) > -1;
-        location.href = res.j.product === "option3" ? (co ? "followup.html" : "id.html") : "review.html"; return; }
+        location.href = res.j.product === "option3" ? "id.html" : "review.html"; return; }   // companies: ID + authority, then contact preference
       $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false;
     }).catch(function () { busy = false; $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false; });
   }

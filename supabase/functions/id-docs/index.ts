@@ -3,14 +3,18 @@
 //   upload    (form data) – one document: part (photo_id | selfie | proof_address | incorporation), doc_type, file
 //   complete  (JSON)      – every document received → case goes to the review queue
 //   later     (JSON)      – "I will upload later": emails a private upload link; id-reminders sends reminders
+//   authority (JSON)      – companies (£59): the director signs the authority to act on screen (typed name + tick)
+//   hmrc_code (JSON)      – Corporation Tax: the client sends the HMRC agent authorisation code when HMRC's letter arrives
 // Rules (rules/id-documents.json): one document cannot be used for both photo ID and proof of address,
 // and the same file cannot be uploaded twice.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { sendIdEmail } from "./email.ts";
+import { sendIdEmail, sendCodeEmail, alertEduard } from "./email.ts";
 
 const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
 const KIND: Record<string, string> = { photo_id: "id_photo", selfie: "id_selfie", proof_address: "id_address", incorporation: "incorporation_cert" };
 const MAX = 10 * 1024 * 1024;
+// Version of the authority-to-act wording the director signed (lang files: auth.*). Change it when the wording changes.
+const AUTHORITY_VERSION = "company-appeal-2026-11-01-draft";
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },
@@ -56,10 +60,15 @@ async function statusOf(c: Obj) {
     const f = files.find((x) => x.kind === KIND[p]);
     out[p] = { received: !!f, doc_type: f?.doc_type ?? null };
   }
+  const company = parts.includes("incorporation");
+  const d = (c.details ?? {}) as Obj;
   return {
-    ref: c.ref, letter_type: c.letter_type, company: parts.includes("incorporation"), parts: out,
+    ref: c.ref, letter_type: c.letter_type, company, parts: out,
     all_received: parts.every((p) => out[p].received), completed: !!c.id_completed_at,
-    authority: !!c.authority_to_act_at, later_requested: !!c.id_requested_at, appeal_deadline: c.appeal_deadline,
+    authority: !!c.authority_to_act_at, authority_name: c.authority_name ?? null, later_requested: !!c.id_requested_at, appeal_deadline: c.appeal_deadline,
+    company_name: company ? d.company_name ?? null : null, company_number: company ? d.company_number ?? null : null,
+    director: company ? d.full_name ?? null : null,
+    needs_hmrc_code: c.letter_type === "ct-late-filing", hmrc_code_received: !!c.hmrc_code_at,
   };
 }
 
@@ -94,7 +103,7 @@ Deno.serve(async (req) => {
   const token = String(body.case ?? "");
   if (!/^[0-9a-f]{40,80}$/.test(token)) return reply(400, { error: "bad_request" });
   const { data: c } = await db.from("cases")
-    .select("id, ref, language, product, status, letter_type, details, appeal_deadline, private_token, id_requested_at, id_reminders_sent, id_completed_at, authority_to_act_at, data_deleted_at")
+    .select("id, ref, language, product, status, letter_type, details, appeal_deadline, private_token, id_requested_at, id_reminders_sent, id_completed_at, authority_to_act_at, authority_name, hmrc_code_at, data_deleted_at")
     .eq("private_token", token).single();
   if (!c || c.data_deleted_at) return reply(404, { error: "not_found" });
   if (c.product !== "option3") return reply(400, { error: "not_option3" });
@@ -152,11 +161,42 @@ Deno.serve(async (req) => {
     if (body.action === "complete") {
       const st = await statusOf(c);
       if (!st.all_received) return reply(400, { error: "missing", status: st });
-      // Option 3 is only the appeal letter, so no authority to act is needed (Eduard, 31 Oct 2026).
-      // It is requested separately if the client later asks for other services.
+      // Individuals (£39): appeal letter only, no authority to act (Eduard, 31 Oct 2026).
+      // Companies (£59): we act as agent, so the director's signed authority is needed (Eduard, 1 Nov 2026).
+      if (st.company && !st.authority) return reply(400, { error: "authority", status: st });
       const now = new Date().toISOString();
       await db.from("cases").update({ id_completed_at: now, status: "in_review" }).eq("id", c.id);
       await db.from("audit_log").insert({ actor: "client", action: "id_completed", case_id: c.id });
+      // Corporation Tax: tell the client about the HMRC authorisation letter and how to send us the code
+      if (st.needs_hmrc_code) await sendCodeEmail(db, c, { previewCode: settings?.live ? null : settings?.preview_code }).catch(() => {});
+      return reply(200, { ok: true, company: st.company });
+    }
+
+    if (body.action === "authority") {
+      const st = await statusOf(c);
+      if (!st.company) return reply(400, { error: "not_company" });
+      const name = String(body.name ?? "").trim().replace(/\s+/g, " ").slice(0, 120);
+      if (name.length < 2) return reply(400, { error: "name" });
+      if (body.agree !== true) return reply(400, { error: "agree" });
+      const now = new Date().toISOString();
+      await db.from("cases").update({ authority_to_act_at: now, authority_name: name, authority_version: AUTHORITY_VERSION }).eq("id", c.id);
+      await db.from("audit_log").insert({ actor: "client", action: "authority_signed", case_id: c.id,
+        detail: { name, version: AUTHORITY_VERSION, ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null, ua: (req.headers.get("user-agent") ?? "").slice(0, 200) } });
+      return reply(200, await statusOf({ ...c, authority_to_act_at: now, authority_name: name }));
+    }
+
+    if (body.action === "hmrc_code") {
+      if (c.letter_type !== "ct-late-filing") return reply(400, { error: "not_ct" });
+      const code = String(body.code ?? "").replace(/[\s-]/g, "").toUpperCase();
+      if (!/^[A-Z0-9]{4,20}$/.test(code)) return reply(400, { error: "code" });
+      const now = new Date().toISOString();
+      await db.from("cases").update({ hmrc_code: code, hmrc_code_at: now }).eq("id", c.id);
+      await db.from("audit_log").insert({ actor: "client", action: "hmrc_code_received", case_id: c.id });
+      await alertEduard(db, c, `HMRC authorisation code received for ${c.ref}`, [
+        `The client has sent the HMRC agent authorisation code for ${c.ref}.`,
+        `Company: ${((c.details ?? {}) as Obj).company_name ?? "-"}`,
+        "Open the admin page to see it.",
+      ]).catch(() => {});
       return reply(200, { ok: true });
     }
 

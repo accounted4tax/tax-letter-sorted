@@ -16,6 +16,11 @@ const EN_DEFAULT: Record<string, string> = {
   "email.id.button": "Upload my documents",
   "email.id.deadline": "Your appeal deadline is {date}.",
   "email.id.footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938",
+  "email.code.subject": "HMRC will post an authorisation code to the company ({ref})",
+  "email.code.body": "Thank you, we have the documents and the signed authority. We are asking HMRC for authorisation to act for the company's Corporation Tax. HMRC will post a letter with an authorisation code to the company's registered office, usually within about 2 weeks.",
+  "email.code.action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
+  "email.code.meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
+  "email.code.button": "Send the HMRC code",
 };
 
 function esc(s: string) {
@@ -77,4 +82,64 @@ ${paras.map((p) => `<p>${esc(p)}</p>`).join("")}
     return { ok: false, error: "send_failed" };
   }
   return { ok: true };
+}
+
+
+// ---------- shared by the other emails ----------
+async function lang(c: any) {
+  const l = c.language === "ro" ? "ro" : "en";
+  const load = async (x: string) => { try { const r = await fetch(`${SITE}/lang/${x}.json`, { cache: "no-store" }); return r.ok ? await r.json() : {}; } catch { return {}; } };
+  const dict = await load(l);
+  const en = l === "en" ? dict : await load("en");
+  const t = (k: string, vars: Record<string, string> = {}) => {
+    const get = (o: any) => k.split(".").reduce((x: any, p) => x?.[p], o);
+    const v = get(dict) ?? get(en) ?? EN_DEFAULT[k] ?? "";
+    return String(v).replace(/\{(\w+)\}/g, (m, x) => vars[x] ?? m);
+  };
+  return { l, t };
+}
+function page(hello: string, paras: string[], button: string | null, link: string | null, footer: string) {
+  return `<!doctype html><html><body style="margin:0;background:#F5F6F8;font-family:Arial,Helvetica,sans-serif;color:#14213D">
+<div style="max-width:560px;margin:0 auto;padding:24px">
+<div style="background:#14213D;color:#fff;padding:14px 18px;border-radius:10px 10px 0 0;font-size:18px;font-weight:bold">Tax Letter Sorted</div>
+<div style="background:#fff;padding:22px 18px;border-radius:0 0 10px 10px;font-size:15px;line-height:1.55">
+<p>${esc(hello)}</p>
+${paras.map((p) => `<p>${esc(p)}</p>`).join("")}
+${button && link ? `<p style="margin:26px 0"><a href="${link}" style="background:#0E6E6B;color:#fff;text-decoration:none;padding:13px 20px;border-radius:8px;font-weight:bold;display:inline-block">${esc(button)}</a></p>
+<p style="font-size:12px;color:#4A5568">${esc(link)}</p>` : ""}
+</div>
+<p style="font-size:12px;color:#4A5568;text-align:center">${esc(footer)}</p>
+</div></body></html>`;
+}
+async function brevo(db: any, caseId: string, to: string, name: string, subject: string, html: string, text: string, type: string, tag: string) {
+  const key = Deno.env.get("BREVO_API_KEY");
+  if (!key || !to) return { ok: false, error: !key ? "not_configured" : "no_email" };
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({ sender: SENDER, to: [{ email: to, name: name || undefined }], subject, htmlContent: html, textContent: text, tags: [tag] }),
+  });
+  const j = await res.json().catch(() => ({}));
+  await db.from("email_log").insert({ case_id: caseId, recipient: to, email_type: type, provider_message_id: j.messageId ?? null, status: res.ok ? "sent" : "failed" });
+  if (!res.ok) await db.from("audit_log").insert({ actor: "brevo", action: "email_failed", case_id: caseId, detail: { status: res.status, error: JSON.stringify(j).slice(0, 300) } });
+  return { ok: res.ok };
+}
+
+// Corporation Tax (£59): HMRC posts an agent authorisation code to the company; the client sends it to us.
+export async function sendCodeEmail(db: any, c: any, opts: { previewCode?: string | null }) {
+  const d = c.details ?? {};
+  const { l, t } = await lang(c);
+  const name = String(d.full_name ?? "").trim();
+  const link = `${SITE}/code.html?case=${c.private_token}&lang=${l}` + (opts.previewCode ? `&preview=${opts.previewCode}` : "");
+  const paras = [t("email.code.body"), t("email.code.action"), t("email.code.meanwhile")];
+  const hello = t("email.id.hello", { name });
+  const html = page(hello, paras, t("email.code.button"), link, t("email.id.footer"));
+  const text = [hello, ...paras, `${t("email.code.button")}: ${link}`, t("email.id.footer")].join("\n\n");
+  return await brevo(db, c.id, String(d.email ?? ""), name, t("email.code.subject", { ref: String(c.ref) }), html, text, "hmrc_code_request", "hmrc_code");
+}
+
+// Short alert to Eduard (letters@)
+export async function alertEduard(db: any, c: any, subject: string, lines: string[]) {
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5">${lines.map((x) => `<p>${esc(x)}</p>`).join("")}</div>`;
+  return await brevo(db, c.id, "letters@accounted4tax.co.uk", "", subject, html, lines.join("\n"), "other", "admin_alert");
 }

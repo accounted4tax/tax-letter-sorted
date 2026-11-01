@@ -15,6 +15,7 @@ const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
 const APPEAL_ROUTES = ["appeal", "choice", "hmrc_check_first"];
 const SA_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment"];
 const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
+const CH_APPEAL_URL = "https://www.gov.uk/appeal-a-penalty-for-filing-your-company-accounts-late";
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },
@@ -74,9 +75,12 @@ function cleanDetails(c: Obj, d: Obj) {
     out.company_name = str(d.company_name, 160).toUpperCase();
     out.company_number = str(d.company_number, 10).replace(/\s/g, "").toUpperCase();
     out.role = d.role === "secretary" ? "Company Secretary" : "Director";
-    out.penalty_reference = str(d.penalty_reference, 40) || null;
-    out.utr = str(d.utr, 13).replace(/\s/g, "") || null;           // CT UTR, optional
+    out.penalty_reference = str(d.penalty_reference, 40).toUpperCase() || null;
+    out.utr = str(d.utr, 13).replace(/\s/g, "").toUpperCase() || null;
     if (String(out.company_name).length < 2) errors.push("company_name");
+    // Corporation Tax: the company's 10-digit UTR is needed to act as agent; Companies House: the penalty reference
+    if (t === "ct-late-filing" && !/^\d{10}K?$/.test(String(out.utr ?? ""))) errors.push("utr");
+    if (t === "companies-house-late-filing" && String(out.penalty_reference ?? "").length < 4) errors.push("penalty_reference");
     if (!/^(\d{8}|[A-Z]{2}\d{6})$/.test(String(out.company_number))) errors.push("company_number");
   }
   return { out, errors };
@@ -126,7 +130,7 @@ async function buildPdf(c: Obj) {
   const r = await rules(t);
   const out = (r?.appeal_output ?? {}) as Obj;
   const to = ch
-    ? ["Companies House", "Late Filing Penalties", "By email: enquiries@companieshouse.gov.uk"]
+    ? ["Companies House", "Late Filing Penalties", "Submitted through the Companies House online appeal service"]
     : String(out.post_to ?? "Corporation Tax Services, HM Revenue and Customs, BX9 1AX").split(", ");
   const refs = [`Company: ${d.company_name} (company number ${d.company_number})`];
   if (d.penalty_reference) refs.push(`Penalty reference: ${d.penalty_reference}`);
@@ -142,7 +146,8 @@ async function buildPdf(c: Obj) {
     signer: String(d.full_name), signer_role: String(d.role ?? "Director"),
   });
   return { bytes: new Uint8Array(bytes), kind: "letter",
-    send: ch ? { how: "email", to: "enquiries@companieshouse.gov.uk" } : { how: "post", to: to.join(", ") } };
+    // Companies House lists only its online appeal service (GOV.UK, checked 1 Nov 2026) – no email or post route
+    send: ch ? { how: "online", to: CH_APPEAL_URL } : { how: "post", to: to.join(", ") } };
 }
 
 async function signedUrl(path: string, seconds = 900) {
@@ -196,7 +201,7 @@ Deno.serve(async (req) => {
 
     if (body.action === "save_details") {
       if (!c.facts_confirmed_at || !APPEAL_ROUTES.includes(String(c.outcome_route))) return reply(400, { error: "not_ready" });
-      const product = body.product === "option3" ? "option3" : "option2";
+      const product = body.product === "option3" || COMPANY_TYPES.includes(String(c.letter_type)) ? "option3" : "option2";
       const { out, errors } = cleanDetails(c, (body.details ?? {}) as Obj);
       if (errors.length) return reply(400, { error: "invalid", fields: errors });
       await db.from("cases").update({

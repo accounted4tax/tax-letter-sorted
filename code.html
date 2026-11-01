@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Send the HMRC code – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Arriving from the emailed link: keep the private case link for this tab, then hide it from the address bar.
+  (function () {
+    var p = new URLSearchParams(location.search), c = p.get("case");
+    if (c && /^[0-9a-f]{40,80}$/.test(c)) { try { sessionStorage.setItem("tls_case", c); } catch (e) {} }
+  })();
+</script>
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0"><div class="spinner" aria-hidden="true"></div></section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <section id="form" class="stack" hidden>
+    <h1 data-i18n="code.title">Send us the HMRC authorisation code</h1>
+    <p class="lead" data-i18n="code.intro"></p>
+    <p class="note" id="refLine"></p>
+    <div class="card">
+      <label class="field" id="codeRow"><span data-i18n="code.label">Authorisation code</span>
+        <span class="hint" data-i18n="code.hint"></span>
+        <input id="code" maxlength="30" autocapitalize="characters" autocomplete="off" spellcheck="false" style="font-size:20px;letter-spacing:2px"></label>
+    </div>
+    <button class="btn" type="button" id="submit" data-i18n="code.submit">Send the code</button>
+  </section>
+
+  <section id="done" class="stack" hidden>
+    <div class="success" role="status"><b data-i18n="code.done_title">Thank you, we have the code</b><p data-i18n="code.done_text" style="margin-top:6px"></p></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Corporation Tax (£59): HMRC posts an agent authorisation code to the company; the client sends it here.
+  var F = window.TLS_FLOW, t = F.t;
+  var $ = function (id) { return document.getElementById(id); };
+  var st = null, errKey = null;
+  if (new URLSearchParams(location.search).get("case")) history.replaceState(null, "", "code.html");
+  function err(k) { errKey = k; $("error").textContent = k ? t(k) : ""; $("error").hidden = !k; $("codeRow").classList.toggle("invalid", k === "code.err_code"); }
+
+  function render() {
+    if (!st) return;
+    $("loading").hidden = true;
+    if (st.hmrc_code_received) { $("form").hidden = true; $("done").hidden = false; return; }
+    $("refLine").textContent = t("code.ref", { ref: st.ref, company: st.company_name || "" });
+    $("form").hidden = false;
+    if (errKey) err(errKey);
+  }
+
+  $("submit").addEventListener("click", function () {
+    var code = $("code").value.replace(/[\s-]/g, "").toUpperCase();
+    if (!/^[A-Z0-9]{4,20}$/.test(code)) return err("code.err_code");
+    err(null); $("submit").disabled = true;
+    F.callFn("id-docs", { action: "hmrc_code", code: code }).then(function (res) {
+      $("submit").disabled = false;
+      if (res.ok) { $("form").hidden = true; $("done").hidden = false; window.scrollTo(0, 0); }
+      else err(res.j.error === "code" ? "code.err_code" : "id.err_server");
+    }).catch(function () { $("submit").disabled = false; err("id.err_server"); });
+  });
+
+  F.onLanguage(function () {
+    if (!F.get("tls_case")) { $("loading").hidden = true; $("error").textContent = t("id.not_found"); $("error").hidden = false; return; }
+    if (st) { render(); return; }
+    F.callFn("id-docs", { action: "status" }).then(function (res) {
+      if (!res.ok || !res.j.needs_hmrc_code) { $("loading").hidden = true; $("error").textContent = t(res.status === 404 || res.ok ? "id.not_found" : "id.err_server"); $("error").hidden = false; return; }
+      st = res.j; render();
+    }).catch(function () { $("loading").hidden = true; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
+  });
+})();
+</script>
+</body>
+</html>

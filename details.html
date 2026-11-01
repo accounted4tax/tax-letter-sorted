@@ -50,7 +50,8 @@
         <input id="company_number" maxlength="10" autocapitalize="characters"></label>
       <label class="field" data-f="penalty_reference"><span><span data-i18n="details.penalty_reference">Penalty reference</span> <span class="hint" id="penRefOpt" data-i18n="common.optional">(optional)</span></span>
         <input id="penalty_reference" maxlength="40" autocapitalize="characters"></label>
-      <label class="field" data-f="utr" id="ctUtrRow"><span><span data-i18n="details.ct_utr">Company UTR</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+      <label class="field" data-f="utr" id="ctUtrRow"><span data-i18n="details.ct_utr">Company UTR</span>
+        <span class="hint" data-i18n="details.ct_utr_hint"></span>
         <input id="ct_utr" inputmode="numeric" maxlength="13"></label>
     </div>
 
@@ -124,7 +125,7 @@
     if (!info) return;
     var company = isCompany(), sa = SA.indexOf(T()) > -1, ch = T() === "companies-house-late-filing";
     $("intro").textContent = t(company ? "details.intro_company" : "details.intro");
-    $("productLabel").textContent = t(product === "option3" ? "details.option3" : "details.option2");
+    $("productLabel").textContent = t(company ? "details.option3_company" : product === "option3" ? "details.option3" : "details.option2");
     $("nameLabel").textContent = t(company ? "details.your_name" : "details.full_name");
     $("companyCard").hidden = !company; $("roleRow").hidden = !company; $("addrTitle").hidden = !company;
     $("ctUtrRow").hidden = ch; $("penRefOpt").hidden = ch;

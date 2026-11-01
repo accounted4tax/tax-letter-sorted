@@ -95,8 +95,10 @@
     // Companies (Corporation Tax, Companies House): no self-serve option. Accountant review £39,
     // or the appeal free with the annual accounts + Corporation Tax return (Eduard, 1 Nov 2026).
     if (isCT || isCH) {
+      // Free: copy the wording and submit it yourself. £59: we act as agent (ID + authority, Eduard 1 Nov 2026).
       return el("section", { class: "stack", id: "offers" }, [
-        offer(true, "outcome.co_o3_title", ["outcome.co_o3_b1", "outcome.co_o3_b2", "outcome.co_o3_b3"], "outcome.co_o3_cta", "option3"),
+        freeCopy(isCH ? "ch" : "ct"),
+        offer(true, "outcome.co_o3_title", ["outcome.co_o3_b1", "outcome.co_o3_b2", "outcome.co_o3_b3", isCT ? "outcome.co_o3_b4_ct" : "outcome.co_o3_b4_ch"], "outcome.co_o3_cta", "option3"),
         el("div", { class: "offer" }, [
           el("h2", { text: t("outcome.co_pkg_title") }),
           el("ul", {}, ["outcome.co_pkg_b1", "outcome.co_pkg_b2", "outcome.co_pkg_b3"].map(function (k) { return el("li", { text: t(k) }); })),
@@ -109,28 +111,35 @@
       offer(false, "outcome.o2_title", [isSA ? "outcome.o2_b1" : "outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta", "option2"),
       offer(true, "outcome.o3_title", ["outcome.o3_b1", "outcome.o3_b2", "outcome.o3_b3", "outcome.o3_b4"], "outcome.o3_cta", "option3"),
       el("p", { class: "soon", text: t(canBuy ? (window.TLS_CONFIG.live ? "common.pay_stripe" : "details.preview_note") : "outcome.coming_soon") }),
-      isSA ? freeCopy() : null,
+      isSA ? freeCopy("sa") : null,
       link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "outcome.call_alt")
     ]);
   }
-  // Free option (Self Assessment): the client appeals online in their HMRC account, pasting our English wording.
+  // Free option: the client appeals themselves, pasting our English wording.
+  //   sa – HMRC online account; ct – company's HMRC business tax account or post; ch – Companies House online appeal service
+  var FREE = {
+    sa: { title: "outcome.online_alt", how: null, url: "https://www.gov.uk/tax-appeals/penalty", btn: "outcome.online_open" },
+    ct: { title: "outcome.co_free_title", how: "outcome.co_free_ct", url: "https://www.gov.uk/company-tax-returns/penalties-for-late-filing", btn: "outcome.co_free_open_ct" },
+    ch: { title: "outcome.co_free_title", how: "outcome.co_free_ch", url: "https://www.gov.uk/appeal-a-penalty-for-filing-your-company-accounts-late", btn: "outcome.co_free_open_ch" }
+  };
   var copyState = null;
-  function freeCopy() {
-    var txt = F.get("tls_appeal_text") || "";
-    if (!txt) return el("p", { class: "note", text: t("outcome.online_alt") });
-    var pre = el("p", { class: "card", lang: "en", style: "white-space:pre-wrap;font-size:14px;user-select:all", text: txt });
-    var msg = copyState ? el("p", { class: copyState === "ok" ? "success" : "callout", role: "status", text: t(copyState === "ok" ? "outcome.copied" : "outcome.copy_failed") }) : null;
+  function freeCopy(kind) {
+    var f = FREE[kind], txt = F.get("tls_appeal_text") || "";
+    if (!txt && kind === "sa") return el("p", { class: "note", text: t(f.title) });
+    var msg = copyState ? el("p", { class: copyState === "ok" ? "success" : "callout", role: "status",
+      text: t(copyState === "ok" ? (kind === "sa" ? "outcome.copied" : "outcome.co_copied") : "outcome.copy_failed") }) : null;
     return el("div", { class: "card stack" }, [
-      el("b", { text: t("outcome.online_alt") }),
+      el(kind === "sa" ? "b" : "h2", { text: t(f.title) }),
+      f.how ? el("p", { text: t(f.how) }) : null,
       el("div", { class: "btnrow" }, [
-        el("button", { class: "btn secondary", type: "button", text: t("outcome.copy_wording"), onclick: function () {
+        txt ? el("button", { class: "btn secondary", type: "button", text: t("outcome.copy_wording"), onclick: function () {
           var done = function (s) { copyState = s; render(); };
           if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { done("ok"); }, function () { done("fail"); });
           else done("fail");
-        } }),
-        link("btn secondary", "https://www.gov.uk/tax-appeals/penalty", "outcome.online_open", true)
+        } }) : null,
+        link("btn secondary", f.url, f.btn, true)
       ]),
-      msg, pre
+      msg, txt ? el("p", { class: "card", lang: "en", style: "white-space:pre-wrap;font-size:14px;user-select:all", text: txt }) : null
     ]);
   }
   var callBtn = function (key) { return link("btn", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), key || "talk.request_call"); };

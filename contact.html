@@ -42,6 +42,11 @@
         <input id="email" type="email" autocomplete="email" maxlength="200"></label>
       <label class="field" id="companyRow" hidden><span data-i18n="contact.company_name">Company name</span>
         <input id="company_name" autocomplete="organization" maxlength="160"></label>
+      <label class="field" id="companyNoRow" hidden><span><span data-i18n="details.company_number">Company number</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <input id="company_number" maxlength="10" autocapitalize="characters"></label>
+      <label class="field" id="authCodeRow" hidden><span><span data-i18n="contact.ch_auth_code">Companies House authentication code</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <span class="hint" data-i18n="contact.ch_auth_code_hint"></span>
+        <input id="ch_auth_code" maxlength="10" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
       <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
         <select id="tax_year"></select></label>
       <label class="field"><span><span id="noteLabel"></span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
@@ -88,7 +93,8 @@
     $("stepName").textContent = t(titleKey);
     $("title").textContent = t(titleKey);
     $("intro").textContent = t(isPackage ? "contact.package_intro" : isHelp ? "help.intro" : "contact.callback_intro");
-    $("companyRow").hidden = !isPackage;
+    $("companyRow").hidden = !isPackage; $("companyNoRow").hidden = !isPackage;
+    $("authCodeRow").hidden = !isPackage;   // asked for only here: we file the accounts (Eduard, 1 Nov 2026)
     $("noteLabel").textContent = t(isHelp ? "help.notes" : "contact.best_time");
     $("submit").textContent = t(isPackage ? "contact.package_submit" : isHelp ? "help.submit" : "talk.submit");
     $("phoneOpt").hidden = !isHelp;   // a call-back needs a phone number; help requests need at least the email
@@ -126,6 +132,8 @@
       body.tax_year = "package";
       body.note = ["[Quote: annual accounts + Corporation Tax return, penalty appeal free]",
         "Company: " + ($("company_name").value.trim() || "-"),
+        "Company number: " + ($("company_number").value.trim().toUpperCase() || "-"),
+        $("ch_auth_code").value.trim() ? "Companies House authentication code: " + $("ch_auth_code").value.trim().toUpperCase() : "",
         ctx.ref ? "Case: " + ctx.ref : "", body.note].filter(Boolean).join(" · ");
     }
     if (!F.get("tls_case")) body.case = null;

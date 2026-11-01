@@ -120,7 +120,8 @@
     });
     $("deadline").textContent = ctx.appeal_deadline ? t("fu.deadline", { date: F.fmtDate(ctx.appeal_deadline) }) : "";
     if (errKey) { $("error").textContent = t(errKey); $("error").hidden = false; } else $("error").hidden = true;
-    if (sentMethod) $("doneText").textContent = t(sentMethod === "phone" ? "fu.done_phone" : "fu.done_email");
+    if (sentMethod) $("doneText").textContent = t(sentMethod === "phone" ? "fu.done_phone" : "fu.done_email")
+      + (ctx.letter_type === "ct-late-filing" ? " " + t("fu.code_note") : "");
   }
   function err(k, rowId) {
     errKey = k; render();

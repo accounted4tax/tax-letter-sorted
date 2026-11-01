@@ -351,9 +351,9 @@
     "o2_b3": "Download, print and sign",
     "o2_cta": "Choose Option 2 · £19",
     "o3_title": "Option 3 · Accountant review",
-    "o3_b1": "Checked and improved by a qualified accountant (MAAT)",
+    "o3_b1": "A qualified accountant (MAAT) contacts you, talks it through and prepares your appeal",
     "o3_b2": "Within 48 hours of receiving everything we need",
-    "o3_b3": "Sent to you for e-signature",
+    "o3_b3": "Emailed to you, ready to print, sign and post",
     "o3_b4": "ID check needed, as required by law",
     "o3_cta": "Choose Option 3 · £39",
     "call_alt": "Not sure? Book a 15-minute call with an accountant · £19",
@@ -386,7 +386,10 @@
     "co_pkg_b1": "We prepare and file the company's annual accounts and Corporation Tax return",
     "co_pkg_b2": "Your penalty appeal is included free",
     "co_pkg_b3": "No-obligation quote, usually within one working day",
-    "co_pkg_cta": "Get a free quote"
+    "co_pkg_cta": "Get a free quote",
+    "copied": "Copied. Paste it into the appeal box in your HMRC online account.",
+    "copy_failed": "Copying didn't work on this device. Select the text below and copy it.",
+    "online_open": "Open HMRC's appeal page"
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -549,7 +552,7 @@
     "deadline": "Send it by {date}.",
     "evidence": "If you have evidence, attach copies (never originals). Keep the originals safe in case HMRC asks for them.",
     "o3_title": "Your case is with our accountant",
-    "o3_text": "A qualified accountant at Accounted4Tax will check your appeal and send it to you for e-signature within 48 hours of receiving everything we need. We'll email you if we need an ID check or anything else.",
+    "o3_text": "A qualified accountant at Accounted4Tax will contact you, talk it through and prepare your appeal within 48 hours of receiving everything we need. We'll email it to you, ready to print, sign and post. We'll email you if we need an ID check or anything else.",
     "preview_badge": "Preview – no payment taken"
   },
   "done": {
@@ -873,7 +876,7 @@
     "later_sent": "We've emailed you a link to upload your documents. We'll remind you if they're still missing.",
     "later_failed": "We couldn't send the email just now. You can come back to this page using the same link.",
     "done_title": "Thank you, we have everything",
-    "done_text": "A qualified accountant at Accounted4Tax will check your appeal and send it to you for e-signature within 48 hours.",
+    "done_text": "A qualified accountant at Accounted4Tax will contact you, talk it through and prepare your appeal within 48 hours. We'll email it to you, ready to print, sign and post.",
     "privacy": "Your documents are stored securely in the UK and used only for our legal identity checks. We keep them for as long as the law requires.",
     "not_found": "This link has expired or is not valid. Please contact us."
   },

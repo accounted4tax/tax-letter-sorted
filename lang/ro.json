@@ -182,7 +182,12 @@
       "fu.done_title",
       "fu.done_phone",
       "fu.done_email",
-      "fu.deadline"
+      "fu.deadline",
+      "outcome.copied",
+      "outcome.copy_failed",
+      "outcome.online_open",
+      "outcome.o3_b1",
+      "outcome.o3_b3"
     ]
   },
   "common": {
@@ -528,9 +533,9 @@
     "o2_b3": "Îl descărcați, îl tipăriți și îl semnați",
     "o2_cta": "Alege Opțiunea 2 · 19 £",
     "o3_title": "Opțiunea 3 · Verificare de către un contabil",
-    "o3_b1": "Verificată și îmbunătățită de un contabil calificat (MAAT)",
+    "o3_b1": "Un contabil calificat (MAAT) vă contactează, discută situația cu dvs. și vă pregătește contestația",
     "o3_b2": "În 48 de ore de la primirea tuturor documentelor necesare",
-    "o3_b3": "Vă este trimisă pentru semnătură electronică",
+    "o3_b3": "Vă este trimisă pe email, gata de tipărit, semnat și expediat prin poștă",
     "o3_b4": "Este necesară verificarea identității, conform legii",
     "o3_cta": "Alege Opțiunea 3 · 39 £",
     "call_alt": "Nu sunteți sigur? Programați o discuție de 15 minute cu un contabil · 19 £",
@@ -563,7 +568,10 @@
     "co_pkg_b1": "Pregătim și depunem bilanțul financiar anual și declarația fiscală anuală a firmei",
     "co_pkg_b2": "Contestația amenzii este inclusă gratuit",
     "co_pkg_b3": "Ofertă fără nicio obligație, de obicei într-o zi lucrătoare",
-    "co_pkg_cta": "Cere o ofertă gratuită"
+    "co_pkg_cta": "Cere o ofertă gratuită",
+    "copied": "Copiat. Lipiți textul în căsuța pentru contestație din contul dvs. HMRC online.",
+    "copy_failed": "Copierea nu a funcționat pe acest dispozitiv. Selectați textul de mai jos și copiați-l.",
+    "online_open": "Deschideți pagina HMRC pentru contestații"
   },
   "ne": {
     "title": "O contestație are puține șanse de reușită",
@@ -726,7 +734,7 @@
     "deadline": "Trimiteți-o până la {date}.",
     "evidence": "Dacă aveți dovezi, atașați copii (niciodată originalele). Păstrați originalele în siguranță, în caz că HMRC le cere.",
     "o3_title": "Dosarul dvs. este la contabilul nostru",
-    "o3_text": "Un contabil calificat de la Accounted4Tax vă va verifica contestația și v-o va trimite pentru semnătură electronică în 48 de ore de la primirea tuturor documentelor necesare. Vă scriem pe email dacă avem nevoie de verificarea identității sau de altceva.",
+    "o3_text": "Un contabil calificat de la Accounted4Tax vă va contacta, va discuta situația cu dvs. și vă va pregăti contestația în 48 de ore de la primirea tuturor documentelor necesare. V-o trimitem pe email, gata de tipărit, semnat și expediat prin poștă. Vă scriem pe email dacă avem nevoie de verificarea identității sau de altceva.",
     "preview_badge": "Previzualizare – nu s-a efectuat nicio plată"
   },
   "done": {
@@ -1058,7 +1066,7 @@
     "later_sent": "V-am trimis pe email un link pentru încărcarea documentelor. Vă vom aminti dacă încă lipsesc.",
     "later_failed": "Nu am putut trimite emailul acum. Puteți reveni la această pagină folosind același link.",
     "done_title": "Vă mulțumim, avem tot ce ne trebuie",
-    "done_text": "Un contabil calificat de la Accounted4Tax vă va verifica contestația și v-o va trimite pentru semnătură electronică în 48 de ore.",
+    "done_text": "Un contabil calificat de la Accounted4Tax vă va contacta, va discuta situația cu dvs. și vă va pregăti contestația în 48 de ore. V-o trimitem pe email, gata de tipărit, semnat și expediat prin poștă.",
     "privacy": "Documentele dvs. sunt păstrate în siguranță în Marea Britanie și folosite doar pentru verificările de identitate cerute de lege. Le păstrăm atât cât cere legea.",
     "not_found": "Acest link a expirat sau nu este valid. Vă rugăm să ne contactați."
   },

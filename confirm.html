@@ -119,6 +119,8 @@
       $("error").textContent = t("confirm.err_declaration"); $("error").hidden = false; return;
     }
     $("error").hidden = true;
+    // keep the English wording so the options page can offer it free, ready to copy (online appeal)
+    F.set("tls_appeal_text", $("appealWrap").hidden ? "" : ($("appealText").textContent || ""));
     if (F.demo || ans.demo) {
       F.setJSON("tls_outcome", { route: ans.route, route_note: ans.route_note, reason: ans.reason, appeal_deadline: ctx.appeal_deadline, penalty_amount: ctx.penalty_amount, letter_type: ctx.letter_type });
       location.href = "outcome.html?demo=1"; return;

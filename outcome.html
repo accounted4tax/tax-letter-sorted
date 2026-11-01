@@ -109,8 +109,28 @@
       offer(false, "outcome.o2_title", [isSA ? "outcome.o2_b1" : "outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta", "option2"),
       offer(true, "outcome.o3_title", ["outcome.o3_b1", "outcome.o3_b2", "outcome.o3_b3", "outcome.o3_b4"], "outcome.o3_cta", "option3"),
       el("p", { class: "soon", text: t(canBuy ? (window.TLS_CONFIG.live ? "common.pay_stripe" : "details.preview_note") : "outcome.coming_soon") }),
-      isSA ? el("p", { class: "note", text: t("outcome.online_alt") }) : null,
+      isSA ? freeCopy() : null,
       link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "outcome.call_alt")
+    ]);
+  }
+  // Free option (Self Assessment): the client appeals online in their HMRC account, pasting our English wording.
+  var copyState = null;
+  function freeCopy() {
+    var txt = F.get("tls_appeal_text") || "";
+    if (!txt) return el("p", { class: "note", text: t("outcome.online_alt") });
+    var pre = el("p", { class: "card", lang: "en", style: "white-space:pre-wrap;font-size:14px;user-select:all", text: txt });
+    var msg = copyState ? el("p", { class: copyState === "ok" ? "success" : "callout", role: "status", text: t(copyState === "ok" ? "outcome.copied" : "outcome.copy_failed") }) : null;
+    return el("div", { class: "card stack" }, [
+      el("b", { text: t("outcome.online_alt") }),
+      el("div", { class: "btnrow" }, [
+        el("button", { class: "btn secondary", type: "button", text: t("outcome.copy_wording"), onclick: function () {
+          var done = function (s) { copyState = s; render(); };
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { done("ok"); }, function () { done("fail"); });
+          else done("fail");
+        } }),
+        link("btn secondary", "https://www.gov.uk/tax-appeals/penalty", "outcome.online_open", true)
+      ]),
+      msg, pre
     ]);
   }
   var callBtn = function (key) { return link("btn", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), key || "talk.request_call"); };

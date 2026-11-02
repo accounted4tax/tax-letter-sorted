@@ -29,3 +29,4 @@ Edge function added 1 Nov 2026: review-contact v1 (saves the preference, emails 
 - 014_admin – applied 1 Nov 2026 (app_settings.admin_emails, cases.admin_appeal_text / admin_notes, help_requests.admin_notes)
 Edge functions 1 Nov 2026: payments v2 (£59 for companies), id-docs v3 (authority to act, HMRC code, code email), appeal v4 (admin build/send, emails the approved PDF), admin v1 (admin page).
 Admin sign-in: Supabase Auth email + password; the user must be created in the dashboard (Authentication → Users → Add user) with an email listed in app_settings.admin_emails.
+- 015_brevo_webhook – applied 2 Nov 2026 (app_settings.webhook_secret). Edge function brevo-webhook v1: Brevo delivery events → email_log.status.

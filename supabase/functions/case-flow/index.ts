@@ -14,6 +14,8 @@ const RULES: Record<string, string> = {
   "sa-late-payment": "sa-late-payment", "sa-notice-to-file": "sa-notice-to-file", "nudge-letters": "nudge-letters",
   "p800": "p800", "simple-assessment": "simple-assessment", "ct-late-filing": "ct-late-filing",
   "companies-house-late-filing": "companies-house-late-filing",
+  "vat-late-submission": "vat-late-submission", "paye-employer-penalty": "paye-employer-penalty",
+  "cis-late-return": "cis-late-return", "sa-statement": "sa-statement",
 };
 const APPEAL_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing", "companies-house-late-filing"];
 const FILING_TYPES = ["sa-late-filing-100", "sa-late-filing-later"];
@@ -102,7 +104,7 @@ async function claudeTool(system: string, content: unknown[], tool: Obj, maxToke
 
 function taxGroup(t: string) {
   if (t.startsWith("vat")) return "vat";
-  if (t.startsWith("paye")) return "paye";
+  if (t.startsWith("paye") || t.startsWith("cis")) return "paye";
   if (t.startsWith("ct")) return "ct";
   if (t.startsWith("companies-house")) return "ch";
   if (t === "simple-assessment") return "sa_simple";
@@ -135,6 +137,10 @@ function actionsFor(t: string, ext: Obj) {
       return [{ id: "how_to_pay", url: pay }, { id: "talk_accountant" }];
     case "sa-other":
       return [{ id: "help_return" }, { id: "talk_accountant" }];
+    case "sa-statement":   // explanation only; a paid £59 appointment for next steps (Eduard, 3 Nov 2026)
+      return [{ id: "book_appointment" }, { id: "how_to_pay", url: pay }];
+    case "cis-late-return":
+      return [{ id: "talk_accountant" }, { id: "how_to_pay", url: pay }];
     default:
       return [{ id: "talk_accountant" }];
   }

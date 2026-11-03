@@ -316,7 +316,29 @@
       "auth.scope_short",
       "email.quote.subject",
       "email.quote.intro",
-      "email.quote.next"
+      "email.quote.next",
+      "letters.sa_statement.title",
+      "letters.cis_late_return.title",
+      "explain.btn_book_appointment",
+      "appt.title",
+      "appt.intro",
+      "appt.point1",
+      "appt.point2",
+      "appt.point3",
+      "appt.name",
+      "appt.email",
+      "appt.phone",
+      "appt.pay",
+      "appt.note",
+      "appt.cancelled",
+      "appt.err_name",
+      "appt.err_email",
+      "appt.err_phone",
+      "appt.err_terms",
+      "appt.err_server",
+      "fu.title_appt",
+      "fu.intro_appt",
+      "fu.done_appt"
     ]
   },
   "common": {
@@ -470,7 +492,8 @@
     "btn_p800_claim": "Solicită rambursarea (GOV.UK)",
     "btn_p800_pay": "Cum plătiți suma datorată",
     "demo": "Explicație de probă – nu a fost citită nici o scrisoare.",
-    "ref": "Dosarul dvs.: {ref}"
+    "ref": "Dosarul dvs.: {ref}",
+    "btn_book_appointment": "Programați o discuție cu un contabil · £59"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -541,6 +564,12 @@
     },
     "hmrc_other": {
       "title": "Alt tip de scrisoare HMRC"
+    },
+    "sa_statement": {
+      "title": "Extras de cont Self Assessment sau scrisoare de datorie (SA300 / Debt Management)"
+    },
+    "cis_late_return": {
+      "title": "Penalitate pentru declarația lunară CIS depusă cu întârziere"
     }
   },
   "q": {
@@ -1296,7 +1325,10 @@
     "done_phone": "Vă trimitem un email pentru a confirma ora apelului, dintre intervalele alese.",
     "done_email": "Vă contactăm în curând pe email.",
     "deadline": "Termenul pentru contestație este {date}.",
-    "code_note": "V-am trimis și un email despre codul de autorizare pe care HMRC îl va trimite prin poștă companiei."
+    "code_note": "V-am trimis și un email despre codul de autorizare pe care HMRC îl va trimite prin poștă companiei.",
+    "title_appt": "Când vă putem suna?",
+    "intro_appt": "Vă mulțumim pentru programare. Bifați zilele și orele potrivite și vă vom confirma programarea.",
+    "done_appt": "Vă confirmăm programarea la telefon sau pe email în cel mult o zi lucrătoare."
   },
   "auth": {
     "title": "Mandatul dvs.",
@@ -1378,5 +1410,23 @@
     "expired": "Linkul de plată a expirat. Vă rugăm să ne contactați pentru unul nou.",
     "not_found": "Nu am găsit acest link de plată. Vă rugăm să folosiți butonul din emailul nostru.",
     "err_server": "A apărut o problemă. Vă rugăm să încercați din nou peste puțin timp."
+  },
+  "appt": {
+    "title": "Programați o discuție cu un contabil",
+    "intro": "Un contabil calificat (MAAT) vă va suna pentru a discuta scrisoarea, suma datorată și pașii următori.",
+    "point1": "O convorbire telefonică de până la 30 de minute, la ora aleasă de dvs.",
+    "point2": "Vă explicăm sumele, dobânda și eventualele penalități din extras",
+    "point3": "Vă spunem ce opțiuni aveți, de exemplu plata în rate (Time to Pay)",
+    "name": "Numele complet",
+    "email": "Adresa de email",
+    "phone": "Număr de telefon",
+    "pay": "Plătiți £59 și alegeți ora",
+    "note": "După plată, alegeți zilele și orele potrivite. Confirmăm programarea la telefon sau pe email.",
+    "cancelled": "Plata a fost anulată. Puteți încerca din nou când sunteți gata.",
+    "err_name": "Vă rugăm să introduceți numele complet.",
+    "err_email": "Vă rugăm să introduceți o adresă de email validă.",
+    "err_phone": "Vă rugăm să introduceți un număr de telefon valid.",
+    "err_terms": "Vă rugăm să acceptați Termenii și Politica de confidențialitate pentru a continua.",
+    "err_server": "A apărut o eroare. Vă rugăm să încercați din nou peste un minut."
   }
 }

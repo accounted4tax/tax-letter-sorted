@@ -1,0 +1,30 @@
+{
+  "id": "cis-late-return",
+  "version": "0.1",
+  "status": "Draft 3 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "title_key": "lt.cis_late_return",
+  "tax": "CIS",
+  "penalty_type": "late_return",
+  "recognition": "CIS late return penalty for a contractor's monthly return (CIS300).",
+  "facts_for_explanation": {
+    "what_it_is": "A penalty because a contractor's monthly CIS return reached HMRC after the 19th of the month after the tax month ended.",
+    "amounts": {
+      "1 day late": "£100",
+      "2 months late": "£200",
+      "6 months late": "£300 or 5% of the CIS deductions on the return, whichever is higher",
+      "12 months late": "£300 or 5% of the CIS deductions, whichever is higher",
+      "more than 12 months": "an additional penalty of up to £3,000 or 100% of the CIS deductions"
+    },
+    "how_to_appeal": "Within 30 days of the penalty notice: online through HMRC's service, or in writing quoting the UTR and the payment reference on the notice. Not by phone.",
+    "nil_returns": "A return is needed every month unless HMRC has been told the business made no payments to subcontractors (an 'inactivity' notice)."
+  },
+  "appeal_output": {
+    "form": "letter",
+    "language": "en",
+    "post_to": "the address on the penalty notice",
+    "online_alternative": "HMRC's online appeal service for CIS penalties"
+  },
+  "sources": [
+    "https://gov.uk/what-you-must-do-as-a-cis-contractor/file-your-monthly-returns"
+  ]
+}

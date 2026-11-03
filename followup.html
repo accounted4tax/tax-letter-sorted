@@ -32,8 +32,8 @@
 
 <main class="wrap">
   <section id="form" class="stack">
-    <h1 data-i18n="fu.title">How should we contact you?</h1>
-    <p class="lead" data-i18n="fu.intro"></p>
+    <h1 id="title" data-i18n="fu.title">How should we contact you?</h1>
+    <p class="lead" id="fuIntro"></p>
 
     <fieldset class="q" id="methodQ">
       <div class="yn">
@@ -87,6 +87,8 @@
   var SLOTS = ["morning", "afternoon", "evening"];
   var picked = {}, errKey = null, sentMethod = null, info = null;
   if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+  var appt = F.get("tls_product") === "appointment";   // £59 appointment: a phone call at a chosen time
+  if (appt) { $("title").removeAttribute("data-i18n"); $("methodQ").hidden = true; document.querySelector('input[name=method][value=phone]').checked = true; }
 
   // the next 5 working days (Monday to Friday), starting tomorrow
   function workingDays() {
@@ -118,9 +120,11 @@
           } })]);
       }))));
     });
-    $("deadline").textContent = ctx.appeal_deadline ? t("fu.deadline", { date: F.fmtDate(ctx.appeal_deadline) }) : "";
+    $("fuIntro").textContent = t(appt ? "fu.intro_appt" : "fu.intro");
+    $("deadline").textContent = appt ? "" : ctx.appeal_deadline ? t("fu.deadline", { date: F.fmtDate(ctx.appeal_deadline) }) : "";
     if (errKey) { $("error").textContent = t(errKey); $("error").hidden = false; } else $("error").hidden = true;
-    if (sentMethod) $("doneText").textContent = t(sentMethod === "phone" ? "fu.done_phone" : "fu.done_email")
+    if (appt) $("title").textContent = t("fu.title_appt");
+    if (sentMethod) $("doneText").textContent = appt ? t("fu.done_appt") : t(sentMethod === "phone" ? "fu.done_phone" : "fu.done_email")
       + (ctx.letter_type === "ct-late-filing" ? " " + t("fu.code_note") : "");
   }
   function err(k, rowId) {

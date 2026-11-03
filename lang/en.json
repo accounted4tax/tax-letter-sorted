@@ -159,7 +159,8 @@
     "btn_p800_claim": "Claim your refund (GOV.UK)",
     "btn_p800_pay": "How to pay what you owe (GOV.UK)",
     "demo": "Sample explanation – no letter was read.",
-    "ref": "Your case: {ref}"
+    "ref": "Your case: {ref}",
+    "btn_book_appointment": "Book an appointment with an accountant · £59"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -230,6 +231,12 @@
     },
     "hmrc_other": {
       "title": "Other HMRC letter"
+    },
+    "sa_statement": {
+      "title": "Self Assessment statement or debt letter (SA300 / Debt Management)"
+    },
+    "cis_late_return": {
+      "title": "CIS late monthly return penalty"
     }
   },
   "q": {
@@ -977,7 +984,10 @@
     "done_phone": "We'll email you to confirm a call time from the ones you chose.",
     "done_email": "We'll be in touch by email shortly.",
     "deadline": "Your appeal deadline is {date}.",
-    "code_note": "We've also emailed you about the authorisation code HMRC will post to the company."
+    "code_note": "We've also emailed you about the authorisation code HMRC will post to the company.",
+    "title_appt": "When can we call you?",
+    "intro_appt": "Thank you for booking. Tick the days and times that suit you and we'll confirm the appointment.",
+    "done_appt": "We'll confirm your appointment by phone or email within one working day."
   },
   "auth": {
     "title": "Your instruction",
@@ -1059,5 +1069,23 @@
     "expired": "This payment link has expired. Please contact us for a new one.",
     "not_found": "We couldn't find this payment link. Please use the button in our email.",
     "err_server": "Something went wrong. Please try again in a moment."
+  },
+  "appt": {
+    "title": "Book an appointment with an accountant",
+    "intro": "A qualified accountant (MAAT) will call you to go through your letter, what you owe and what you can do next.",
+    "point1": "A phone call of up to 30 minutes at a time you choose",
+    "point2": "We explain the amounts, the interest and any penalties on your statement",
+    "point3": "We tell you your options, for example paying in instalments (Time to Pay)",
+    "name": "Your full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "pay": "Pay £59 and choose a time",
+    "note": "After paying, you choose the days and times that suit you. We confirm the appointment by phone or email.",
+    "cancelled": "The payment was cancelled. You can try again when you're ready.",
+    "err_name": "Please enter your full name.",
+    "err_email": "Please enter a valid email address.",
+    "err_phone": "Please enter a valid phone number.",
+    "err_terms": "Please accept the Terms and Privacy Policy to continue.",
+    "err_server": "Something went wrong. Please try again in a minute."
   }
 }

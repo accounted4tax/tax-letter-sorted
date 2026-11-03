@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Book an appointment – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stack">
+    <h1 data-i18n="appt.title">Book an appointment with an accountant</h1>
+    <p class="lead" data-i18n="appt.intro"></p>
+    <div class="card">
+      <ul style="padding-left:20px;line-height:1.6">
+        <li data-i18n="appt.point1"></li>
+        <li data-i18n="appt.point2"></li>
+        <li data-i18n="appt.point3"></li>
+      </ul>
+      <p style="font-size:24px;font-weight:700;margin-top:8px">£59</p>
+    </div>
+    <p class="callout" id="cancelled" hidden data-i18n="appt.cancelled"></p>
+
+    <div class="card stack">
+      <label class="field" id="nameRow"><span data-i18n="appt.name">Your full name</span>
+        <input id="name" autocomplete="name" maxlength="120"></label>
+      <label class="field" id="emailRow"><span data-i18n="appt.email">Email address</span>
+        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
+      <label class="field" id="phoneRow"><span data-i18n="appt.phone">Phone number</span>
+        <input id="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+      <label class="check" id="termsRow"><input type="checkbox" id="terms"><span><span data-i18n="details.start_now"></span> <a href="terms.html" target="_blank" rel="noopener" data-i18n="common.terms">Terms</a> · <a href="privacy.html" target="_blank" rel="noopener" data-i18n="common.privacy">Privacy Policy</a></span></label>
+      <label class="check"><input type="checkbox" id="marketing"><span data-i18n="details.marketing"></span></label>
+    </div>
+
+    <p class="error" id="error" role="alert" hidden></p>
+    <button class="btn" type="button" id="pay" data-i18n="appt.pay">Pay £59 and choose a time</button>
+    <p class="note" data-i18n="appt.note"></p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // £59 appointment (Statement of Account / debt letters): contact details → Stripe → choose times (followup.html).
+  var F = window.TLS_FLOW, t = F.t;
+  var $ = function (id) { return document.getElementById(id); };
+  if (!F.get("tls_case")) { location.href = "upload.html"; return; }
+  if (new URLSearchParams(location.search).get("cancelled")) $("cancelled").hidden = false;
+  var errKey = null;
+  function err(k, row) {
+    errKey = k; $("error").textContent = t(k); $("error").hidden = false;
+    document.querySelectorAll(".invalid").forEach(function (n) { n.classList.remove("invalid"); });
+    if (row) { $(row).classList.add("invalid"); $(row).scrollIntoView({ block: "center" }); }
+  }
+  $("pay").addEventListener("click", function () {
+    var b = { action: "appointment_checkout", name: $("name").value.trim(), email: $("email").value.trim(),
+      phone: $("phone").value.trim(), terms: $("terms").checked, marketing: $("marketing").checked };
+    if (b.name.length < 2) return err("appt.err_name", "nameRow");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(b.email)) return err("appt.err_email", "emailRow");
+    if (!/^[+\d][\d\s()-]{8,}$/.test(b.phone)) return err("appt.err_phone", "phoneRow");
+    if (!b.terms) return err("appt.err_terms", "termsRow");
+    errKey = null; $("error").hidden = true; $("pay").disabled = true;
+    F.callFn("payments", b).then(function (res) {
+      if (res.ok && res.j.url) { location.href = res.j.url; return; }
+      $("pay").disabled = false;
+      var e = res.j && res.j.error;
+      err(e === "name" ? "appt.err_name" : e === "email" ? "appt.err_email" : e === "phone" ? "appt.err_phone" : e === "terms" ? "appt.err_terms" : "appt.err_server");
+    }).catch(function () { $("pay").disabled = false; err("appt.err_server"); });
+  });
+  F.onLanguage(function () { if (errKey) $("error").textContent = t(errKey); });
+})();
+</script>
+</body>
+</html>

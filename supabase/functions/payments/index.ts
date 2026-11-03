@@ -11,6 +11,7 @@ const PRICES: Record<string, { pence: number; name: string }> = {
   option2: { pence: 1900, name: "Tax Letter Sorted – Option 2: appeal prepared for you to sign and send" },
   option3: { pence: 3900, name: "Tax Letter Sorted – Option 3: appeal reviewed by a qualified accountant" },
   // Companies (Corporation Tax, Companies House): ID, authority to act, appeal submitted by Accounted4Tax as agent (Eduard, 1 Nov 2026)
+  appointment: { pence: 5900, name: "Tax Letter Sorted – appointment with a qualified accountant" },
   option3_company: { pence: 5900, name: "Tax Letter Sorted – company penalty appeal by a qualified accountant (as agent)" },
 };
 const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
@@ -105,6 +106,36 @@ Deno.serve(async (req) => {
       return reply(200, { url: session.url });
     }
 
+    // ---- £59 appointment (SA statement / debt letters): name, email, phone, then Stripe ----
+    if (body.action === "appointment_checkout") {
+      const name = String(body.name ?? "").trim().slice(0, 120), email = String(body.email ?? "").trim().toLowerCase().slice(0, 200), phone = String(body.phone ?? "").trim().slice(0, 30);
+      if (name.length < 2) return reply(400, { error: "name" });
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return reply(400, { error: "email" });
+      if (!/^[+\d][\d\s()-]{8,}$/.test(phone)) return reply(400, { error: "phone" });
+      if (body.terms !== true) return reply(400, { error: "terms" });
+      const nd = { ...d, full_name: name, email, phone, marketing_consent: body.marketing === true, terms_accepted_at: new Date().toISOString() };
+      await db.from("cases").update({ details: nd, details_saved_at: new Date().toISOString(), product: "appointment",
+        delete_after: new Date(Date.now() + 60 * 864e5).toISOString() }).eq("id", c.id);
+      const price = PRICES.appointment;
+      const q = (s: string) => `${SITE}/${s}`;
+      const session = await stripe("checkout/sessions", {
+        mode: "payment",
+        "line_items[0][price_data][currency]": "gbp",
+        "line_items[0][price_data][unit_amount]": String(price.pence),
+        "line_items[0][price_data][product_data][name]": price.name,
+        "line_items[0][quantity]": "1",
+        customer_email: email, client_reference_id: String(c.ref),
+        "metadata[case_ref]": String(c.ref), "metadata[product]": "appointment",
+        "payment_intent_data[description]": `${c.ref} · appointment`, "payment_intent_data[metadata][case_ref]": String(c.ref),
+        locale: c.language === "ro" ? "ro" : "en-GB",
+        success_url: q("paid.html?session={CHECKOUT_SESSION_ID}"), cancel_url: q("appointment.html?cancelled=1"),
+        expires_at: String(Math.floor(Date.now() / 1000) + 60 * 60),
+      });
+      await db.from("payments").insert({ case_id: c.id, product: "appointment", amount_pence: price.pence, stripe_session_id: session.id, status: "pending", stripe_mode: mode() });
+      await funnel(body.visit_id, "stripe_opened", c, "appointment");
+      return reply(200, { url: session.url });
+    }
+
     // ---- payment links sent from the admin page ----
     if (body.action === "link_info" || body.action === "link_checkout") {
       const { data: link } = await db.from("payment_links").select("*").eq("id", String(body.link ?? "")).eq("case_id", c.id).maybeSingle();
@@ -153,7 +184,7 @@ Deno.serve(async (req) => {
         const { data: lk } = await db.from("payment_links").select("target").eq("id", p.payment_link_id).maybeSingle();
         target = String(lk?.target ?? target);
       }
-      const next = target === "option3" ? "id" : p.payment_link_id ? "done" : "review";
+      const next = target === "option3" ? "id" : target === "appointment" ? "slots" : p.payment_link_id ? "done" : "review";
       if (p.status === "paid") return reply(200, { paid: true, product: target, next });
       const s = await stripe(`checkout/sessions/${sid}`);
       if (s.payment_status !== "paid") return reply(200, { paid: false, status: s.status });
@@ -169,7 +200,7 @@ Deno.serve(async (req) => {
         customerId = cu?.id ?? null;
       }
       await db.from("payments").update({ status: "paid", paid_at: now, stripe_payment_intent: String(s.payment_intent ?? ""), customer_id: customerId }).eq("id", p.id);
-      const upd: Obj = { customer_id: customerId, status: target === "option3" || p.payment_link_id ? "in_review" : "paid" };
+      const upd: Obj = { customer_id: customerId, status: target === "option3" || target === "appointment" || p.payment_link_id ? "in_review" : "paid" };
       if (p.payment_link_id) upd.product = target;
       if (target === "option3") upd.delete_after = null;     // Option 3 records are kept (AAT period)
       await db.from("cases").update(upd).eq("id", c.id);

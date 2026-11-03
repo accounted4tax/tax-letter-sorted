@@ -8,16 +8,16 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const MODEL = "claude-haiku-5-5";
 const MAX_READS = 3;
 const LETTER_TYPES = [
-  "sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "sa-notice-to-file", "sa-other",
+  "sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "sa-notice-to-file", "sa-statement", "sa-other",
   "nudge-letters", "p800", "simple-assessment",
   "vat-late-submission", "vat-late-payment", "vat-other",
-  "paye-employer-penalty", "paye-other",
+  "paye-employer-penalty", "paye-other", "cis-late-return",
   "ct-late-filing", "ct-other",
   "companies-house-late-filing", "companies-house-other",
   "compliance-check", "hmrc-other", "not-recognised",
 ];
 const PENALTY_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing",
-  "companies-house-late-filing", "vat-late-submission", "vat-late-payment", "paye-employer-penalty"];
+  "companies-house-late-filing", "vat-late-submission", "vat-late-payment", "paye-employer-penalty", "cis-late-return"];
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },
@@ -36,7 +36,8 @@ Self Assessment (individuals):
 - sa-late-filing-later: form code SA370 with "Late filing penalties for the year ended": daily (£10 a day), 6-month or 12-month penalties.
 - sa-late-payment: form code SA370 with "Late payment penalties for the year ended" (5% penalties on tax unpaid).
 - sa-notice-to-file: SA316 or a notice asking the person to send a Self Assessment tax return (also SA818 "you still need to fill in a tax return").
-- sa-other: any other Self Assessment letter (SA302 tax calculation, statement of account, return corrections AAS1, notice withdrawn SA832, SA251 update, payments on account, repayment).
+- sa-statement: SA300 Self Assessment statement of account, or a Debt Management letter chasing unpaid Self Assessment tax (reminder, final demand, notice of enforcement).
+- sa-other: any other Self Assessment letter (SA302 tax calculation, return corrections AAS1, notice withdrawn SA832, SA251 update, repayment).
 - nudge-letters: HMRC asking the person to check their tax because it has information (online selling platforms, other income), including ITSA6 "Check if you need to send us a Self Assessment tax return". Not a penalty.
 - p800: P800 tax calculation (PAYE overpaid or underpaid).
 - simple-assessment: PA302 Simple Assessment tax bill.
@@ -47,6 +48,8 @@ VAT (businesses):
 PAYE (employers and employees):
 - paye-employer-penalty: penalty for an employer's late PAYE/RTI filing (Full Payment Submission) or late PAYE payment.
 - paye-other: any other PAYE letter (tax code notice P2, employer PAYE reminders, P60/P11D queries, coding out).
+CIS (construction contractors):
+- cis-late-return: penalty for a contractor's late monthly CIS return (CIS300).
 Corporation Tax and Companies House:
 - ct-late-filing: HMRC Corporation Tax (Company Tax Return) late filing penalty.
 - ct-other: any other Corporation Tax letter (notice to deliver a Company Tax Return CT603, interest, determination, payment reminder).
@@ -54,7 +57,7 @@ Corporation Tax and Companies House:
 - companies-house-other: any other Companies House letter (confirmation statement or accounts reminder, strike-off notice, registered office).
 Other:
 - compliance-check: HMRC is checking or enquiring into a return or records (CC/FS factsheets, "I'm checking your tax return", information notice, enquiry under section 9A).
-- hmrc-other: any other HMRC letter (agent authorisation, repayment security check, CIS registration, Child Benefit, Inheritance Tax, Capital Gains, debt).
+- hmrc-other: any other HMRC letter (agent authorisation, repayment security check, CIS registration or other CIS letters, Child Benefit, Inheritance Tax, Capital Gains, debt).
 - not-recognised: not from HMRC or Companies House, or unreadable.
 
 A notice can list several penalties (e.g. daily + 6-month). Put each in penalties[] and the total in penalty_total.
@@ -103,6 +106,8 @@ const TOOL = {
       company_number: { type: ["string", "null"] },
       vat_number: { type: ["string", "null"], description: "VAT registration number, if printed" },
       employer_paye_ref: { type: ["string", "null"], description: "employer PAYE reference (e.g. 123/AB45678), if printed" },
+      accounts_office_ref: { type: ["string", "null"], description: "employer Accounts Office reference (13 characters, e.g. 123PA00045678), if printed" },
+      vat_registration_date: { type: ["string", "null"], description: "VAT registration date as YYYY-MM-DD, if printed" },
       period: { type: ["string", "null"], description: "VAT or PAYE period the letter is about, as printed" },
       accounts_period_end: { type: ["string", "null"], description: "Corporation Tax or Companies House letters: the end date of the company's accounting period / 'accounts made up to' date, as YYYY-MM-DD" },
       hmrc_phone: { type: ["string", "null"] },

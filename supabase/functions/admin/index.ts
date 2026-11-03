@@ -185,20 +185,21 @@ Deno.serve(async (req) => {
       case "overview": {
         const { data: cs } = await db.from("cases")
           .select("id, ref, product, status, letter_type, appeal_deadline, id_completed_at, id_requested_at, hmrc_code_at, hmrc_code_requested_at, sent_at, data_deleted_at, details")
-          .in("product", ["option2", "option3"]).is("data_deleted_at", null).order("created_at", { ascending: false }).limit(500);
+          .in("product", ["option2", "option3", "appointment"]).is("data_deleted_at", null).order("created_at", { ascending: false }).limit(500);
         const ids = (cs ?? []).map((c) => c.id);
         const { data: paid } = ids.length ? await db.from("payments").select("case_id, amount_pence, paid_at").eq("status", "paid").in("case_id", ids) : { data: [] };
         const paidSet = new Set((paid ?? []).map((p) => p.case_id));
         const { data: contacts } = ids.length ? await db.from("review_contacts").select("case_id, method, confirmed_at, availability, phone, email, note").in("case_id", ids) : { data: [] };
         const { data: viaLink } = ids.length ? await db.from("payments").select("case_id").eq("status", "paid").not("payment_link_id", "is", null).in("case_id", ids) : { data: [] };
         const linkSet = new Set((viaLink ?? []).map((p) => p.case_id));
-        const queue = (cs ?? []).filter((c) => (c.product === "option3" || linkSet.has(c.id)) && paidSet.has(c.id) && !["sent", "submitted", "posted", "closed"].includes(c.status));
+        const queue = (cs ?? []).filter((c) => (c.product === "option3" || c.product === "appointment" || linkSet.has(c.id)) && paidSet.has(c.id) && !["sent", "submitted", "posted", "closed"].includes(c.status));
         const company = (t: string) => t === "ct-late-filing" || t === "companies-house-late-filing";
         const q = queue.map((c) => {
           const rc = (contacts ?? []).find((x) => x.case_id === c.id);
           const todo: string[] = [];
           if (c.product === "option3" && !c.id_completed_at) todo.push(c.id_requested_at ? "waiting_for_id" : "id_not_started");
-          if (c.product !== "option3") todo.push("write_appeal");
+          if (c.product === "appointment") todo.push(rc ? (rc.confirmed_at ? "hold_appointment" : "confirm_call") : "waiting_for_times");
+          else if (c.product !== "option3") todo.push("write_appeal");
           if (company(c.letter_type) && rc && rc.method === "phone" && !rc.confirmed_at) todo.push("confirm_call");
           if (c.letter_type === "ct-late-filing" && c.id_completed_at && !c.hmrc_code_requested_at) todo.push("request_hmrc_code");
           if (c.hmrc_code_at) todo.push("hmrc_code_received");
@@ -221,7 +222,8 @@ Deno.serve(async (req) => {
       case "cases": {
         let q = db.from("cases").select("*").order("created_at", { ascending: false }).limit(300);
         const f = String(body.filter ?? "all");
-        if (f === "paid") q = q.in("product", ["option2", "option3"]);
+        if (f === "paid") q = q.in("product", ["option2", "option3", "appointment"]);
+        if (f === "appointment") q = q.eq("product", "appointment");
         if (f === "option3") q = q.eq("product", "option3");
         if (f === "option2") q = q.eq("product", "option2");
         if (f === "active") q = q.is("data_deleted_at", null);

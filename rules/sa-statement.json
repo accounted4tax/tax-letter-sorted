@@ -1,0 +1,20 @@
+{
+  "id": "sa-statement",
+  "version": "0.1",
+  "status": "Draft 3 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "title_key": "lt.sa_statement",
+  "tax": "Self Assessment",
+  "kind": "explain_only",
+  "recognition": "SA300 Self Assessment statement, or a Debt Management letter about unpaid Self Assessment tax (final reminder, demand, notice of enforcement).",
+  "facts_for_explanation": {
+    "what_it_is": "A statement of the Self Assessment account: tax due, payments made, payments on account, interest and penalties – or a letter chasing unpaid tax.",
+    "payments_on_account": "Most people pay twice a year in advance (31 January and 31 July), each half of last year's bill, plus a balancing payment on 31 January.",
+    "interest": "Interest runs on tax paid late, and late payment penalties of 5% can apply at 30 days, 6 months and 12 months.",
+    "cant_pay": "If the client can't pay in full, they can ask HMRC for a payment plan (Time to Pay). HMRC Self Assessment payment problems: 0300 200 3820.",
+    "debt_letters": "Debt Management letters should never be ignored: HMRC can take enforcement action. Contact HMRC before the date on the letter."
+  },
+  "sources": [
+    "https://www.gov.uk/pay-self-assessment-tax-bill",
+    "https://www.gov.uk/difficulties-paying-hmrc"
+  ]
+}

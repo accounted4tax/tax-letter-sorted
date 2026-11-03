@@ -19,7 +19,7 @@ async function alertEduard(c: Obj, row: Obj) {
   const d = (c.details ?? {}) as Obj;
   const slots = ((row.availability ?? []) as Obj[]).map((s) => `${s.date} ${s.slot}`).join(", ");
   const lines = [
-    `New company appeal review (£39 paid): ${c.ref}`,
+    c.product === "appointment" ? `New £59 appointment booked: ${c.ref}` : `New accountant review: ${c.ref}`,
     `Company: ${d.company_name ?? "-"} (${d.company_number ?? "-"})`,
     `Contact: ${d.full_name ?? "-"}`,
     row.method === "phone" ? `Wants a CALL on ${row.phone}. Available: ${slots || "-"}` : `Wants EMAIL contact: ${row.email}`,
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     .select("id, ref, product, letter_type, details, appeal_deadline, data_deleted_at")
     .eq("private_token", token).single();
   if (!c || c.data_deleted_at) return reply(404, { error: "not_found" });
-  if (c.product !== "option3") return reply(400, { error: "not_option3" });
+  if (c.product !== "option3" && c.product !== "appointment") return reply(400, { error: "not_option3" });
   if (mustPay) {
     const { data: paid } = await db.from("payments").select("id").eq("case_id", c.id).eq("status", "paid").limit(1);
     if (!paid?.length) return reply(402, { error: "not_paid" });

@@ -1,0 +1,29 @@
+{
+  "id": "vat-late-submission",
+  "version": "0.1",
+  "status": "Draft 3 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "title_key": "lt.vat_late_submission",
+  "tax": "VAT",
+  "penalty_type": "late_submission_points",
+  "facts_for_explanation": {
+    "what_it_is": "From VAT periods starting on or after 1 January 2023, each VAT Return sent late (including nil and repayment returns) gets one penalty point. When the points reach the threshold, HMRC charges a £200 penalty, and another £200 for each further late return while at the threshold.",
+    "thresholds": {
+      "annual": "2 points",
+      "quarterly": "4 points",
+      "monthly": "5 points"
+    },
+    "removing_points": "At the threshold, points are removed only when both are met: (A) a period of compliance – all returns on time for 24 months (annual), 12 months (quarterly) or 6 months (monthly); and (B) all outstanding returns for the previous 24 months sent. Below the threshold, each point expires on its own after about 24 months.",
+    "how_to_challenge": "Ask HMRC for a review through the VAT online account, or write to: Solicitor's Office and Legal Services, HMRC, BX9 1ZT. A penalty can be cancelled if there was a reasonable excuse. Usually within 30 days of the penalty decision.",
+    "pay": "Even while appealing, keep sending returns on time to stop more points."
+  },
+  "appeal_output": {
+    "form": "letter",
+    "language": "en",
+    "post_to": "Solicitor's Office and Legal Services, HMRC, BX9 1ZT",
+    "online_alternative": "Ask for a review in the business's VAT online account"
+  },
+  "sources": [
+    "https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late",
+    "https://www.gov.uk/guidance/remove-penalty-points-youve-received-after-submitting-your-vat-return-late"
+  ]
+}

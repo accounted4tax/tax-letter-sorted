@@ -15,6 +15,11 @@ const EVIDENCE_EN = {
 
 function fmt(iso) {
   if (!iso) return "";
+  // month only ("2021-12") → "December 2021"
+  if (/^\d{4}-\d{2}$/.test(String(iso))) {
+    const m = new Date(String(iso) + "-01T00:00:00Z");
+    return isNaN(m) ? iso : m.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
+  }
   const d = new Date(String(iso).slice(0, 10) + "T00:00:00Z");
   if (isNaN(d)) return iso;
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
@@ -64,7 +69,7 @@ const BECAUSE_CLOSE = {
 };
 
 // a = {
-//   letter_type, reason, tax_year ("2024-25"), penalty_count (number),
+//   letter_type, reasons: [] (or a single reason), tax_year ("2024-25"), penalty_count (number),
 //   story, why_late, nnf_other_text, something_else_text   (English, as confirmed)
 //   date_from, date_to, filed_date, filed_asap ("yes"/"no"), evidence: []
 // }
@@ -81,10 +86,15 @@ export function composeAppeal(a) {
   const act = pay ? "pay my tax" : company ? "file its company tax return" : ch ? "file its accounts" : "file my tax return";
   const filedVerb = pay ? "paid" : "filed";
   const deadline = pay ? "the payment deadline" : "the filing deadline";
-  const because = BECAUSE[a.reason] || null;
+  // one or more reasons the client chose (only those with appeal wording are named)
+  const reasons = (Array.isArray(a.reasons) && a.reasons.length ? a.reasons : [a.reason]).filter(Boolean);
+  const nnf = reasons.includes("never_needed_to_file");
+  const named = reasons.filter((r) => BECAUSE[r]);
+  const because = named.length ? list(named.map((r) => BECAUSE[r])) : null;
+  const becauseClose = named.length ? list(named.map((r) => BECAUSE_CLOSE[r])) : "of the circumstances described above";
 
   const p = [];
-  if (a.reason === "never_needed_to_file") {
+  if (nnf) {
     p.push(`I would like to appeal against the ${penaltyWords}${year}, because I do not believe I needed to file a tax return for that year. The facts are as follows.`);
   } else if (because) {
     p.push(`I would like to appeal against the ${penaltyWords}${year}. ${who} unable to ${act} on time because ${because}. The facts are as follows.`);
@@ -112,10 +122,10 @@ export function composeAppeal(a) {
 
   if (a.why_late) p.push(`I am making this appeal after the 30-day time limit because: ${sentence(a.why_late)}`);
 
-  if (a.reason === "never_needed_to_file") {
+  if (nnf) {
     p.push(`Missing ${deadline} was not intentional. I did not believe I needed to file a tax return for that year.`);
   } else {
-    p.push(`Missing ${deadline} was not intentional. It happened because ${BECAUSE_CLOSE[a.reason] || "of the circumstances described above"}.`);
+    p.push(`Missing ${deadline} was not intentional. It happened because ${becauseClose}.`);
   }
   p.push("Thank you for considering this appeal. I look forward to a favourable decision.");
   return p.join("\n\n");

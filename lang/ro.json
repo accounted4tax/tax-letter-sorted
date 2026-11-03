@@ -287,7 +287,15 @@
       "pkg.m_cis",
       "pkg.m_vat",
       "pkg.m_until",
-      "details.start_now"
+      "details.start_now",
+      "q.continue_not_filed_btn",
+      "q.continue_not_filed_done",
+      "confirm.mismatch_title",
+      "confirm.mismatch_text",
+      "confirm.mismatch_ok",
+      "confirm.err_mismatch",
+      "confirm.you_wrote",
+      "confirm.english_for_hmrc"
     ]
   },
   "common": {
@@ -565,7 +573,9 @@
     "err_required": "Vă rugăm să răspundeți la întrebările marcate cu roșu.",
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
     "no_questions": "Încă nu avem întrebări pentru contestarea acestui tip de scrisoare.",
-    "filed_asap_accounts": "Ați depus bilanțul financiar anual imediat ce ați putut, după ce s-a terminat?"
+    "filed_asap_accounts": "Ați depus bilanțul financiar anual imediat ce ați putut, după ce s-a terminat?",
+    "continue_not_filed_btn": "Continui cu contestația – înțeleg că HMRC așteaptă mai întâi declarația fiscală anuală",
+    "continue_not_filed_done": "Bine – continuați cu contestația. Vă rugăm totuși să depuneți declarația fiscală anuală cât mai curând."
   },
   "warn": {
     "return_not_filed": "De obicei, HMRC nu decide asupra contestației până nu este depusă declarația fiscală anuală. Contestația mea poate fi amânată sau respinsă până atunci. Înțeleg și vreau să continui."
@@ -742,7 +752,7 @@
     "title": "Verificați circumstanțele în engleză",
     "intro": "HMRC are nevoie de contestație în engleză. Asigurați-vă că textul în engleză spune exact ce ne-ați spus. Nu am adăugat nimic.",
     "you_wrote": "Ați scris",
-    "english_for_hmrc": "Textul în engleză pentru HMRC",
+    "english_for_hmrc": "În engleză pentru HMRC (cu greșelile corectate)",
     "change": "Modifică răspunsurile",
     "key_facts": "Circumstanțele principale",
     "return_filed": "Declarația fiscală anuală depusă",
@@ -761,7 +771,11 @@
     "none": "Niciuna",
     "accounts_filed": "Bilanțul financiar anual depus",
     "appeal_text_title": "Contestația dvs., așa cum o va citi HMRC",
-    "appeal_text_hint": "Acest text va fi trecut în contestația dvs. Verificați să spună doar ce este adevărat."
+    "appeal_text_hint": "Acest text va fi trecut în contestația dvs. Verificați să spună doar ce este adevărat.",
+    "mismatch_title": "Explicația dvs. nu pare să corespundă motivului ales",
+    "mismatch_text": "Ați ales: „{reason}”. Vă rugăm să verificați că ce ați scris descrie acest motiv. Dacă nu, modificați răspunsurile.",
+    "mismatch_ok": "Am verificat: motivul și explicația mea sunt corecte.",
+    "err_mismatch": "Vă rugăm să verificați motivul și explicația sau să modificați răspunsurile."
   },
   "details": {
     "title": "Datele dvs. pentru contestație",

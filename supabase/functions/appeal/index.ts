@@ -102,10 +102,12 @@ async function buildPdf(c: Obj) {
   const eng = (ae.texts ?? {}) as Record<string, string>;
   const penalties = ((ext.penalties ?? []) as Obj[]).filter((p) => p && (p.amount != null || p.description));
   const reason = String(ae.reason ?? a.reason ?? "");
+  // one or more reasons (multiple choice from 3 Nov 2026); older cases have a single reason
+  const reasons = (Array.isArray(ae.reasons) && ae.reasons.length ? ae.reasons : Array.isArray(a.reasons) && a.reasons.length ? a.reasons : [reason]).map(String).filter(Boolean);
 
   // Eduard's own wording (admin page) replaces the automatic wording when he has written one
   const text = c.admin_appeal_text ? String(c.admin_appeal_text) : composeAppeal({
-    letter_type: t, reason, tax_year: c.tax_year ?? ext.tax_year, penalty_count: Math.max(1, penalties.length),
+    letter_type: t, reason, reasons, tax_year: c.tax_year ?? ext.tax_year, penalty_count: Math.max(1, penalties.length),
     story: eng.story, why_late: eng.why_late, nnf_other_text: eng.nnf_other_text, something_else_text: eng.something_else_text,
     date_from: a.date_from, date_to: a.date_to, filed_date: a.filed_date, filed_asap: a.filed_asap, evidence: a.evidence ?? [],
   });
@@ -126,7 +128,7 @@ async function buildPdf(c: Obj) {
     const bytes = await fillSA370(PDFLib, pdf, map, {
       tax_reference: d.utr, full_name: d.full_name, address_lines: d.address_lines, postcode: d.postcode,
       ni_number: d.ni_number, phone: d.phone, tax_year_end: m ? m[1].slice(0, 2) + m[2] : "",
-      penalties: rows, reason_tick: (map.reason_to_tick as Obj)[reason] ?? "other", description: text,
+      penalties: rows, reason_tick: reasons.map((r) => String((map.reason_to_tick as Obj)[r] ?? "other")), description: text,
     });
     return { bytes: new Uint8Array(bytes), kind: "sa370", send: { how: "post", to: String(map.send_to) } };
   }

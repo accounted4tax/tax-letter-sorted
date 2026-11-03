@@ -114,7 +114,8 @@ function el(tag, attrs, kids) {
   return n;
 }
 const pill = (t, cls) => el("span", { class: "pill " + (cls || ""), text: t });
-const d = (iso) => iso ? new Date(String(iso).length === 10 ? iso + "T00:00:00Z" : iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const d = (iso) => !iso ? "–" : /^\d{4}-\d{2}$/.test(String(iso)) ? new Date(iso + "-01T00:00:00Z").toLocaleDateString("en-GB", { month: "short", year: "numeric" })
+  : new Date(String(iso).length === 10 ? iso + "T00:00:00Z" : iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 const dt = (iso) => iso ? new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "–";
 const money = (p) => p == null ? "–" : "£" + (p / 100).toFixed(2);
 const daysLeft = (iso) => iso ? Math.ceil((new Date(iso + "T23:59:59Z") - new Date()) / 864e5) : null;

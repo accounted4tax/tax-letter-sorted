@@ -283,7 +283,9 @@
     "err_required": "Please answer the questions marked in red.",
     "err_server": "Something went wrong. Please try again.",
     "no_questions": "There are no appeal questions for this type of letter yet.",
-    "filed_asap_accounts": "Did you file the accounts as soon as you could once it ended?"
+    "filed_asap_accounts": "Did you file the accounts as soon as you could once it ended?",
+    "continue_not_filed_btn": "Continue to appeal – I understand HMRC expects a tax return first",
+    "continue_not_filed_done": "OK – you're continuing with the appeal. Please still file your return as soon as you can."
   },
   "warn": {
     "return_not_filed": "HMRC usually won't decide your appeal until your return is filed. My appeal may be delayed or refused until then. I understand and want to continue."
@@ -460,7 +462,7 @@
     "title": "Check your facts in English",
     "intro": "HMRC needs your appeal in English. Make sure the English says exactly what you told us. We haven't added anything.",
     "you_wrote": "You wrote",
-    "english_for_hmrc": "English for HMRC",
+    "english_for_hmrc": "English for HMRC (spelling corrected)",
     "change": "Change my answers",
     "key_facts": "Your key facts",
     "return_filed": "Return filed",
@@ -479,7 +481,11 @@
     "none": "None",
     "accounts_filed": "Accounts filed",
     "appeal_text_title": "Your appeal, as HMRC will read it",
-    "appeal_text_hint": "This text goes on your appeal. Check it says only what's true."
+    "appeal_text_hint": "This text goes on your appeal. Check it says only what's true.",
+    "mismatch_title": "Your explanation doesn't seem to match the reason you chose",
+    "mismatch_text": "You chose: \"{reason}\". Please check that what you wrote describes this. If not, change your answers.",
+    "mismatch_ok": "I've checked: my reason and my explanation are both correct.",
+    "err_mismatch": "Please check your reason and explanation, or change your answers."
   },
   "details": {
     "title": "Your details for the appeal",

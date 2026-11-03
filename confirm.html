@@ -36,6 +36,12 @@
     <h1 data-i18n="confirm.title">Check your facts in English</h1>
     <p class="lead" data-i18n="confirm.intro">HMRC needs your appeal in English.</p>
 
+    <div class="callout stack" id="mismatch" hidden>
+      <b data-i18n="confirm.mismatch_title">Your explanation doesn't seem to match the reason you chose</b>
+      <span id="mismatchText"></span>
+      <label class="check" id="mismatchWrap"><input type="checkbox" id="mismatchOk"><span data-i18n="confirm.mismatch_ok">I've checked: my reason and my explanation are both correct.</span></label>
+    </div>
+
     <section class="card">
       <h2 data-i18n="confirm.key_facts">Your key facts</h2>
       <dl class="facts" id="facts"></dl>
@@ -84,10 +90,14 @@
       add("confirm.evidence", (fx.evidence || []).length ? fx.evidence.map(function (k) { return t("q.evidence_opt." + k); }).join(", ") : t("confirm.none"));
     }
 
+    // the story didn't seem to fit the chosen reason: ask the client to check (we never suggest a reason)
+    $("mismatch").hidden = !ans.reason_mismatch;
+    if (ans.reason_mismatch) $("mismatchText").textContent = t("confirm.mismatch_text", { reason: ans.reason_label_key ? t(ans.reason_label_key) : "" });
+
     var box = $("texts"); box.innerHTML = "";
     var orig = ans.original || {}, eng = ans.english || {};
     Object.keys(eng).forEach(function (k) {
-      var same = F.lang() === "en" || (orig[k] || "").trim() === (eng[k] || "").trim();
+      var same = (orig[k] || "").trim() === (eng[k] || "").trim();
       box.appendChild(el("section", { class: "section" }, [
         el("h2", { text: t("confirm.label_" + k) }),
         el("div", { class: "compare" }, same
@@ -114,6 +124,10 @@
 
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
+    if (ans && ans.reason_mismatch && !$("mismatchOk").checked) {
+      $("mismatchWrap").classList.add("invalid"); $("mismatch").scrollIntoView({ behavior: "smooth", block: "center" });
+      $("error").textContent = t("confirm.err_mismatch"); $("error").hidden = false; return;
+    }
     if (!$("declaration").checked) {
       $("declWrap").classList.add("invalid");
       $("error").textContent = t("confirm.err_declaration"); $("error").hidden = false; return;

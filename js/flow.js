@@ -26,6 +26,10 @@ window.TLS_FLOW = (function () {
 
   function fmtDate(iso) {
     if (!iso) return "";
+    if (/^\d{4}-\d{2}$/.test(String(iso))) {   // month only → "December 2021"
+      var m = new Date(iso + "-01T00:00:00");
+      return isNaN(m) ? iso : m.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+    }
     var d = new Date(String(iso).slice(0, 10) + "T00:00:00");
     return isNaN(d) ? iso : d.toLocaleDateString(locale(), { day: "numeric", month: "long", year: "numeric" });
   }

@@ -91,6 +91,15 @@
     return el("label", { class: "field", id: "q_" + name, "data-q": name }, [el("span", { text: t(labelKey) }),
       el("input", { type: "date", max: F.today(), value: a[name] || "", oninput: function (e) { a[name] = e.target.value; save(); } })]);
   }
+  function monthInput(name, labelKey) {
+    return el("label", { class: "field", id: "q_" + name, "data-q": name }, [el("span", { text: t(labelKey) }),
+      el("input", { type: "month", max: F.today().slice(0, 7), placeholder: "mm/yyyy", value: /^\d{4}-\d{2}$/.test(a[name] || "") ? a[name] : "",
+        oninput: function (e) {
+          // browsers without a month picker show a plain box: accept "12/2021" too
+          var v = e.target.value.trim(), m = /^(\d{1,2})[\/.\-](\d{4})$/.exec(v);
+          a[name] = m && +m[1] >= 1 && +m[1] <= 12 ? m[2] + "-" + ("0" + m[1]).slice(-2) : v; save();
+        } })]);
+  }
   function textArea(name, labelKey, hintKey) {
     return el("label", { class: "field", id: "q_" + name, "data-q": name }, [el("span", { text: t(labelKey) }),
       hintKey ? el("span", { class: "hint", text: t(hintKey) }) : null,
@@ -126,7 +135,7 @@
       if (r.sub_options) { p.nnf = true; if (a.nnf === "other") p.nnf_other_text = true; }
       if (r.free_text) p.something_else_text = true;
       if (r.health_consent) p.health_consent = true;
-      if (r.needs_dates) { p.date_from = true; p.date_to = true; p.at_deadline = true; p.filed_asap = true; p.evidence = true; }
+      if (r.needs_dates) { p.date_from = true; p.date_to = true; p.evidence = true; if (isPay || a.filed === "yes") p.filed_asap = true; }
       if (!r.sub_options && !r.free_text) p.story = true;
       if (lateAppeal) p.why_late = true;
       if (isSA) p.more_than_one_year = true;
@@ -148,8 +157,7 @@
     need("nnf_other_text", (a.nnf_other_text || "").trim());
     need("something_else_text", (a.something_else_text || "").trim());
     need("health_consent", a.health_consent === "yes");
-    need("date_from", a.date_from);
-    need("at_deadline", a.at_deadline);
+    need("date_from", /^\d{4}-\d{2}$/.test(a.date_from || ""));
     need("filed_asap", a.filed_asap);
     need("story", (a.story || "").trim().length >= 10);
     need("why_late", (a.why_late || "").trim());
@@ -177,7 +185,10 @@
         el("p", { text: t("q.not_filed_note") }),
         el("a", { class: "btn", href: "contact.html?kind=help" + (F.demo ? "&demo=1" : ""), text: t("q.file_first") }),
         el("a", { class: "btn secondary", href: "https://www.gov.uk/log-in-file-self-assessment-tax-return", target: "_blank", rel: "noopener", text: t("q.file_yourself") }),
-        tick("continue_not_filed", "q.continue_not_filed")
+        a.continue_not_filed === "yes"
+          ? el("p", { class: "success", id: "q_continue_not_filed", text: t("q.continue_not_filed_done") })
+          : el("button", { class: "btn secondary", type: "button", id: "q_continue_not_filed", "data-q": "continue_not_filed", text: t("q.continue_not_filed_btn"),
+              onclick: function () { a.continue_not_filed = "yes"; save(); render(); var r = $("q_reason"); if (r) r.scrollIntoView({ behavior: "smooth", block: "start" }); } })
       ]));
     }
     if (p.role) f.appendChild(q("role", "ct.q_role", [radio("role", "director", t("ct.role_opt.director")), radio("role", "secretary", t("ct.role_opt.secretary")), radio("role", "other", t("ct.role_opt.other"))]));
@@ -199,9 +210,9 @@
     if (p.something_else_text) f.appendChild(textArea("something_else_text", "q.something_else_text"));
     if (p.health_consent) f.appendChild(el("div", { class: "callout stack" }, [el("b", { text: t("q.health_title") }), tick("health_consent", "q.health_consent")]));
     if (p.date_from) {
-      f.appendChild(q("dates", "q.problem_from_to", [el("div", { class: "two" }, [dateInput("date_from", "common.from"), dateInput("date_to", "common.to")])]));
-      f.appendChild(yn("at_deadline", "q.problem_at_deadline"));
-      f.appendChild(yn("filed_asap", isPay ? "q.paid_as_soon_as_able" : isCH ? "q.filed_asap_accounts" : "q.filed_as_soon_as_able"));
+      f.appendChild(q("dates", "q.problem_from_to", [el("div", { class: "two" }, [monthInput("date_from", "common.from"), monthInput("date_to", "common.to")])]));
+      // "Did you file as soon as you could?" only makes sense once it has been filed (or, for late payment, paid)
+      if (p.filed_asap) f.appendChild(yn("filed_asap", isPay ? "q.paid_as_soon_as_able" : isCH ? "q.filed_asap_accounts" : "q.filed_as_soon_as_able"));
     }
     if (p.story) f.appendChild(textArea("story", "q.what_happened", "q.story_hint"));
     if (p.evidence) {

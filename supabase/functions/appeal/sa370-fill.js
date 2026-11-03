@@ -6,7 +6,7 @@
 //   tax_reference, full_name, address_lines: [], postcode, ni_number, phone, capacity,
 //   tax_year_end: "2025",
 //   penalties: { filing_1day: { date }, filing_3m: { amount, date }, ... payment_12m: {...} },
-//   reason_tick: "ill_health" | ... | "other",
+//   reason_tick: "ill_health" | ... | "other"   (or an array: one box ticked for each reason),
 //   description: "plain English text"
 // }
 // Signature and the signing date are left blank on purpose: the client signs and dates by hand.
@@ -93,8 +93,8 @@ export async function fillSA370(PDFLib, templateBytes, map, data) {
   }
 
   // ---- Reason ----
-  const tick = F.reason_ticks[data.reason_tick] ?? F.reason_ticks.other;
-  cells(tick[0], tick[2], [tick[1]], "X");
+  const wanted = [...new Set([].concat(data.reason_tick ?? "other").map((k) => (F.reason_ticks[k] ? k : "other")))];
+  for (const k of wanted) { const tick = F.reason_ticks[k]; cells(tick[0], tick[2], [tick[1]], "X"); }
 
   // Description: blank lines between paragraphs take a small gap, so a normal appeal fits the box.
   const DS = 9.5, DL = 11.2, GAP = 4.5;

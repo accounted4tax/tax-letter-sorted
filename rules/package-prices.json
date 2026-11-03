@@ -1,0 +1,13 @@
+{
+  "id": "package-prices",
+  "status": "Eduard, 3 Nov 2026 – catch-up services only (no monthly / future prices on the website)",
+  "currency": "GBP",
+  "vat": "Accounted4Tax Ltd is not VAT registered – no VAT added",
+  "year_end": { "dormant": 149, "trading": 349, "note": "annual accounts + Corporation Tax return + filing; penalty appeal included free; per overdue year-end" },
+  "bookkeeping": { "per_batch": 30, "batch_size": 50, "note": "every started batch of 50 transactions" },
+  "payroll": { "per_month": 30, "included": 5, "extra_each": 5, "note": "per month not submitted, up to 5 employees; +£5 per extra employee per month" },
+  "cis": { "per_month": 30, "included": 5, "extra_each": 5, "note": "CIS returns as contractor, per month not submitted, up to 5 subcontractors; +£5 per extra subcontractor per month" },
+  "vat": { "per_month": 30, "note": "per month of VAT period not submitted (a quarterly return = 3 months)" },
+  "confirmation_statement": { "price": 99, "note": "Companies House fee included" },
+  "limits": { "years": 6, "transactions": 20000, "people": 500, "months": 72 }
+}

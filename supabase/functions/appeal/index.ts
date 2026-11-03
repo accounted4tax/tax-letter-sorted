@@ -66,6 +66,9 @@ function cleanDetails(c: Obj, d: Obj) {
   if (!/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/.test(String(out.postcode))) errors.push("postcode");
   if (!/^[+\d][\d\s()-]{8,}$/.test(String(out.phone))) errors.push("phone");
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(out.email))) errors.push("email");
+  // Terms accepted and "start straight away" (Consumer Contracts Regulations: right to cancel ends once the service is complete)
+  if (d.terms_accepted !== true) errors.push("terms_accepted");
+  out.terms_accepted_at = new Date().toISOString();
   if (SA_TYPES.includes(t)) {
     out.utr = str(d.utr, 13).replace(/\s/g, "").toUpperCase();
     if (!/^\d{10}K?$/.test(String(out.utr))) errors.push("utr");

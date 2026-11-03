@@ -286,7 +286,8 @@
       "pkg.m_payroll",
       "pkg.m_cis",
       "pkg.m_vat",
-      "pkg.m_until"
+      "pkg.m_until",
+      "details.start_now"
     ]
   },
   "common": {
@@ -805,7 +806,8 @@
     "preview_note": "Previzualizare: nu se iau bani reali. Dacă vi se cere plata, folosiți cardul de test Stripe 4242 4242 4242 4242, orice dată viitoare și orice 3 cifre.",
     "cancelled": "Plata a fost anulată. Nu ați plătit nimic.",
     "option3_company": "Analiză de către contabil · £59",
-    "ct_utr_hint": "10 cifre. Apare pe scrisorile HMRC despre impozitul pe profit al companiei."
+    "ct_utr_hint": "10 cifre. Apare pe scrisorile HMRC despre impozitul pe profit al companiei.",
+    "start_now": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat – înțeleg că, după ce contestația este gata, nu mai pot anula pentru rambursare."
   },
   "review": {
     "step": "Verificați contestația",

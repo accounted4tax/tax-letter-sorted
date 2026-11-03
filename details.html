@@ -93,6 +93,7 @@
         <input id="email" type="email" autocomplete="email" maxlength="200"></label>
     </div>
 
+    <label class="check" data-f="terms_accepted"><input type="checkbox" id="terms"><span><span data-i18n="details.start_now"></span> <a href="terms.html" target="_blank" rel="noopener" data-i18n="common.terms">Terms</a> · <a href="privacy.html" target="_blank" rel="noopener" data-i18n="common.privacy">Privacy Policy</a></span></label>
     <label class="check"><input type="checkbox" id="marketing"><span data-i18n="details.marketing"></span></label>
     <p class="note" data-i18n="details.privacy"></p>
     <p class="error" id="error" role="alert" hidden></p>
@@ -167,7 +168,7 @@
     var details = {
       full_name: $("full_name").value, phone: $("phone").value, email: $("email").value,
       address_lines: [$("addr1").value, $("addr2").value, $("town").value].map(function (s) { return s.trim(); }).filter(Boolean),
-      postcode: $("postcode").value, marketing_consent: $("marketing").checked
+      postcode: $("postcode").value, marketing_consent: $("marketing").checked, terms_accepted: $("terms").checked
     };
     if (company) {
       details.company_name = $("company_name").value; details.company_number = $("company_number").value;

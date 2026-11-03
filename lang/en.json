@@ -524,7 +524,8 @@
     "preview_note": "Preview: no real money is taken. If asked to pay, use the Stripe test card 4242 4242 4242 4242, any future date and any 3 digits.",
     "cancelled": "Payment cancelled. You haven't been charged.",
     "option3_company": "Accountant review · £59",
-    "ct_utr_hint": "10 digits. It's on the company's Corporation Tax letters from HMRC."
+    "ct_utr_hint": "10 digits. It's on the company's Corporation Tax letters from HMRC.",
+    "start_now": "I've read the Terms and Privacy Policy. Please start straight away – I understand that once my appeal is ready, I can no longer cancel for a refund."
   },
   "review": {
     "step": "Review your appeal",

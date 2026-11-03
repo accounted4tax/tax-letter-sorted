@@ -1,0 +1,15 @@
+/* Privacy Policy and Terms pages */
+.legal{padding-top:24px;padding-bottom:48px;font-size:15px;line-height:1.6}
+.legal h1{margin-bottom:4px}
+.legal h2{font-size:18px;margin:26px 0 8px}
+.legal p,.legal li{color:var(--ink)}
+.legal ul{padding-left:22px;margin:8px 0}
+.legal li{margin:4px 0}
+.legal .updated{font-size:13px;color:var(--soft);margin-bottom:16px}
+.legal .todo{background:#FFF4DB;color:#7A4D00;padding:0 4px;border-radius:4px;font-weight:600}
+.legal table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;display:block;overflow-x:auto}
+.legal th,.legal td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.legal thead th{background:#F0F2F6}
+.legal tbody th{background:#F7F9FB;font-weight:600;min-width:120px}
+.legal .callout{margin:10px 0}
+footer a{color:inherit}

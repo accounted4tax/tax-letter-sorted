@@ -22,6 +22,15 @@
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
   .kpi b{display:block;font-size:24px}
+  .casecols{display:grid;gap:14px;align-items:start}
+  .casecols.cols2{grid-template-columns:1fr 1fr}
+  .casecols.cols3{grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:860px){.casecols.cols2,.casecols.cols3{grid-template-columns:1fr}}
+  .casecol{min-height:60px}
+  .box .boxhead{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+  .box .grip{cursor:grab;color:var(--soft);font-size:18px;line-height:1;padding:2px 4px}
+  .box .chev{color:var(--muted);font-size:14px;width:14px}
+  .box.dragging{opacity:.5;outline:2px dashed var(--teal)}
   button.kpi{text-align:left;font:inherit;color:inherit;cursor:pointer}
   button.kpi:hover{border-color:var(--teal);box-shadow:0 1px 4px rgba(20,33,61,.08)}
   .kpi span{font-size:13px;color:var(--muted)}
@@ -178,6 +187,7 @@ let tab = "queue";
 document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => { openTab(b.dataset.tab); }));
 function openTab(name) {
   tab = name;
+  document.querySelector("main.awrap").style.maxWidth = "";
   document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
   ({ queue: showQueue, cases: showCases, quotes: showQuotes, requests: showRequests, emails: showEmails, funnel: showFunnel, data: showData })[name]();
 }
@@ -277,7 +287,7 @@ async function openCase(ref) {
   busy();
   let r;
   try { r = await api("case", { ref }); } catch (e) { return fail(e); }
-  const c = r.case, det = c.details || {}, v = $("view"); v.innerHTML = "";
+  const c = r.case, det = c.details || {}, v = $("view"); v.innerHTML = ""; v.dataset.ref = c.ref;
   const company = c.letter_type === "ct-late-filing" || c.letter_type === "companies-house-late-filing";
   const paid = r.payments.find((p) => p.status === "paid");
   v.appendChild(el("button", { class: "back", type: "button", text: "← Back", onclick: () => openTab(tab) }));
@@ -603,6 +613,83 @@ async function openCase(ref) {
       : el("p", { class: "muted", text: "No emails yet." })]));
   right.appendChild(el("section", { class: "card" }, [el("h2", { class: "sec", text: "History" }),
     el("pre", { class: "ans", text: r.history.map((h) => `${dt(h.at)}  ${h.actor}  ${h.action}`).join("\n") || "–" })]));
+  arrangeCase(grid, left, right, v);
+}
+
+// ---------- case page layout: collapsible boxes you can drag into 2 or 3 columns (saved in this browser) ----------
+const LAYOUT_KEY = "tls_admin_case_layout_v1";
+const FIXED_OPEN = ["case", "client"];               // always open
+const DEFAULT_CLOSED = ["quote", "history"];
+function loadLayout() { try { return JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {}; } catch (e) { return {}; } }
+function saveLayout(l) { try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(l)); } catch (e) {} }
+function cardKey(title) {
+  const t = title.toLowerCase();
+  if (t === "case") return "case";
+  if (t === "client" || t.startsWith("company and director")) return "client";
+  if (t.startsWith("create a quote")) return "quote";
+  if (t.startsWith("hmrc agent")) return "hmrc";
+  if (t.startsWith("how they want")) return "contact";
+  if (t.startsWith("client's answers")) return "answers";
+  return t.replace(/[^a-z]+/g, "_").replace(/^_|_$/g, "");
+}
+function arrangeCase(grid, left, right, view) {
+  const layout = loadLayout();
+  const cards = {};
+  const defaults2 = [[], []];
+  [left, right].forEach((col, ci) => Array.from(col.children).forEach((sec) => {
+    // turn each box into: header (drag handle · title · open/close) + body
+    let title = "", body = [];
+    const det = sec.firstElementChild && sec.firstElementChild.tagName === "DETAILS" ? sec.firstElementChild : null;
+    if (det) { title = det.querySelector("summary").textContent; body = Array.from(det.children).filter((x) => x.tagName !== "SUMMARY"); }
+    else { const h = sec.querySelector(":scope > h2"); title = h ? h.textContent : "Box"; body = Array.from(sec.children).filter((x) => x !== h); }
+    const key = cardKey(title);
+    sec.innerHTML = ""; sec.dataset.key = key; sec.classList.add("box");
+    const fixed = FIXED_OPEN.includes(key);
+    const closed = !fixed && (layout.closed ? layout.closed.includes(key) : DEFAULT_CLOSED.includes(key));
+    const wrap = el("div", { class: "stack boxbody", hidden: closed }, body);
+    const chev = el("span", { class: "chev", text: fixed ? "" : closed ? "▸" : "▾" });
+    const head = el("div", { class: "boxhead" }, [el("span", { class: "grip", title: "Drag to move", text: "⠿" }), el("h2", { class: "sec", style: "flex:1", text: title }), chev]);
+    if (!fixed) head.addEventListener("click", (e) => {
+      if (e.target.classList.contains("grip")) return;
+      wrap.hidden = !wrap.hidden; chev.textContent = wrap.hidden ? "▸" : "▾";
+      const l = loadLayout(); const cl = new Set(l.closed || DEFAULT_CLOSED);
+      wrap.hidden ? cl.add(key) : cl.delete(key); l.closed = [...cl]; saveLayout(l);
+    });
+    sec.append(head, wrap);
+    // only the ⠿ handle starts a drag, so typing and selecting text inside boxes still works
+    const grip = head.querySelector(".grip");
+    grip.addEventListener("mousedown", () => { sec.draggable = true; });
+    grip.addEventListener("mouseup", () => { sec.draggable = false; });
+    cards[key] = sec; defaults2[ci].push(key);
+  }));
+  const all = Object.keys(cards);
+  const defaults3 = [["case", "client", "charge_the_client", "quote"], ["contact", "documents", "hmrc", "answers"], ["write_the_appeal", "status_and_notes", "emails", "history"]];
+  // columns switch
+  const n = layout.columns === 3 ? 3 : 2;
+  const saved = (layout["cols" + n] || (n === 3 ? defaults3 : defaults2)).map((c) => c.filter((k) => cards[k]));
+  all.filter((k) => !saved.flat().includes(k)).forEach((k) => saved[0].push(k));   // new boxes go to the first column
+  grid.innerHTML = ""; grid.className = "casecols cols" + n;
+  document.querySelector("main.awrap").style.maxWidth = n === 3 ? "1560px" : "";   // more room for 3 columns
+  const cols = saved.map((keys) => { const col = el("div", { class: "stack casecol" }); keys.forEach((k) => col.appendChild(cards[k])); grid.appendChild(col); return col; });
+  // drag and drop
+  let dragging = null;
+  const persist = () => { const l = loadLayout(); l["cols" + n] = cols.map((col) => Array.from(col.children).map((x) => x.dataset.key)); saveLayout(l); };
+  Object.values(cards).forEach((sec) => {
+    sec.addEventListener("dragstart", (e) => { dragging = sec; sec.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+    sec.addEventListener("dragend", () => { sec.classList.remove("dragging"); sec.draggable = false; dragging = null; persist(); });
+  });
+  cols.forEach((col) => col.addEventListener("dragover", (e) => {
+    if (!dragging) return; e.preventDefault();
+    const after = Array.from(col.children).filter((x) => x !== dragging).find((x) => e.clientY < x.getBoundingClientRect().top + x.offsetHeight / 2);
+    after ? col.insertBefore(dragging, after) : col.appendChild(dragging);
+  }));
+  // toolbar: 2 / 3 columns, reset
+  const bar = el("div", { class: "row", style: "justify-content:flex-end;margin:-6px 0 10px" }, [
+    el("span", { class: "muted", text: "Drag a box by ⠿ to move it ·" }),
+    ...[2, 3].map((k) => el("button", { class: "sbtn" + (k === n ? " primary" : ""), type: "button", text: k + " columns",
+      onclick: () => { const l = loadLayout(); l.columns = k; saveLayout(l); openCase(view.dataset.ref); } })),
+    el("button", { class: "sbtn", type: "button", text: "Reset layout", onclick: () => { saveLayout({}); openCase(view.dataset.ref); } })]);
+  grid.parentNode.insertBefore(bar, grid);
 }
 
 // ---------- Requests ----------

@@ -104,6 +104,7 @@ const TOOL = {
       vat_number: { type: ["string", "null"], description: "VAT registration number, if printed" },
       employer_paye_ref: { type: ["string", "null"], description: "employer PAYE reference (e.g. 123/AB45678), if printed" },
       period: { type: ["string", "null"], description: "VAT or PAYE period the letter is about, as printed" },
+      accounts_period_end: { type: ["string", "null"], description: "Corporation Tax or Companies House letters: the end date of the company's accounting period / 'accounts made up to' date, as YYYY-MM-DD" },
       hmrc_phone: { type: ["string", "null"] },
       return_address: { type: ["string", "null"], description: "HMRC address to write to, if printed" },
       notes: { type: ["string", "null"], description: "anything unusual, in one short English sentence" },

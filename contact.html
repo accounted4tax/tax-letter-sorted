@@ -33,25 +33,6 @@
   <form id="form" class="stack" novalidate>
     <h1 id="title"></h1>
     <p class="lead" id="intro"></p>
-    <div class="card">
-      <label class="field"><span data-i18n="common.full_name">Full name</span>
-        <input id="full_name" autocomplete="name" maxlength="120"></label>
-      <label class="field"><span><span data-i18n="common.mobile">Mobile number</span> <span class="hint" id="phoneOpt" data-i18n="common.optional">(optional)</span></span>
-        <input id="phone" type="tel" autocomplete="tel" maxlength="40"></label>
-      <label class="field"><span><span data-i18n="common.email">Email</span></span>
-        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
-      <label class="field" id="companyRow" hidden><span data-i18n="contact.company_name">Company name</span>
-        <input id="company_name" autocomplete="organization" maxlength="160"></label>
-      <label class="field" id="companyNoRow" hidden><span><span data-i18n="details.company_number">Company number</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
-        <input id="company_number" maxlength="10" autocapitalize="characters"></label>
-      <label class="field" id="authCodeRow" hidden><span><span data-i18n="contact.ch_auth_code">Companies House authentication code</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
-        <span class="hint" data-i18n="contact.ch_auth_code_hint"></span>
-        <input id="ch_auth_code" maxlength="10" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
-      <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
-        <select id="tax_year"></select></label>
-      <label class="field"><span><span id="noteLabel"></span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
-        <textarea id="note" maxlength="1000" style="min-height:90px"></textarea></label>
-    </div>
     <!-- Package quote: instant estimate for catching up (Eduard, 3 Nov 2026). Prices: rules/package-prices.json -->
     <div class="card" id="estCard" hidden>
       <h2 style="font-size:18px" data-i18n="pkg.title">Your instant estimate</h2>
@@ -65,6 +46,12 @@
         <fieldset class="q"><legend data-i18n="pkg.books">Is the bookkeeping already done?</legend>
           <div class="yn"><label class="opt"><input type="radio" name="books" value="yes"><span data-i18n="common.yes">Yes</span></label>
           <label class="opt"><input type="radio" name="books" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
+        <label class="field" id="swRow" hidden><span data-i18n="pkg.software">Which software do you keep the books in?</span>
+          <select id="pkSw">
+            <option value="quickbooks">QuickBooks</option><option value="xero">Xero</option><option value="freeagent">FreeAgent</option>
+            <option value="sage">Sage</option><option value="other" data-i18n="pkg.sw_other">Other accounting software</option>
+            <option value="excel" data-i18n="pkg.sw_excel">Excel / spreadsheet</option><option value="paper" data-i18n="pkg.sw_paper">Paper / no software</option>
+          </select></label>
         <label class="field" id="txRow"><span data-i18n="pkg.tx">Roughly how many bank transactions in total (all overdue years)?</span>
           <span class="hint" data-i18n="pkg.tx_hint"></span>
           <input id="pkTx" type="number" inputmode="numeric" min="0" value="" style="max-width:160px"></label>
@@ -87,6 +74,13 @@
           <label class="opt"><input type="radio" name="vat" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
         <label class="field" id="vatQs" hidden><span data-i18n="pkg.months_vat">Months of VAT not submitted (a quarter = 3 months)</span>
           <input id="pkVatM" type="number" inputmode="numeric" min="0" value="0" style="max-width:120px"></label>
+        <label class="field"><span data-i18n="pkg.directors">How many directors does the company have?</span>
+          <input id="pkDirs" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
+        <fieldset class="q"><legend data-i18n="pkg.sa">Are the directors' personal tax returns (Self Assessment) up to date?</legend>
+          <div class="yn"><label class="opt"><input type="radio" name="sa" value="yes" checked><span data-i18n="common.yes">Yes</span></label>
+          <label class="opt"><input type="radio" name="sa" value="no"><span data-i18n="common.no">No</span></label></div></fieldset>
+        <label class="field" id="saQs" hidden><span data-i18n="pkg.sa_missing">How many directors' tax returns are missing in total? (for example 2 directors × 2 years = 4)</span>
+          <input id="pkSaN" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
       </div>
       <fieldset class="q"><legend data-i18n="pkg.cs">Is the confirmation statement due as well?</legend>
         <div class="yn"><label class="opt"><input type="radio" name="cs" value="yes"><span data-i18n="common.yes">Yes</span></label>
@@ -95,7 +89,36 @@
         <b id="estTotal"></b>
         <span id="estLines" style="white-space:pre-line"></span>
       </div>
+      <fieldset class="q"><legend data-i18n="pkg.future">Would you like us to look after the company from now on?</legend>
+        <div class="yn"><label class="opt"><input type="radio" name="future" value="yes"><span data-i18n="common.yes">Yes</span></label>
+        <label class="opt"><input type="radio" name="future" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
+      <div id="futureQs" class="stack" hidden>
+        <label class="field"><span data-i18n="pkg.year_end">The company's year-end (accounting period end)</span>
+          <span class="hint" data-i18n="pkg.year_end_hint"></span>
+          <input id="pkYE" type="date" style="max-width:220px"></label>
+        <label class="check" id="saFutureRow"><input type="checkbox" id="pkSaFuture" checked><span data-i18n="pkg.sa_future">Include the directors' personal tax returns</span></label>
+        <div class="deadline" id="monthBox" aria-live="polite"><b id="monthTotal"></b><span id="monthLines" style="white-space:pre-line"></span></div>
+      </div>
       <p class="hint" data-i18n="pkg.disclaimer"></p>
+    </div>
+    <div class="card">
+      <label class="field"><span data-i18n="common.full_name">Full name</span>
+        <input id="full_name" autocomplete="name" maxlength="120"></label>
+      <label class="field"><span><span data-i18n="common.mobile">Mobile number</span> <span class="hint" id="phoneOpt" data-i18n="common.optional">(optional)</span></span>
+        <input id="phone" type="tel" autocomplete="tel" maxlength="40"></label>
+      <label class="field"><span><span data-i18n="common.email">Email</span></span>
+        <input id="email" type="email" autocomplete="email" maxlength="200"></label>
+      <label class="field" id="companyRow" hidden><span data-i18n="contact.company_name">Company name</span>
+        <input id="company_name" autocomplete="organization" maxlength="160"></label>
+      <label class="field" id="companyNoRow" hidden><span><span data-i18n="details.company_number">Company number</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <input id="company_number" maxlength="10" autocapitalize="characters"></label>
+      <label class="field" id="authCodeRow" hidden><span><span data-i18n="contact.ch_auth_code">Companies House authentication code</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <span class="hint" data-i18n="contact.ch_auth_code_hint"></span>
+        <input id="ch_auth_code" maxlength="10" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
+      <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
+        <select id="tax_year"></select></label>
+      <label class="field"><span><span id="noteLabel"></span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+        <textarea id="note" maxlength="1500" style="min-height:90px"></textarea></label>
     </div>
     <p class="note" style="text-align:left" data-i18n="contact.consent_note">By sending this form, you agree that Accounted4Tax can contact you about your request.</p>
     <p class="error" id="error" role="alert" hidden></p>
@@ -168,42 +191,83 @@
   function num(id, min, max) { var v = Math.floor(Number($(id).value)); if (!isFinite(v) || v < min) v = min; return Math.min(v, max); }
   function gbp(n) { return "£" + n.toLocaleString("en-GB"); }
   var est = null;
+  function nextYearEnd(iso) {
+    // the next date with the same day and month as the year-end on the letter (or as typed), after today
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ""); if (!m) return null;
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var d = new Date(today.getFullYear(), Number(m[2]) - 1, Number(m[3]));
+    if (d <= today) d = new Date(today.getFullYear() + 1, Number(m[2]) - 1, Number(m[3]));
+    return d;
+  }
   function estimate() {
     if (!P || !isPackage) return;
-    var L = P.limits, dormant = radio("dormant") === "yes";
+    var L = P.limits, dormant = radio("dormant") === "yes", booksDone = radio("books") === "yes";
     $("tradingQs").hidden = dormant;
-    $("txRow").hidden = radio("books") === "yes";
+    $("txRow").hidden = booksDone; $("swRow").hidden = !booksDone;
     $("payrollQs").hidden = radio("payroll") !== "yes";
     $("cisQs").hidden = radio("cis") !== "yes";
     $("vatQs").hidden = radio("vat") !== "yes";
+    $("saQs").hidden = radio("sa") !== "no";
+    $("futureQs").hidden = radio("future") !== "yes";
+    $("saFutureRow").hidden = dormant;
     var years = num("pkYears", 1, L.years), lines = [], total = 0, a = { dormant: dormant, years: years };
     var add = function (key, vars, amount) { if (amount > 0) { lines.push(t(key, Object.assign({ amount: gbp(amount) }, vars))); total += amount; } };
-    add(dormant ? "pkg.l_yearend_dormant" : "pkg.l_yearend", { n: years, each: gbp(dormant ? P.year_end.dormant : P.year_end.trading) }, years * (dormant ? P.year_end.dormant : P.year_end.trading));
+    var yearEnd = dormant ? P.year_end.dormant : P.year_end.trading;
+    var sw = $("pkSw").value, needsSoftware = !dormant && (!booksDone || sw === "excel" || sw === "paper");
+    var dirs = num("pkDirs", 1, L.people);
+    var payM = 0, cisM = 0, vatM = 0, payRate = 0, cisRate = 0, vatRate = 0;
+    add(dormant ? "pkg.l_yearend_dormant" : "pkg.l_yearend", { n: years, each: gbp(yearEnd) }, years * yearEnd);
     if (!dormant) {
-      if (radio("books") === "no") {
+      if (!booksDone) {
         var tx = num("pkTx", 0, L.transactions), batches = Math.ceil(tx / P.bookkeeping.batch_size);
         a.transactions = tx;
         add("pkg.l_books", { n: tx, batches: batches }, batches * P.bookkeeping.per_batch);
-      } else a.books_done = true;
+      } else a.software = sw;
+      if (needsSoftware) add("pkg.l_software", {}, P.software.per_year);
+      a.directors = dirs;
+      if (radio("sa") === "no") { var sn = num("pkSaN", 1, L.people * L.years); a.director_returns_missing = sn; add("pkg.l_sa", { n: sn }, sn * P.director_sa.per_return); }
       if (radio("payroll") === "yes") {
-        var emp = num("pkEmp", 1, L.people), pm = num("pkPayM", 0, L.months);
-        a.payroll = { employees: emp, months: pm };
-        add("pkg.l_payroll", { n: pm, people: emp }, pm * (P.payroll.per_month + Math.max(0, emp - P.payroll.included) * P.payroll.extra_each));
+        var emp = num("pkEmp", 1, L.people); payM = num("pkPayM", 0, L.months);
+        payRate = P.payroll.per_month + Math.max(0, emp - P.payroll.included) * P.payroll.extra_each;
+        a.payroll = { employees: emp, months: payM };
+        add("pkg.l_payroll", { n: payM, people: emp }, payM * payRate);
       }
       if (radio("cis") === "yes") {
-        var subs = num("pkSubs", 1, L.people), cm = num("pkCisM", 0, L.months);
-        a.cis = { subcontractors: subs, months: cm };
-        add("pkg.l_cis", { n: cm, people: subs }, cm * (P.cis.per_month + Math.max(0, subs - P.cis.included) * P.cis.extra_each));
+        var subs = num("pkSubs", 1, L.people); cisM = num("pkCisM", 0, L.months);
+        cisRate = P.cis.per_month + Math.max(0, subs - P.cis.included) * P.cis.extra_each;
+        a.cis = { subcontractors: subs, months: cisM };
+        add("pkg.l_cis", { n: cisM, people: subs }, cisM * cisRate);
       }
-      if (radio("vat") === "yes") { var vm = num("pkVatM", 0, L.months); a.vat = { months: vm }; add("pkg.l_vat", { n: vm }, vm * P.vat.per_month); }
+      if (radio("vat") === "yes") { vatM = num("pkVatM", 0, L.months); vatRate = P.vat.per_month; a.vat = { months: vatM }; add("pkg.l_vat", { n: vatM }, vatM * vatRate); }
     }
     if (radio("cs") === "yes") { a.confirmation_statement = true; add("pkg.l_cs", {}, P.confirmation_statement.price); }
     lines.push(t("pkg.l_appeal"));
     $("estTotal").textContent = t("pkg.total", { amount: gbp(total) });
     $("estLines").textContent = lines.join("\n");
-    est = { total: total, answers: a, lines: lines };
+    est = { total: total, answers: a, lines: lines, monthly: null };
+
+    // ---- from now on: a monthly fee until the next year-end (at least P.monthly.min_months months) ----
+    if (radio("future") === "yes") {
+      var ye = nextYearEnd($("pkYE").value);
+      if (!ye) { $("monthTotal").textContent = t("pkg.m_need_ye"); $("monthLines").textContent = ""; return; }
+      var now = new Date(), left = (ye.getFullYear() - now.getFullYear()) * 12 + (ye.getMonth() - now.getMonth()) + (ye.getDate() >= now.getDate() ? 0 : -1);
+      left = Math.max(P.monthly.min_months, Math.max(1, left));
+      var saF = !dormant && $("pkSaFuture").checked;
+      var annual = yearEnd + P.confirmation_statement.price + (needsSoftware ? P.software.per_year : 0) + (saF ? dirs * P.director_sa.per_return : 0);
+      var spread = Math.round(annual / left * 100) / 100;
+      var mLines = [t("pkg.m_annual", { amount: gbpp(annual), months: left, each: gbpp(spread) })];
+      if (payRate) mLines.push(t("pkg.m_payroll", { amount: gbpp(payRate) }));
+      if (cisRate) mLines.push(t("pkg.m_cis", { amount: gbpp(cisRate) }));
+      if (vatRate) mLines.push(t("pkg.m_vat", { amount: gbpp(vatRate) }));
+      var monthly = Math.round((spread + payRate + cisRate + vatRate) * 100) / 100;
+      $("monthTotal").textContent = t("pkg.m_total", { amount: gbpp(monthly), months: left });
+      $("monthLines").textContent = mLines.join("\n") + "\n" + t("pkg.m_until", { date: ye.toLocaleDateString(F.lang() === "ro" ? "ro-RO" : "en-GB", { day: "numeric", month: "long", year: "numeric" }) });
+      est.monthly = { amount: monthly, months: left, year_end: $("pkYE").value, directors_sa: saF };
+    }
   }
-  document.querySelectorAll("#estCard input").forEach(function (i) { i.addEventListener(i.type === "radio" ? "change" : "input", estimate); });
+  function gbpp(n) { return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
+  document.querySelectorAll("#estCard input, #estCard select").forEach(function (i) { i.addEventListener(i.type === "radio" || i.tagName === "SELECT" || i.type === "checkbox" ? "change" : "input", estimate); });
+  if (isPackage) { var pe = (F.getJSON("tls_explain") || {}).accounts_period_end; if (/^\d{4}-\d{2}-\d{2}$/.test(pe || "")) $("pkYE").value = pe; }
 
   function err(key) { $("error").textContent = t(key); $("error").hidden = false; }
 
@@ -225,7 +289,8 @@
         "Company: " + ($("company_name").value.trim() || "-"),
         "Company number: " + ($("company_number").value.trim().toUpperCase() || "-"),
         $("ch_auth_code").value.trim() ? "Companies House authentication code: " + $("ch_auth_code").value.trim().toUpperCase() : "",
-        est ? "ESTIMATE " + "£" + est.total + " – " + JSON.stringify(est.answers) : "",
+        est ? "CATCH-UP ESTIMATE £" + est.total + " – " + JSON.stringify(est.answers) : "",
+        est && est.monthly ? "MONTHLY FROM NOW £" + est.monthly.amount + " x " + est.monthly.months + " months – " + JSON.stringify(est.monthly) : "",
         ctx.ref ? "Case: " + ctx.ref : "", body.note].filter(Boolean).join(" · ");
     }
     if (!F.get("tls_case")) body.case = null;

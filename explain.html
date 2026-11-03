@@ -181,7 +181,7 @@
   // What later screens need (no explanation text)
   function strip(d) {
     return { ref: d.ref, letter_type: d.letter_type, appeal_deadline: d.appeal_deadline, pay_by_date: d.pay_by_date,
-      penalty_amount: d.penalty_amount, tax_year: d.tax_year, notice_date: d.notice_date };
+      penalty_amount: d.penalty_amount, tax_year: d.tax_year, notice_date: d.notice_date, accounts_period_end: d.accounts_period_end || null };
   }
 
   $("retry").addEventListener("click", load);

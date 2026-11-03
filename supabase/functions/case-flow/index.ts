@@ -210,6 +210,7 @@ async function explain(c: Obj, lang: string, body: Obj) {
     appeal_deadline: c.appeal_deadline ?? null, extended: !!ext.extended_appeal_date,
     pay_by_date: ext.pay_by_date ?? null, penalty_amount: c.penalty_amount ?? ext.penalty_total ?? null,
     tax_year: c.tax_year ?? ext.tax_year ?? null, issuer: ext.issuer ?? null,
+    accounts_period_end: ext.accounts_period_end ?? null,
     actions: actionsFor(letterType, ext), can_appeal_here: APPEAL_TYPES.includes(letterType),
   };
   if (cached) return { ...base, explanation: cached, cached: true };
@@ -368,7 +369,7 @@ async function contact(c: Obj | null, body: Obj) {
   const lang = String(c?.language ?? body.language ?? "en");
   if (kind === "help") {
     await db.from("help_requests").insert({ full_name: name, email: email || "(none)", phone: phone || null,
-      tax_year: str(body.tax_year, 40) || null, note: str(body.note, 1000) || null });
+      tax_year: str(body.tax_year, 40) || null, note: str(body.note, 3000) || null });
     await funnel(body.visit_id, "help_requested", c?.letter_type, lang);
   } else {
     if (!phone) return { status: 400, body: { error: "phone" } };

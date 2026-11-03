@@ -21,6 +21,8 @@
 //                              (o2 £19 · o3 £39 · o3co £59 · top20 £20 top-up to £39 · top40 £40 top-up to £59)
 //   send_id_email {ref}      – emails the client the "upload your ID" link now (same email as "I will upload later")
 //   correct_text {text}      – corrects spelling, grammar and punctuation of Eduard's appeal wording (meaning unchanged)
+//   quote {ref, answers, save, email} – accounts + CT quote for a case (same prices as the website's instant estimate);
+//                              save → appears in the Quotes tab; email → sent to the client in their language
 //   case_from_callback {id}  – creates a case for a call-back request that has none (so it can be charged)
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -61,6 +63,56 @@ async function texts(lang: string) {
     const v = get(dict) ?? get(en) ?? EMAIL_EN[k] ?? "";
     return String(v).replace(/\{(\w+)\}/g, (m, x) => vars[x] ?? m);
   };
+}
+
+// ---------- accounts + CT quote (prices: rules/package-prices.json, same rules as the website's instant estimate) ----------
+type Q = Record<string, any>;
+async function priceQuote(a: Q, lang: string) {
+  const P = await fetch(`${SITE}/rules/package-prices.json`, { cache: "no-store" }).then((r) => r.json()) as Q;
+  const t = await texts(lang);
+  const num = (v: unknown, min: number, max: number) => { const n = Math.floor(Number(v)); return !isFinite(n) || n < min ? min : Math.min(n, max); };
+  const gbp = (n: number) => "£" + n.toLocaleString("en-GB", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  const L = P.limits, lines: string[] = []; let total = 0;
+  const add = (key: string, vars: Record<string, string | number>, amount: number) => {
+    if (amount > 0) { lines.push(t(key, Object.fromEntries(Object.entries({ ...vars, amount: gbp(amount) }).map(([k, v]) => [k, String(v)])))); total += amount; }
+  };
+  const dormant = a.dormant === true, years = num(a.years, 1, L.years), booksDone = a.books_done === true;
+  const yearEnd = dormant ? P.year_end.dormant : P.year_end.trading;
+  const sw = String(a.software ?? ""), needsSoftware = !dormant && (!booksDone || sw === "excel" || sw === "paper");
+  const dirs = num(a.directors, 1, L.people);
+  let payRate = 0, cisRate = 0, vatRate = 0;
+  add(dormant ? "pkg.l_yearend_dormant" : "pkg.l_yearend", { n: years, each: gbp(yearEnd) }, years * yearEnd);
+  if (!dormant) {
+    if (!booksDone) { const tx = num(a.transactions, 0, L.transactions), b = Math.ceil(tx / P.bookkeeping.batch_size); add("pkg.l_books", { n: tx, batches: b }, b * P.bookkeeping.per_batch); }
+    if (needsSoftware) add("pkg.l_software", {}, P.software.per_year);
+    if (Number(a.director_returns_missing) > 0) { const n = num(a.director_returns_missing, 1, L.people * L.years); add("pkg.l_sa", { n }, n * P.director_sa.per_return); }
+    if (a.payroll) { const e = num(a.payroll.employees, 1, L.people), m = num(a.payroll.months, 0, L.months); payRate = P.payroll.per_month + Math.max(0, e - P.payroll.included) * P.payroll.extra_each; add("pkg.l_payroll", { n: m, people: e }, m * payRate); }
+    if (a.cis) { const sc = num(a.cis.subcontractors, 1, L.people), m = num(a.cis.months, 0, L.months); cisRate = P.cis.per_month + Math.max(0, sc - P.cis.included) * P.cis.extra_each; add("pkg.l_cis", { n: m, people: sc }, m * cisRate); }
+    if (a.vat) { const m = num(a.vat.months, 0, L.months); vatRate = P.vat.per_month; add("pkg.l_vat", { n: m }, m * vatRate); }
+  }
+  if (a.confirmation_statement) add("pkg.l_cs", {}, P.confirmation_statement.price);
+  lines.push(t("pkg.l_appeal"));
+  let monthly: Q | null = null;
+  const fy = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(a.future?.year_end ?? ""));
+  if (a.future && fy) {
+    const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+    let ye = new Date(Date.UTC(today.getUTCFullYear(), +fy[2] - 1, +fy[3]));
+    if (ye <= today) ye = new Date(Date.UTC(today.getUTCFullYear() + 1, +fy[2] - 1, +fy[3]));
+    let left = (ye.getUTCFullYear() - today.getUTCFullYear()) * 12 + (ye.getUTCMonth() - today.getUTCMonth()) + (ye.getUTCDate() >= today.getUTCDate() ? 0 : -1);
+    left = Math.max(P.monthly.min_months, Math.max(1, left));
+    const saF = !dormant && a.future.directors_sa === true;
+    const annual = yearEnd + P.confirmation_statement.price + (needsSoftware ? P.software.per_year : 0) + (saF ? dirs * P.director_sa.per_return : 0);
+    const spread = Math.round(annual / left * 100) / 100;
+    const amount = Math.round((spread + payRate + cisRate + vatRate) * 100) / 100;
+    const yeIso = ye.toISOString().slice(0, 10);
+    const mLines = [t("pkg.m_annual", { amount: gbp(annual), months: String(left), each: gbp(spread) })];
+    if (payRate) mLines.push(t("pkg.m_payroll", { amount: gbp(payRate) }));
+    if (cisRate) mLines.push(t("pkg.m_cis", { amount: gbp(cisRate) }));
+    if (vatRate) mLines.push(t("pkg.m_vat", { amount: gbp(vatRate) }));
+    mLines.push(t("pkg.m_until", { date: ye.toLocaleDateString(lang === "ro" ? "ro-RO" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) }));
+    monthly = { amount, months: left, year_end: yeIso, directors_sa: saF, title: t("pkg.m_total", { amount: gbp(amount), months: String(left) }), lines: mLines };
+  }
+  return { total, title: t("pkg.total", { amount: gbp(total) }), lines, monthly, disclaimer: t("pkg.disclaimer"), t };
 }
 
 function bucketPath(p: string) { const i = p.indexOf("/"); return { bucket: p.slice(0, i), path: p.slice(i + 1) }; }
@@ -435,6 +487,53 @@ Deno.serve(async (req) => {
         const fixed = String((use?.input as Obj | undefined)?.text ?? "").trim();
         if (!fixed) return reply(502, { error: "reader" });
         return reply(200, { text: fixed });
+      }
+
+      case "quote": {
+        const c = await caseByRef(body.ref);
+        if (!c) return reply(404, { error: "not_found" });
+        const a = (body.answers ?? {}) as Q;
+        const lang = c.language === "ro" ? "ro" : "en";
+        const q = await priceQuote(a, lang);
+        const out: Obj = { total: q.total, title: q.title, lines: q.lines, monthly: q.monthly, disclaimer: q.disclaimer };
+        if (body.save === true || body.email === true) {
+          const d = (c.details ?? {}) as Obj;
+          const to = str(body.client_email, 200).toLowerCase() || String(d.email ?? "");
+          const answers = { ...a }; delete (answers as Q).future;
+          const note = ["[Quote: annual accounts + Corporation Tax return, penalty appeal free] [prepared by Eduard]",
+            "Company: " + (str(body.company_name, 160) || d.company_name || "-"), "Company number: " + (str(body.company_number, 10) || d.company_number || "-"),
+            `Case: ${c.ref}`, `CATCH-UP ESTIMATE £${q.total} – ${JSON.stringify(answers)}`,
+            q.monthly ? `MONTHLY FROM NOW £${q.monthly.amount} x ${q.monthly.months} months – ${JSON.stringify({ amount: q.monthly.amount, months: q.monthly.months, year_end: q.monthly.year_end, directors_sa: q.monthly.directors_sa })}` : "",
+            str(body.note, 1000)].filter(Boolean).join(" · ");
+          const { data: hr } = await db.from("help_requests").insert({ full_name: String(d.full_name ?? "-"), email: to || "(none)", phone: (d.phone as string) ?? null,
+            tax_year: "package", note, contact_consent_at: new Date().toISOString(), status: "contacted" }).select("id").single();
+          out.saved = !!hr;
+          await log("quote_saved", c.id, { total: q.total, monthly: q.monthly?.amount ?? null });
+          if (body.email === true) {
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return reply(400, { error: "email" });
+            const t = q.t, name = String(d.full_name ?? "").trim();
+            const paras = [t("email.quote.intro")];
+            const block = (title: string, ls: string[]) => `<div style="background:#14213D;color:#fff;border-radius:10px;padding:14px 16px;margin:14px 0"><b style="font-size:17px">${esc(title)}</b><br>${ls.map(esc).join("<br>")}</div>`;
+            const html = `<!doctype html><html><body style="margin:0;background:#F5F6F8;font-family:Arial,Helvetica,sans-serif;color:#14213D"><div style="max-width:560px;margin:0 auto;padding:24px">
+<div style="background:#14213D;color:#fff;padding:14px 18px;border-radius:10px 10px 0 0;font-size:18px;font-weight:bold">Tax Letter Sorted</div>
+<div style="background:#fff;padding:22px 18px;border-radius:0 0 10px 10px;font-size:15px;line-height:1.55"><p>${esc(t("email.paylink.hello", { name }))}</p>${paras.map((x) => `<p>${esc(x)}</p>`).join("")}
+${block(q.title, q.lines)}${q.monthly ? block(q.monthly.title, q.monthly.lines) : ""}<p style="font-size:13px;color:#4A5568">${esc(q.disclaimer)}</p><p>${esc(t("email.quote.next"))}</p></div>
+<p style="font-size:12px;color:#4A5568;text-align:center">${esc(t("email.id.footer"))}</p></div></body></html>`;
+            const text = [t("email.paylink.hello", { name }), ...paras, q.title, ...q.lines, ...(q.monthly ? [q.monthly.title, ...q.monthly.lines] : []), q.disclaimer, t("email.quote.next")].join("\n");
+            const key = Deno.env.get("BREVO_API_KEY");
+            let sent = false;
+            if (key) {
+              const res = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
+                body: JSON.stringify({ sender: { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" }, to: [{ email: to, name: name || undefined }],
+                  subject: t("email.quote.subject", { ref: String(c.ref) }), htmlContent: html, textContent: text, tags: ["quote"] }) });
+              const j = await res.json().catch(() => ({}));
+              sent = res.ok;
+              await db.from("email_log").insert({ case_id: c.id, recipient: to, email_type: "other", provider_message_id: j.messageId ?? null, status: res.ok ? "sent" : "failed" });
+            }
+            out.sent = sent;
+          }
+        }
+        return reply(200, out);
       }
 
       case "case_from_callback": {

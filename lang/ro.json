@@ -313,7 +313,10 @@
       "auth.instruct",
       "auth.instruct_noname",
       "auth.confirmed",
-      "auth.scope_short"
+      "auth.scope_short",
+      "email.quote.subject",
+      "email.quote.intro",
+      "email.quote.next"
     ]
   },
   "common": {
@@ -1262,6 +1265,11 @@
       "opt_o3co": "analiza de către contabil pentru companie (£59)",
       "opt_top20": "diferența până la analiza de către contabil (£20)",
       "opt_top40": "diferența până la analiza de către contabil pentru companie (£40)"
+    },
+    "quote": {
+      "subject": "Oferta dvs. – {ref}",
+      "intro": "Vă mulțumim pentru discuție. Aveți mai jos oferta pentru aducerea companiei la zi. Contestația penalității este inclusă gratuit.",
+      "next": "Răspundeți la acest email dacă doriți să continuăm și vă trimitem pașii următori."
     }
   },
   "fu": {

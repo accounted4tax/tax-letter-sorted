@@ -946,6 +946,11 @@
       "opt_o3co": "company accountant review (£59)",
       "opt_top20": "top-up to the accountant review (£20)",
       "opt_top40": "top-up to the company accountant review (£40)"
+    },
+    "quote": {
+      "subject": "Your quote – {ref}",
+      "intro": "Thank you for speaking with us. Here is your quote for bringing the company up to date. Your penalty appeal is included free.",
+      "next": "Just reply to this email if you'd like to go ahead, and we'll send you the next steps."
     }
   },
   "fu": {

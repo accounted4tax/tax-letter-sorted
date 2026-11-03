@@ -354,6 +354,85 @@ async function openCase(ref) {
     left.appendChild(box);
   }
 
+  // Accounts + Corporation Tax quote, prepared by Eduard (same prices as the website's instant estimate)
+  if (!c.data_deleted_at) {
+    const Q = { dormant: false, years: 1, books_done: false, transactions: 0, software: "quickbooks", directors: 1, sa_missing: 0,
+      payroll: false, employees: 1, pay_m: 0, cis: false, subs: 1, cis_m: 0, vat: false, vat_m: 0, cs: false, future: false,
+      year_end: (c.extracted || {}).accounts_period_end || "", dir_sa: true };
+    const inp = (k, type, attrs = {}) => { const i = el("input", Object.assign({ class: "sm", type: type || "number", min: "0", style: "width:100%" }, attrs));
+      if (type === "checkbox") { i.checked = !!Q[k]; i.className = ""; i.addEventListener("change", () => { Q[k] = i.checked; redraw(); }); }
+      else { i.value = Q[k]; i.addEventListener("input", () => { Q[k] = type === "date" ? i.value : Number(i.value); preview(); }); }
+      return i; };
+    const yn = (k, label) => el("label", { class: "check" }, [inp(k, "checkbox"), el("span", { text: label })]);
+    const fld = (label, node) => el("label", { class: "field" }, [el("span", { text: label }), node]);
+    const swSel = el("select", { class: "sm", style: "width:100%" }, [["quickbooks", "QuickBooks"], ["xero", "Xero"], ["freeagent", "FreeAgent"], ["sage", "Sage"], ["other", "Other software"], ["excel", "Excel / spreadsheet"], ["paper", "Paper / no software"]]
+      .map(([v, t]) => el("option", { value: v, text: t })));
+    swSel.addEventListener("change", () => { Q.software = swSel.value; preview(); });
+    const form = el("div", { class: "stack" }), result = el("div", { class: "stack" });
+    const qNote = el("textarea", { class: "small", placeholder: "Note for your records (optional)" });
+    let timer = null, last = null;
+    function answers() {
+      const a = { dormant: Q.dormant, years: Q.years, books_done: Q.books_done, directors: Q.directors, confirmation_statement: Q.cs };
+      if (!Q.dormant) {
+        if (Q.books_done) a.software = Q.software; else a.transactions = Q.transactions;
+        if (Q.sa_missing > 0) a.director_returns_missing = Q.sa_missing;
+        if (Q.payroll) a.payroll = { employees: Q.employees, months: Q.pay_m };
+        if (Q.cis) a.cis = { subcontractors: Q.subs, months: Q.cis_m };
+        if (Q.vat) a.vat = { months: Q.vat_m };
+      }
+      if (Q.future) a.future = { year_end: Q.year_end, directors_sa: Q.dir_sa };
+      return a;
+    }
+    function show(x) {
+      result.innerHTML = "";
+      result.appendChild(el("div", { class: "deadline" }, [el("b", { text: x.title }), el("span", { style: "white-space:pre-line", text: x.lines.join("\n") })]));
+      if (x.monthly) result.appendChild(el("div", { class: "deadline" }, [el("b", { text: x.monthly.title }), el("span", { style: "white-space:pre-line", text: x.monthly.lines.join("\n") })]));
+      else if (Q.future) result.appendChild(el("p", { class: "muted", text: "Enter the company's year-end to see the monthly price." }));
+    }
+    function preview() { clearTimeout(timer); timer = setTimeout(async () => { try { last = await api("quote", { ref: c.ref, answers: answers() }); show(last); } catch (e) {} }, 350); }
+    function redraw() {
+      form.innerHTML = "";
+      form.appendChild(yn("dormant", "Dormant company"));
+      form.appendChild(el("div", { class: "grid2" }, [fld("Overdue year-ends", inp("years", "number", { min: "1" })), fld("Directors", inp("directors", "number", { min: "1" }))]));
+      if (!Q.dormant) {
+        form.appendChild(yn("books_done", "Bookkeeping already done"));
+        form.appendChild(Q.books_done ? fld("Software", swSel) : fld("Transactions (all overdue years)", inp("transactions")));
+        form.appendChild(fld("Directors' tax returns missing (directors × years)", inp("sa_missing")));
+        form.appendChild(yn("payroll", "Payroll registered"));
+        if (Q.payroll) form.appendChild(el("div", { class: "grid2" }, [fld("Employees", inp("employees", "number", { min: "1" })), fld("Months not submitted", inp("pay_m"))]));
+        form.appendChild(yn("cis", "CIS contractor"));
+        if (Q.cis) form.appendChild(el("div", { class: "grid2" }, [fld("Subcontractors", inp("subs", "number", { min: "1" })), fld("Months not submitted", inp("cis_m"))]));
+        form.appendChild(yn("vat", "VAT registered"));
+        if (Q.vat) form.appendChild(fld("VAT months not submitted", inp("vat_m")));
+      }
+      form.appendChild(yn("cs", "Confirmation statement due"));
+      form.appendChild(yn("future", "Monthly price from now on"));
+      if (Q.future) { form.appendChild(fld("Company year-end (any past year-end date)", inp("year_end", "date"))); if (!Q.dormant) form.appendChild(yn("dir_sa", "Include directors' tax returns in the monthly price")); }
+      swSel.value = Q.software; preview();
+    }
+    const qOut = el("p", { class: "muted" });
+    const go = async (emailIt, btn) => {
+      if (emailIt && !confirm("Save this quote and email it to " + (det.email || "the client") + "?")) return;
+      btn.disabled = true;
+      try {
+        const x = await api("quote", { ref: c.ref, answers: answers(), save: true, email: emailIt, note: qNote.value, company_name: det.company_name || "", company_number: det.company_number || "" });
+        qOut.textContent = emailIt ? (x.sent ? "Quote saved and emailed to the client." : "Quote saved, but the email didn't send.") : "Quote saved – see the Quotes tab.";
+        toast(qOut.textContent);
+      } catch (e) { qOut.textContent = e.message === "email" ? "No valid client email on the case." : "Not saved (" + e.message + ")."; }
+      btn.disabled = false;
+    };
+    left.appendChild(el("section", { class: "card" }, [el("details", {}, [
+      el("summary", { style: "cursor:pointer;font-weight:700;font-size:17px", text: "Create a quote – accounts + Corporation Tax (appeal free)" }),
+      el("div", { class: "stack", style: "margin-top:12px" }, [
+        el("p", { class: "muted", text: "Same prices as the website's instant estimate (rules/package-prices.json). The email goes in the client's language." }),
+        form, result, qNote,
+        el("div", { class: "row" }, [
+          el("button", { class: "sbtn", type: "button", text: "Save quote", onclick: (e) => go(false, e.target) }),
+          el("button", { class: "sbtn primary", type: "button", text: "Save and email to client", onclick: (e) => go(true, e.target) })]),
+        qOut])])]));
+    redraw();
+  }
+
   // Contact preference (companies)
   if (r.contacts.length) {
     const rc = r.contacts[r.contacts.length - 1];

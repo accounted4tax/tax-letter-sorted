@@ -50,7 +50,7 @@ jobs:
             if [ -f "supabase/functions/$f/index.ts" ]; then
               echo "::group::$f"
               # all our functions check their own access (preview code, admin sign-in, secrets), so no Supabase JWT check
-              supabase functions deploy "$f" --project-ref "$PROJECT_REF" --no-verify-jwt --use-api
+              supabase functions deploy "$f" --project-ref "$PROJECT_REF" --no-verify-jwt --use-api --yes
               echo "::endgroup::"
             fi
           done

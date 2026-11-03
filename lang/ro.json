@@ -1159,8 +1159,8 @@
   },
   "idd": {
     "passport": "Pașaport valabil, semnat",
-    "driving_licence_photo": "Permis de conducere cu fotografie, valabil, din Marea Britanie sau SEE",
-    "eea_id_card": "Carte de identitate dintr-un stat SEE",
+    "driving_licence_photo": "Permis de conducere cu fotografie, valabil, din Marea Britanie sau UE",
+    "eea_id_card": "Carte de identitate dintr-o țară din Uniunea Europeană",
     "national_id_card": "Carte de identitate națională cu fotografia dvs.",
     "cis4_card": "Card de înregistrare CIS4 cu fotografie (construcții)",
     "firearms_certificate": "Permis de port-armă",
@@ -1176,7 +1176,7 @@
     "electoral_register": "Înscriere în registrul electoral",
     "nhs_gp_letter": "Card medical NHS sau scrisoare de la medicul de familie (GP) care confirmă înregistrarea",
     "driving_licence_address": "Permis de conducere complet din Marea Britanie, valabil (doar dacă nu l-ați folosit ca act de identitate cu fotografie)",
-    "eea_id_card_address": "Carte de identitate SEE cu adresa (doar dacă nu ați folosit-o ca act de identitate cu fotografie)",
+    "eea_id_card_address": "Carte de identitate din UE cu adresa (doar dacă nu ați folosit-o ca act de identitate cu fotografie)",
     "certificate_of_incorporation": "Certificatul de înregistrare a firmei (certificate of incorporation)"
   },
   "id": {

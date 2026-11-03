@@ -373,7 +373,7 @@ async function openCase(ref) {
   const docs = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Documents" })]);
   if (c.product === "option3") docs.appendChild(el("p", { class: "muted", text: c.id_completed_at ? "ID check completed " + dt(c.id_completed_at) : (c.id_requested_at ? "Client chose to upload later (" + c.id_reminders_sent + " reminders sent)" : "ID not uploaded yet") }));
   if (company && c.product === "option3") docs.appendChild(el("p", { class: c.authority_to_act_at ? "success" : "callout",
-    text: c.authority_to_act_at ? `Authority to act signed by ${c.authority_name} on ${dt(c.authority_to_act_at)} (${c.authority_version})` : "Authority to act not signed yet" }));
+    text: c.authority_to_act_at ? `Director's instruction confirmed (${c.authority_name}) on ${dt(c.authority_to_act_at)}` : "Director's instruction not confirmed yet" }));
   if (!files.length) docs.appendChild(el("p", { class: "muted", text: "No files stored." }));
   files.forEach((f) => docs.appendChild(el("div", { class: "row" }, [
     el("span", { style: "flex:1", text: (KIND[f.kind] || f.kind) + (f.doc_type && f.doc_type !== "selfie" ? " – " + f.doc_type.replace(/_/g, " ") : "") }),

@@ -17,7 +17,7 @@ const EN_DEFAULT: Record<string, string> = {
   "email.id.deadline": "Your appeal deadline is {date}.",
   "email.id.footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938",
   "email.code.subject": "HMRC will post an authorisation code to the company ({ref})",
-  "email.code.body": "Thank you, we have the documents and the signed authority. We are asking HMRC for authorisation to act for the company's Corporation Tax. HMRC will post a letter with an authorisation code to the company's registered office, usually within about 2 weeks.",
+  "email.code.body": "Thank you, we have the documents and your confirmation. We are asking HMRC for authorisation to act for the company's Corporation Tax. HMRC will post a letter with an authorisation code to the company's registered office, usually within about 2 weeks.",
   "email.code.action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
   "email.code.meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
   "email.code.button": "Send the HMRC code",

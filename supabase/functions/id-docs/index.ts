@@ -3,7 +3,7 @@
 //   upload    (form data) – one document: part (photo_id | selfie | proof_address | incorporation), doc_type, file
 //   complete  (JSON)      – every document received → case goes to the review queue
 //   later     (JSON)      – "I will upload later": emails a private upload link; id-reminders sends reminders
-//   authority (JSON)      – companies (£59): the director signs the authority to act on screen (typed name + tick)
+//   authority (JSON)      – companies (£59): the director ticks to confirm they are a director and instruct us on this penalty
 //   hmrc_code (JSON)      – Corporation Tax: the client sends the HMRC agent authorisation code when HMRC's letter arrives
 // Rules (rules/id-documents.json): one document cannot be used for both photo ID and proof of address,
 // and the same file cannot be uploaded twice.
@@ -14,7 +14,7 @@ const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
 const KIND: Record<string, string> = { photo_id: "id_photo", selfie: "id_selfie", proof_address: "id_address", incorporation: "incorporation_cert" };
 const MAX = 10 * 1024 * 1024;
 // Version of the authority-to-act wording the director signed (lang files: auth.*). Change it when the wording changes.
-const AUTHORITY_VERSION = "company-appeal-2026-11-01-draft";
+const AUTHORITY_VERSION = "director-instruction-2026-11-03";   // one tick: "I'm a director … and I ask Accounted4Tax to deal with this penalty"
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
   auth: { persistSession: false },

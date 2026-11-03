@@ -152,35 +152,27 @@
     return el("section", { class: "card part" + (partErr[part] ? " invalid" : "") }, kids);
   }
 
-  // Companies (£59): we act as agent, so the director signs the authority to act on screen.
-  var authName = "", authAgree = false, authErr = null, authBusy = false;
+  // Companies (£59): one tick – the director confirms they are a director and asks us to deal with this penalty
+  // (a record of the client's instruction; HMRC and Companies House access comes from their own codes).
+  var authErr = null, authBusy = false;
   function authorityCard() {
     var box = $("authority"); box.innerHTML = "";
     if (!st.company) return;
-    var vars = { director: st.director || "", company: st.company_name || "", number: st.company_number || "" };
-    var kids = [el("h2", { text: t("auth.title") }), el("p", { text: t("auth.intro", vars) }),
-      el("ol", { class: "list" }, ["auth.item1" + (st.needs_hmrc_code ? "_ct" : "_ch"), "auth.item2", "auth.item3"].map(function (k) { return el("li", { text: t(k) }); })),
-      el("p", { text: t("auth.scope") }), el("p", { class: "hint", text: t("auth.withdraw") })];
-    if (st.authority) {
-      kids.push(el("p", { class: "got", text: t("auth.signed", { name: st.authority_name || "" }) }));
-    } else {
-      kids.push(el("label", { class: "field" }, [el("span", { text: t("auth.type_name") }),
-        el("input", { id: "authName", autocomplete: "name", maxlength: "120", value: authName, oninput: function (e) { authName = e.target.value; } })]));
-      kids.push(el("label", { class: "check" }, [el("input", { type: "checkbox", id: "authAgree", checked: authAgree, onchange: function (e) { authAgree = e.target.checked; } }),
-        el("span", { text: t("auth.agree") })]));
-      kids.push(el("button", { class: "btn secondary", type: "button", disabled: authBusy, text: t("auth.sign"), onclick: signAuthority }));
-    }
+    var co = (st.company_name || "").trim();
+    var text = co ? t("auth.instruct", { company: co + (st.company_number ? " (" + st.company_number + ")" : "") }) : t("auth.instruct_noname");
+    var kids = [el("h2", { text: t("auth.title") })];
+    if (st.authority) kids.push(el("p", { class: "got", text: t("auth.confirmed") }));
+    kids.push(el("label", { class: "check" }, [el("input", { type: "checkbox", id: "authAgree", checked: !!st.authority, disabled: !!st.authority || authBusy,
+      onchange: function (e) { if (e.target.checked) confirmInstruction(); } }), el("span", { text: text })]));
+    kids.push(el("p", { class: "hint", text: t("auth.scope_short") }));
     if (authErr) kids.push(el("p", { class: "error", role: "alert", text: t(authErr) }));
     box.appendChild(el("section", { class: "card part" + (authErr ? " invalid" : "") }, kids));
-    if (!st.authority) { var n = $("authName"); if (n && document.activeElement !== n) n.value = authName; }
   }
-  function signAuthority() {
-    if (authName.trim().length < 2) { authErr = "auth.err_name"; render(); return; }
-    if (!authAgree) { authErr = "auth.err_agree"; render(); return; }
+  function confirmInstruction() {
     authErr = null; authBusy = true; render();
-    api({ action: "authority", name: authName.trim(), agree: true }).then(function (res) {
+    api({ action: "authority", name: st.director || "Director", agree: true }).then(function (res) {
       authBusy = false;
-      if (res.ok) { st = res.j; if (errKey === "auth.err_unsigned") showErr(null); } else authErr = res.j.error === "name" ? "auth.err_name" : res.j.error === "agree" ? "auth.err_agree" : "id.err_server";
+      if (res.ok) { st = res.j; if (errKey === "auth.err_unsigned") showErr(null); } else authErr = "id.err_server";
       render();
     }).catch(function () { authBusy = false; authErr = "id.err_server"; render(); });
   }

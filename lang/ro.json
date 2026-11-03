@@ -199,19 +199,6 @@
       "details.option3_company",
       "details.ct_utr_hint",
       "auth.title",
-      "auth.intro",
-      "auth.item1_ct",
-      "auth.item1_ch",
-      "auth.item2",
-      "auth.item3",
-      "auth.scope",
-      "auth.withdraw",
-      "auth.type_name",
-      "auth.agree",
-      "auth.sign",
-      "auth.signed",
-      "auth.err_name",
-      "auth.err_agree",
       "auth.err_unsigned",
       "fu.code_note",
       "code.title",
@@ -322,7 +309,11 @@
       "email.paylink.opt_o3",
       "email.paylink.opt_o3co",
       "email.paylink.opt_top20",
-      "email.paylink.opt_top40"
+      "email.paylink.opt_top40",
+      "auth.instruct",
+      "auth.instruct_noname",
+      "auth.confirmed",
+      "auth.scope_short"
     ]
   },
   "common": {
@@ -699,7 +690,7 @@
     "co_o3_title": "Analiză de către contabil · £59",
     "co_o3_b1": "Un contabil calificat (MAAT) acționează ca agent al companiei și depune contestația pentru dvs.",
     "co_o3_b2": "Discutăm cu dvs. la telefon sau pe email pentru a înțelege situația",
-    "co_o3_b3": "Verificarea identității directorului și o împuternicire semnată, conform legii",
+    "co_o3_b3": "Verificarea identității directorului, conform legii",
     "co_o3_cta": "Alegeți analiza de către contabil · £59",
     "co_pkg_title": "Contestație gratuită împreună cu bilanțul financiar anual și declarația fiscală anuală a firmei",
     "co_pkg_b1": "Pregătim și depunem bilanțul financiar anual și declarația fiscală anuală a firmei",
@@ -1239,7 +1230,7 @@
     },
     "code": {
       "subject": "HMRC va trimite prin poștă un cod de autorizare companiei ({ref})",
-      "body": "Vă mulțumim, am primit documentele și împuternicirea semnată. Solicităm la HMRC autorizarea de a acționa pentru impozitul pe profit al companiei. HMRC va trimite prin poștă o scrisoare cu un cod de autorizare la sediul social al companiei, de obicei în aproximativ 2 săptămâni.",
+      "body": "Vă mulțumim, am primit documentele și confirmarea dvs. Solicităm la HMRC autorizarea de a acționa pentru impozitul pe profit al companiei. HMRC va trimite prin poștă o scrisoare cu un cod de autorizare la sediul social al companiei, de obicei în aproximativ 2 săptămâni.",
       "action": "Când primiți scrisoarea, vă rugăm să ne trimiteți codul imediat, folosind butonul de mai jos. Codul este valabil doar o perioadă limitată.",
       "meanwhile": "Între timp pregătim contestația, ca să nu fie depășit termenul.",
       "button": "Trimiteți codul HMRC"
@@ -1300,21 +1291,12 @@
     "code_note": "V-am trimis și un email despre codul de autorizare pe care HMRC îl va trimite prin poștă companiei."
   },
   "auth": {
-    "title": "Împuternicire",
-    "intro": "Subsemnatul/Subsemnata {director}, director al {company} (număr de companie {number}), împuternicesc Accounted4Tax Ltd, care funcționează sub numele Tax Letter Sorted, să acționeze ca agent al companiei pentru această contestație a penalității. Aceasta include:",
-    "item1_ct": "corespondența cu HM Revenue and Customs privind penalitatea la impozitul pe profit (Corporation Tax), inclusiv solicitarea către HMRC a autorizării ca agent pentru impozitul pe profit al companiei;",
-    "item1_ch": "corespondența cu Companies House privind penalitatea pentru depunerea cu întârziere;",
-    "item2": "pregătirea și depunerea contestației, precum și primirea și răspunsul la scrisorile legate de aceasta;",
-    "item3": "păstrarea copiilor documentelor de identitate și a evidențelor atât timp cât cere legea.",
-    "scope": "Această împuternicire acoperă doar această contestație. Orice altă lucrare necesită o scrisoare de angajament separată. Confirm că sunt director al companiei și că informațiile pe care le-am dat sunt adevărate.",
-    "withdraw": "Puteți retrage această împuternicire oricând, printr-un email la letters@accounted4tax.co.uk. Se aplică versiunea în limba engleză.",
-    "type_name": "Scrieți numele complet pentru a semna",
-    "agree": "Sunt director al companiei și dau această împuternicire.",
-    "sign": "Semnați împuternicirea",
-    "signed": "Semnat de {name}",
-    "err_name": "Vă rugăm să scrieți numele complet.",
-    "err_agree": "Vă rugăm să bifați căsuța pentru a confirma.",
-    "err_unsigned": "Vă rugăm să semnați împuternicirea înainte de a trimite documentele."
+    "title": "Mandatul dvs.",
+    "err_unsigned": "Vă rugăm să bifați că sunteți director înainte de a trimite documentele.",
+    "instruct": "Sunt director al {company} și cer Accounted4Tax să se ocupe de această penalitate pentru companie.",
+    "instruct_noname": "Sunt director al companiei și cer Accounted4Tax să se ocupe de această penalitate pentru companie.",
+    "confirmed": "Confirmat",
+    "scope_short": "Aceasta acoperă doar contestația acestei penalități. Orice altă lucrare necesită un acord separat."
   },
   "code": {
     "title": "Trimiteți-ne codul de autorizare HMRC",

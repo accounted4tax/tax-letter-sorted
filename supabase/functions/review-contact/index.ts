@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",

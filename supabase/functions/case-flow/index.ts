@@ -7,7 +7,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-haiku-5-5";
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const LANGS = ["en", "ro", "pl", "bg", "lt", "ar", "ur"];
 const RULES: Record<string, string> = {
   "sa-late-filing-100": "sa-late-filing-100", "sa-late-filing-later": "sa-late-filing-later",
@@ -408,7 +408,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",

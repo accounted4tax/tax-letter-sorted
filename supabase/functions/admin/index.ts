@@ -35,7 +35,7 @@ const REQUEST_STATUSES = ["new", "contacted", "client", "closed"];
 const CALLBACK_STATUSES = ["new", "called", "link_sent", "no_appeal", "closed"];
 const str = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const LINK_OPTIONS: Record<string, { pence: number; product: string; target: string; label: string }> = {
   o2: { pence: 1900, product: "option2", target: "option2", label: "Penalty appeal prepared after your call (£19)" },
   o3: { pence: 3900, product: "option3", target: "option3", label: "Accountant review (£39)" },
@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",
@@ -251,7 +251,7 @@ Deno.serve(async (req) => {
         ]);
         const { data: links } = await db.from("payment_links").select("id, label, amount_pence, created_at, expires_at, used_at, sent_to").eq("case_id", c.id).order("created_at");
         const { private_token: _t, letter_text, ...rest } = c as Obj;
-        const site = "https://accounted4tax.github.io/tax-letter-sorted";
+        const site = "https://taxletters.accounted4tax.co.uk";
         return reply(200, {
           case: rest, letter_text_chars: String(letter_text ?? "").length,
           answers: ans.data ?? null, files: files.data ?? [], payments: pays.data ?? [], emails: mails.data ?? [],
@@ -463,7 +463,7 @@ Deno.serve(async (req) => {
         if (c.id_completed_at) return reply(400, { error: "already_complete" });
         // same email as "I will upload later" (starts the reminders if they haven't started)
         const r = await fetch(`${URL_}/functions/v1/id-docs`, { method: "POST",
-          headers: { "Content-Type": "application/json", Origin: "https://accounted4tax.github.io" },
+          headers: { "Content-Type": "application/json", Origin: "https://taxletters.accounted4tax.co.uk" },
           body: JSON.stringify({ action: "later", case: c.private_token, preview: settings?.live ? undefined : settings?.preview_code }) });
         const j = await r.json().catch(() => ({}));
         await log("id_email_sent_by_admin", c.id, { ok: r.ok && j.sent === true });

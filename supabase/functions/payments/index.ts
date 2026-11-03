@@ -6,7 +6,7 @@
 // The Stripe secret key lives only in Supabase secrets (STRIPE_SECRET_KEY).
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const PRICES: Record<string, { pence: number; name: string }> = {
   option2: { pence: 1900, name: "Tax Letter Sorted – Option 2: appeal prepared for you to sign and send" },
   option3: { pence: 3900, name: "Tax Letter Sorted – Option 3: appeal reviewed by a qualified accountant" },
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",

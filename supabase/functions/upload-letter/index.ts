@@ -24,7 +24,7 @@ function sniff(b: Uint8Array): { ext: string; mime: string } | null {
 }
 
 async function sha256(b: Uint8Array) {
-  const h = await crypto.subtle.digest("SHA-256", b);
+  const h = await crypto.subtle.digest("SHA-256", b as BufferSource);
   return [...new Uint8Array(h)].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",

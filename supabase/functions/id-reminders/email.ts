@@ -2,7 +2,7 @@
 // and records it in email_log. Shared by id-docs and id-reminders (each folder has its own copy).
 // The Brevo key is an Edge Function secret (BREVO_API_KEY).
 // deno-lint-ignore-file no-explicit-any
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const SENDER = { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" };
 const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
 

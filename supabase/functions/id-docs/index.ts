@@ -10,7 +10,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { sendIdEmail, sendCodeEmail, alertEduard } from "./email.ts";
 
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const KIND: Record<string, string> = { photo_id: "id_photo", selfie: "id_selfie", proof_address: "id_address", incorporation: "incorporation_cert" };
 const MAX = 10 * 1024 * 1024;
 // Version of the authority-to-act wording the director signed (lang files: auth.*). Change it when the wording changes.
@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
   const origin = req.headers.get("origin") ?? "";
   const okOrigin = (settings?.allowed_origins ?? []).includes(origin) || origin.startsWith("http://localhost");
   const cors = {
-    "Access-Control-Allow-Origin": okOrigin ? origin : "https://accounted4tax.github.io",
+    "Access-Control-Allow-Origin": okOrigin ? origin : "https://taxletters.accounted4tax.co.uk",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-client-info",
     "Vary": "Origin",

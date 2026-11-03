@@ -1,7 +1,7 @@
 // Emails the appeal PDF to the client (Brevo), in the client's language, with what to do next.
 // The PDF is attached; the email log keeps the SHA-256 of the PDF sent (proof of which document went out).
 // deno-lint-ignore-file no-explicit-any
-const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const SITE = "https://taxletters.accounted4tax.co.uk";
 const SENDER = { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" };
 
 const EN_DEFAULT: Record<string, string> = {

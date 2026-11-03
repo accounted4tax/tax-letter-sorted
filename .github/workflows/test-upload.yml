@@ -15,7 +15,7 @@ jobs:
           CODE: ${{ inputs.code }}
           URL: ${{ secrets.SUPABASE_URL }}
         run: |
-          F="$URL/functions/v1/upload-letter"; O="Origin: https://accounted4tax.github.io"
+          F="$URL/functions/v1/upload-letter"; O="Origin: https://taxletters.accounted4tax.co.uk"
           printf '%%PDF-1.4\n%% dummy test file\n%%%%EOF\n' > t.pdf; printf 'hello' > t.txt
           r1=$(curl -s -H "$O" -F consent=yes -F files=@t.pdf "$F")
           r2=$(curl -s -H "$O" -F preview="$CODE" -F consent=yes -F files=@t.txt "$F")

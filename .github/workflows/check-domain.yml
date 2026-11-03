@@ -1,0 +1,12 @@
+# Checks that taxletters.accounted4tax.co.uk points to GitHub Pages and answers over http/https (run by hand).
+name: Check domain
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "--- DNS"; dig +short taxletters.accounted4tax.co.uk CNAME; dig +short taxletters.accounted4tax.co.uk A
+          echo "--- http";  curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" http://taxletters.accounted4tax.co.uk/ || true
+          echo "--- https"; curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" https://taxletters.accounted4tax.co.uk/ || echo "https not ready"
+          echo "--- old";   curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" https://accounted4tax.github.io/tax-letter-sorted/ || true

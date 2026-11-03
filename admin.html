@@ -369,7 +369,7 @@ async function openCase(ref) {
 
   // Documents
   const files = r.files.filter((f) => !f.deleted_at);
-  const KIND = { letter: "HMRC letter", id_photo: "Photo ID", id_selfie: "Selfie", id_address: "Proof of address", incorporation_cert: "Certificate of incorporation", appeal_pdf: "Appeal PDF", evidence: "Evidence", signed_pdf: "Signed PDF" };
+  const KIND = { letter: "HMRC letter", id_photo: "Photo ID", id_selfie: "Selfie with photo ID", id_address: "Proof of address", incorporation_cert: "Certificate of incorporation", appeal_pdf: "Appeal PDF", evidence: "Evidence", signed_pdf: "Signed PDF" };
   const docs = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Documents" })]);
   if (c.product === "option3") docs.appendChild(el("p", { class: "muted", text: c.id_completed_at ? "ID check completed " + dt(c.id_completed_at) : (c.id_requested_at ? "Client chose to upload later (" + c.id_reminders_sent + " reminders sent)" : "ID not uploaded yet") }));
   if (company && c.product === "option3") docs.appendChild(el("p", { class: c.authority_to_act_at ? "success" : "callout",

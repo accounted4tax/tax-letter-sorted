@@ -10,8 +10,8 @@ const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
 const EN_DEFAULT: Record<string, string> = {
   "email.id.subject": "Upload your ID to continue your appeal ({ref})",
   "email.id.hello": "Hello {name},",
-  "email.id.body": "Thank you for choosing our accountant review. Before we can act for you, the law requires us to check your identity. Please upload your photo ID, a selfie and proof of address using the button below.",
-  "email.id.body_company": "Thank you for choosing our accountant review. Before we can act for the company, the law requires us to check the director's identity and the company. Please upload the director's photo ID, a selfie, proof of address and the certificate of incorporation using the button below.",
+  "email.id.body": "Thank you for choosing our accountant review. Before we can act for you, the law requires us to check your identity. Please upload your photo ID, a selfie holding that photo ID next to your face, and proof of address using the button below.",
+  "email.id.body_company": "Thank you for choosing our accountant review. Before we can act for the company, the law requires us to check the director's identity and the company. Please upload the director's photo ID, a selfie holding that photo ID next to the face, proof of address and the certificate of incorporation using the button below.",
   "email.id.reminder": "Reminder: we still need your documents before we can start on your appeal.",
   "email.id.button": "Upload my documents",
   "email.id.deadline": "Your appeal deadline is {date}.",

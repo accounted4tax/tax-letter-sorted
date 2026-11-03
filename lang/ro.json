@@ -1185,20 +1185,20 @@
     "intro_company": "Înainte să putem reprezenta firma, legea ne obligă să verificăm identitatea directorului și firma. Vă rugăm să încărcați documentele de mai jos.",
     "part": {
       "photo_id": "1. Act de identitate cu fotografie",
-      "selfie": "2. O fotografie cu fața dvs. (selfie)",
+      "selfie": "2. Un selfie cu actul de identitate ținut lângă față",
       "proof_address": "3. Dovada adresei",
       "incorporation": "4. Certificatul de înregistrare a firmei"
     },
     "hint": {
       "photo_id": "O fotografie clară a întregului document. Asigurați-vă că se văd toate colțurile.",
-      "selfie": "Priviți spre cameră, în lumină bună, fără ochelari sau pălărie. O comparăm cu actul de identitate.",
+      "selfie": "Țineți lângă față același act de identitate pe care l-ați încărcat mai sus, cu fotografia spre cameră. Fața și actul trebuie să se vadă clar. Lumină bună, fără ochelari sau pălărie. Astfel vedem că actul vă aparține și îl aveți la dvs.",
       "proof_address": "Trebuie să arate numele și adresa dvs. actuală. Nu se acceptă facturi de telefon mobil, extrase de card de credit sau permise de conducere provizorii.",
       "incorporation": "Este bun și PDF-ul de la Companies House."
     },
     "which_document": "Ce document?",
     "take_photo": "Fă o fotografie",
     "choose_file": "Alege un fișier",
-    "take_selfie": "Fă un selfie",
+    "take_selfie": "Faceți un selfie cu actul",
     "uploading": "Se încarcă…",
     "received": "Primit",
     "replace": "Înlocuiește",
@@ -1221,8 +1221,8 @@
     "id": {
       "subject": "Încărcați actele de identitate pentru a continua contestația ({ref})",
       "hello": "Bună ziua, {name},",
-      "body": "Vă mulțumim că ați ales verificarea de către un contabil. Înainte să vă putem reprezenta, legea ne obligă să vă verificăm identitatea. Vă rugăm să încărcați actul de identitate cu fotografie, un selfie și dovada adresei folosind butonul de mai jos.",
-      "body_company": "Vă mulțumim că ați ales verificarea de către un contabil. Înainte să putem reprezenta firma, legea ne obligă să verificăm identitatea directorului și firma. Vă rugăm să încărcați actul de identitate cu fotografie al directorului, un selfie, dovada adresei și certificatul de înregistrare a firmei folosind butonul de mai jos.",
+      "body": "Vă mulțumim că ați ales verificarea de către un contabil. Înainte să vă putem reprezenta, legea ne obligă să vă verificăm identitatea. Vă rugăm să încărcați actul de identitate cu fotografie, un selfie în care țineți acel act lângă față și dovada adresei, folosind butonul de mai jos.",
+      "body_company": "Vă mulțumim că ați ales verificarea de către un contabil. Înainte să putem reprezenta firma, legea ne obligă să verificăm identitatea directorului și firma. Vă rugăm să încărcați actul de identitate cu fotografie al directorului, un selfie în care directorul ține acel act lângă față, dovada adresei și certificatul de înregistrare a firmei, folosind butonul de mai jos.",
       "reminder": "Vă reamintim: avem nevoie de documentele dvs. înainte să începem lucrul la contestație.",
       "button": "Încarcă documentele",
       "deadline": "Termenul pentru contestație este {date}.",

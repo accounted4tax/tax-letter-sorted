@@ -256,7 +256,7 @@ async function explain(c: Obj, lang: string, body: Obj) {
 const TRANSLATE_SYSTEM = `Write each field in clear, correct UK English for a letter to HMRC or Companies House.
 If a field is in another language, translate it faithfully. If it is already in English, correct spelling, grammar and punctuation only.
 Do not add, remove, soften or strengthen anything. Do not add reasons, dates or details that are not in the original.
-Keep dates, names and amounts exactly. Write in the first person, as the client wrote it.
+Keep dates, names and amounts exactly. Write in the first person, as the client wrote it. Use normal UK tax wording (to "file" a return means to send it to HMRC).
 Then check consistency: the client chose this reason from a list: "{REASON}". Set "matches_reason" to false only if the client's own
 explanation ("story") clearly describes a different cause (for example the reason is a bereavement but the story is about a computer
 breaking down). If it is consistent, partly related, or too short to tell, set it to true. Never suggest a reason.

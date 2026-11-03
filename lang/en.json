@@ -1073,7 +1073,7 @@
   "appt": {
     "title": "Book an appointment with an accountant",
     "intro": "A qualified accountant (MAAT) will call you to go through your letter, what you owe and what you can do next.",
-    "point1": "A phone call with a qualified accountant at a time that suits you",
+    "point1": "A 30-minute phone call with a qualified accountant at a time that suits you",
     "point2": "We explain the amounts, the interest and any penalties on your statement",
     "point3": "We tell you your options, for example paying in instalments (Time to Pay)",
     "name": "Your full name",
@@ -1087,6 +1087,6 @@
     "err_phone": "Please enter a valid phone number.",
     "err_terms": "Please accept the Terms and Privacy Policy to continue.",
     "err_server": "Something went wrong. Please try again in a minute.",
-    "start_now": "I have read the Terms and Privacy Policy. Please start straight away – I understand that once the appointment has taken place I can't cancel it for a refund."
+    "start_now": "I have read the Terms and Privacy Policy. Please start straight away – I understand that I can't cancel for a refund less than 1 hour before the appointment, or once it has taken place."
   }
 }

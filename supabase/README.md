@@ -31,3 +31,4 @@ Edge functions 1 Nov 2026: payments v2 (£59 for companies), id-docs v3 (authori
 Admin sign-in: Supabase Auth email + password; the user must be created in the dashboard (Authentication → Users → Add user) with an email listed in app_settings.admin_emails.
 - 015_brevo_webhook – applied 2 Nov 2026 (app_settings.webhook_secret). Edge function brevo-webhook v1: Brevo delivery events → email_log.status.
 - 016_requests_retention – applied 3 Nov 2026 (pg_cron 'requests-retention-daily': help/quote/call-back requests deleted after 12 months, except status 'client')
+- 017_payment_links_amounts – applied 3 Nov 2026 (payment_links amount/target/label/sent_to/created_by; payments.payment_link_id)

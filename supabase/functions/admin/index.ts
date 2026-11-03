@@ -17,6 +17,9 @@
 //   funnel {days}            – visitors at each step
 //   export {what}            – rows for CSV: customers | cases | payments | emails
 //   find_person {email}      – what is held about someone;  delete_person {email, include_kept}
+//   payment_link {ref, option, email, name, phone} – emails the client a Stripe payment link after a call
+//                              (o2 £19 · o3 £39 · o3co £59 · top20 £20 top-up to £39 · top40 £40 top-up to £59)
+//   case_from_callback {id}  – creates a case for a call-back request that has none (so it can be charged)
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const URL_ = Deno.env.get("SUPABASE_URL")!;
@@ -27,6 +30,36 @@ const STATUSES = ["uploaded", "explained", "questions", "outcome", "callback_req
 const REQUEST_STATUSES = ["new", "contacted", "client", "closed"];
 const CALLBACK_STATUSES = ["new", "called", "link_sent", "no_appeal", "closed"];
 const str = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+
+const SITE = "https://accounted4tax.github.io/tax-letter-sorted";
+const LINK_OPTIONS: Record<string, { pence: number; product: string; target: string; label: string }> = {
+  o2: { pence: 1900, product: "option2", target: "option2", label: "Penalty appeal prepared after your call (£19)" },
+  o3: { pence: 3900, product: "option3", target: "option3", label: "Accountant review (£39)" },
+  o3co: { pence: 5900, product: "option3", target: "option3", label: "Company accountant review (£59)" },
+  top20: { pence: 2000, product: "option3_topup", target: "option3", label: "Top-up to the accountant review (£20)" },
+  top40: { pence: 4000, product: "option3_topup", target: "option3", label: "Top-up to the company accountant review (£40)" },
+};
+const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+const EMAIL_EN: Record<string, string> = {
+  "email.paylink.subject": "Your payment link – {ref}",
+  "email.paylink.hello": "Hello {name},",
+  "email.paylink.body": "Thank you for speaking with us. As agreed, here is your secure payment link for: {label}.",
+  "email.paylink.amount": "Amount: {amount} (no VAT).",
+  "email.paylink.next_o3": "After you pay, we'll ask for your ID documents, then we'll prepare your appeal.",
+  "email.paylink.next_o2": "After you pay, we'll prepare your appeal and email it to you.",
+  "email.paylink.button": "Pay securely",
+  "email.paylink.expires": "The link works for 14 days.",
+  "email.id.footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938",
+};
+async function texts(lang: string) {
+  const load = async (x: string) => { try { const r = await fetch(`${SITE}/lang/${x}.json`, { cache: "no-store" }); return r.ok ? await r.json() : {}; } catch { return {}; } };
+  const dict = await load(lang), en = lang === "en" ? dict : await load("en");
+  return (k: string, vars: Record<string, string> = {}) => {
+    const get = (o: Obj) => k.split(".").reduce((x: unknown, p) => (x as Obj | undefined)?.[p], o);
+    const v = get(dict) ?? get(en) ?? EMAIL_EN[k] ?? "";
+    return String(v).replace(/\{(\w+)\}/g, (m, x) => vars[x] ?? m);
+  };
+}
 
 function bucketPath(p: string) { const i = p.indexOf("/"); return { bucket: p.slice(0, i), path: p.slice(i + 1) }; }
 async function signed(storagePath: string, seconds = 600) {
@@ -103,16 +136,19 @@ Deno.serve(async (req) => {
         const { data: paid } = ids.length ? await db.from("payments").select("case_id, amount_pence, paid_at").eq("status", "paid").in("case_id", ids) : { data: [] };
         const paidSet = new Set((paid ?? []).map((p) => p.case_id));
         const { data: contacts } = ids.length ? await db.from("review_contacts").select("case_id, method, confirmed_at, availability, phone, email, note").in("case_id", ids) : { data: [] };
-        const queue = (cs ?? []).filter((c) => c.product === "option3" && paidSet.has(c.id) && !["sent", "submitted", "posted", "closed"].includes(c.status));
+        const { data: viaLink } = ids.length ? await db.from("payments").select("case_id").eq("status", "paid").not("payment_link_id", "is", null).in("case_id", ids) : { data: [] };
+        const linkSet = new Set((viaLink ?? []).map((p) => p.case_id));
+        const queue = (cs ?? []).filter((c) => (c.product === "option3" || linkSet.has(c.id)) && paidSet.has(c.id) && !["sent", "submitted", "posted", "closed"].includes(c.status));
         const company = (t: string) => t === "ct-late-filing" || t === "companies-house-late-filing";
         const q = queue.map((c) => {
           const rc = (contacts ?? []).find((x) => x.case_id === c.id);
           const todo: string[] = [];
-          if (!c.id_completed_at) todo.push(c.id_requested_at ? "waiting_for_id" : "id_not_started");
+          if (c.product === "option3" && !c.id_completed_at) todo.push(c.id_requested_at ? "waiting_for_id" : "id_not_started");
+          if (c.product !== "option3") todo.push("write_appeal");
           if (company(c.letter_type) && rc && rc.method === "phone" && !rc.confirmed_at) todo.push("confirm_call");
           if (c.letter_type === "ct-late-filing" && c.id_completed_at && !c.hmrc_code_requested_at) todo.push("request_hmrc_code");
           if (c.hmrc_code_at) todo.push("hmrc_code_received");
-          if (c.id_completed_at) todo.push("write_appeal");
+          if (c.product === "option3" && c.id_completed_at) todo.push("write_appeal");
           return { ref: c.ref, letter_type: c.letter_type, status: c.status, appeal_deadline: c.appeal_deadline,
             name: (c.details as Obj)?.full_name ?? null, company: (c.details as Obj)?.company_name ?? null, todo,
             contact: rc ? { method: rc.method, confirmed_at: rc.confirmed_at, phone: rc.phone, email: rc.email, availability: rc.availability, note: rc.note } : null };
@@ -158,12 +194,13 @@ Deno.serve(async (req) => {
           db.from("review_contacts").select("id, method, phone, email, availability, note, created_at, confirmed_at, confirmed_slot").eq("case_id", c.id).order("created_at"),
           db.from("audit_log").select("at, actor, action, detail").eq("case_id", c.id).order("at", { ascending: false }).limit(60),
         ]);
+        const { data: links } = await db.from("payment_links").select("id, label, amount_pence, created_at, expires_at, used_at, sent_to").eq("case_id", c.id).order("created_at");
         const { private_token: _t, letter_text, ...rest } = c as Obj;
         const site = "https://accounted4tax.github.io/tax-letter-sorted";
         return reply(200, {
           case: rest, letter_text_chars: String(letter_text ?? "").length,
           answers: ans.data ?? null, files: files.data ?? [], payments: pays.data ?? [], emails: mails.data ?? [],
-          contacts: rcs.data ?? [], history: hist.data ?? [],
+          contacts: rcs.data ?? [], history: hist.data ?? [], payment_links: links ?? [],
           links: c.data_deleted_at ? {} : {
             id_upload: `${site}/id.html?case=${c.private_token}&lang=${c.language}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`),
             hmrc_code: c.letter_type === "ct-late-filing" ? `${site}/code.html?case=${c.private_token}&lang=${c.language}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`) : null,
@@ -241,7 +278,9 @@ Deno.serve(async (req) => {
           db.from("help_requests").select("*").order("created_at", { ascending: false }).limit(300),
           db.from("callbacks").select("*").order("created_at", { ascending: false }).limit(300),
         ]);
-        return reply(200, { help: h.data ?? [], callbacks: cb.data ?? [] });
+        const cids = [...new Set((cb.data ?? []).map((x) => x.case_id).filter(Boolean))];
+        const { data: crefs } = cids.length ? await db.from("cases").select("id, ref").in("id", cids) : { data: [] };
+        return reply(200, { help: h.data ?? [], callbacks: (cb.data ?? []).map((x) => ({ ...x, case_ref: (crefs ?? []).find((r) => r.id === x.case_id)?.ref ?? null })) });
       }
 
       case "update_request": {
@@ -296,6 +335,68 @@ Deno.serve(async (req) => {
         const { data } = await db.from(tables[what][0]).select(tables[what][1]).order(what === "emails" ? "sent_at" : "created_at", { ascending: false }).limit(10000);
         await log("export", null, { what, rows: (data ?? []).length });
         return reply(200, { rows: data ?? [] });
+      }
+
+      case "payment_link": {
+        const c = await caseByRef(body.ref);
+        if (!c) return reply(404, { error: "not_found" });
+        if (c.data_deleted_at) return reply(400, { error: "deleted" });
+        const opt = LINK_OPTIONS[String(body.option ?? "")];
+        if (!opt) return reply(400, { error: "option" });
+        const d = { ...((c.details ?? {}) as Obj) };
+        const to = str(body.email, 200).toLowerCase() || String(d.email ?? "");
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return reply(400, { error: "email" });
+        d.email = to;
+        if (str(body.name, 120)) d.full_name = str(body.name, 120);
+        if (str(body.phone, 30)) d.phone = str(body.phone, 30);
+        await db.from("cases").update({ details: d, delete_after: c.delete_after && new Date(c.delete_after) < new Date(Date.now() + 30 * 864e5) ? new Date(Date.now() + 30 * 864e5).toISOString() : c.delete_after }).eq("id", c.id);
+        const { data: link } = await db.from("payment_links").insert({
+          case_id: c.id, product: opt.product, target: opt.target, amount_pence: opt.pence, label: opt.label, sent_to: to, created_by: email,
+          expires_at: new Date(Date.now() + 14 * 864e5).toISOString(),
+        }).select("id").single();
+        const lang = c.language === "ro" ? "ro" : "en";
+        const url = `${SITE}/pay-link.html?case=${c.private_token}&l=${link!.id}&lang=${lang}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`);
+        // the email
+        const t = await texts(lang);
+        const amount = "£" + (opt.pence / 100).toFixed(2).replace(/\.00$/, "");
+        const label = t("email.paylink.opt_" + String(body.option)) !== "email.paylink.opt_" + String(body.option) && t("email.paylink.opt_" + String(body.option)) ? t("email.paylink.opt_" + String(body.option)) : opt.label;
+        const name = String(d.full_name ?? "").trim();
+        const paras = [t("email.paylink.body", { label }), t("email.paylink.amount", { amount }),
+          t(opt.target === "option3" ? "email.paylink.next_o3" : "email.paylink.next_o2"), t("email.paylink.expires")];
+        const hello = t("email.paylink.hello", { name });
+        const html = `<!doctype html><html><body style="margin:0;background:#F5F6F8;font-family:Arial,Helvetica,sans-serif;color:#14213D"><div style="max-width:560px;margin:0 auto;padding:24px">
+<div style="background:#14213D;color:#fff;padding:14px 18px;border-radius:10px 10px 0 0;font-size:18px;font-weight:bold">Tax Letter Sorted</div>
+<div style="background:#fff;padding:22px 18px;border-radius:0 0 10px 10px;font-size:15px;line-height:1.55"><p>${esc(hello)}</p>${paras.map((x) => `<p>${esc(x)}</p>`).join("")}
+<p style="margin:26px 0"><a href="${url}" style="background:#0E6E6B;color:#fff;text-decoration:none;padding:13px 20px;border-radius:8px;font-weight:bold;display:inline-block">${esc(t("email.paylink.button"))} – ${esc(amount)}</a></p>
+<p style="font-size:12px;color:#4A5568">${esc(url)}</p></div>
+<p style="font-size:12px;color:#4A5568;text-align:center">${esc(t("email.id.footer"))}</p></div></body></html>`;
+        const key = Deno.env.get("BREVO_API_KEY");
+        let sent = false;
+        if (key) {
+          const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST", headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
+            body: JSON.stringify({ sender: { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" }, to: [{ email: to, name: name || undefined }],
+              subject: t("email.paylink.subject", { ref: String(c.ref) }), htmlContent: html,
+              textContent: [hello, ...paras, `${t("email.paylink.button")}: ${url}`].join("\n\n"), tags: ["payment_link"] }),
+          });
+          const j = await res.json().catch(() => ({}));
+          sent = res.ok;
+          await db.from("email_log").insert({ case_id: c.id, recipient: to, email_type: "payment_link", provider_message_id: j.messageId ?? null, status: res.ok ? "sent" : "failed" });
+        }
+        await log("payment_link_sent", c.id, { option: body.option, pence: opt.pence, emailed: sent });
+        return reply(200, { ok: true, sent, url });
+      }
+
+      case "case_from_callback": {
+        const { data: cb } = await db.from("callbacks").select("*").eq("id", String(body.id ?? "")).maybeSingle();
+        if (!cb) return reply(404, { error: "not_found" });
+        if (cb.case_id) { const { data: ex } = await db.from("cases").select("ref").eq("id", cb.case_id).maybeSingle(); if (ex) return reply(200, { ref: ex.ref }); }
+        const token = [...crypto.getRandomValues(new Uint8Array(32))].map((b) => b.toString(16).padStart(2, "0")).join("");
+        const { data: nc } = await db.from("cases").insert({ language: "en", status: "callback_requested", private_token: token,
+          details: { full_name: cb.full_name, email: cb.email, phone: cb.phone }, delete_after: new Date(Date.now() + 30 * 864e5).toISOString() }).select("id, ref").single();
+        await db.from("callbacks").update({ case_id: nc!.id }).eq("id", cb.id);
+        await log("case_created_from_callback", nc!.id, {});
+        return reply(200, { ref: nc!.ref });
       }
 
       case "find_person":

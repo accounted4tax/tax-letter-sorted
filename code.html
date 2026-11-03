@@ -12,6 +12,8 @@
   // Arriving from the emailed link: keep the private case link for this tab, then hide it from the address bar.
   (function () {
     var p = new URLSearchParams(location.search), c = p.get("case");
+    try { var lg = p.get("lang"); if (lg === "en" || lg === "ro") localStorage.setItem("tls_lang", lg); } catch (e) {}
+    void 0;
     if (c && /^[0-9a-f]{40,80}$/.test(c)) { try { sessionStorage.setItem("tls_case", c); } catch (e) {} }
   })();
 </script>

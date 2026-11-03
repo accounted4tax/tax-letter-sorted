@@ -295,7 +295,34 @@
       "confirm.mismatch_ok",
       "confirm.err_mismatch",
       "confirm.you_wrote",
-      "confirm.english_for_hmrc"
+      "confirm.english_for_hmrc",
+      "paylink.title",
+      "paylink.ref",
+      "paylink.next_o3",
+      "paylink.next_o2",
+      "paylink.terms",
+      "paylink.pay",
+      "paylink.cancelled",
+      "paylink.err_terms",
+      "paylink.used",
+      "paylink.expired",
+      "paylink.not_found",
+      "paylink.err_server",
+      "paid.done_title",
+      "paid.done_text",
+      "email.paylink.subject",
+      "email.paylink.hello",
+      "email.paylink.body",
+      "email.paylink.amount",
+      "email.paylink.next_o3",
+      "email.paylink.next_o2",
+      "email.paylink.button",
+      "email.paylink.expires",
+      "email.paylink.opt_o2",
+      "email.paylink.opt_o3",
+      "email.paylink.opt_o3co",
+      "email.paylink.opt_top20",
+      "email.paylink.opt_top40"
     ]
   },
   "common": {
@@ -1135,7 +1162,9 @@
     "checking": "Verificăm plata…",
     "not_yet": "Încă nu am primit plata. Dacă tocmai ați plătit, așteptați puțin și verificați din nou.",
     "check_again": "Verifică din nou",
-    "thanks": "Vă mulțumim. Plata dvs. este confirmată."
+    "thanks": "Vă mulțumim. Plata dvs. este confirmată.",
+    "done_title": "Vă mulțumim, plata a fost confirmată",
+    "done_text": "Vă pregătim contestația și v-o trimitem pe email, de obicei în 48 de ore."
   },
   "idd": {
     "passport": "Pașaport valabil, semnat",
@@ -1227,6 +1256,21 @@
       "evidence": "Dacă aveți dovezi (de exemplu o scrisoare de la spital), trimiteți copii, niciodată originalele.",
       "keep": "Păstrăm acest PDF 14 zile, apoi îl ștergem. Vă rugăm să salvați o copie.",
       "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
+    },
+    "paylink": {
+      "subject": "Linkul dvs. de plată – {ref}",
+      "hello": "Bună ziua, {name},",
+      "body": "Vă mulțumim pentru discuție. Așa cum am stabilit, aveți mai jos linkul securizat de plată pentru: {label}.",
+      "amount": "Suma: {amount} (fără TVA).",
+      "next_o3": "După plată vă cerem documentele de identitate, apoi vă pregătim contestația.",
+      "next_o2": "După plată vă pregătim contestația și v-o trimitem pe email.",
+      "button": "Plătiți în siguranță",
+      "expires": "Linkul este valabil 14 zile.",
+      "opt_o2": "contestația pregătită după apelul nostru (£19)",
+      "opt_o3": "analiza de către contabil (£39)",
+      "opt_o3co": "analiza de către contabil pentru companie (£59)",
+      "opt_top20": "diferența până la analiza de către contabil (£20)",
+      "opt_top40": "diferența până la analiza de către contabil pentru companie (£40)"
     }
   },
   "fu": {
@@ -1330,5 +1374,19 @@
     "m_cis": "Declarații CIS: {amount} pe lună",
     "m_vat": "TVA: {amount} pe lună",
     "m_until": "Până la următorul sfârșit de exercițiu, pe {date}. Apoi stabilim împreună anul următor."
+  },
+  "paylink": {
+    "title": "Plata dvs.",
+    "ref": "Dosar {ref}",
+    "next_o3": "După plată vă cerem documentele de identitate, apoi vă pregătim contestația.",
+    "next_o2": "După plată vă pregătim contestația și v-o trimitem pe email.",
+    "terms": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat.",
+    "pay": "Plătiți în siguranță",
+    "cancelled": "Plata nu a fost finalizată. Puteți încerca din nou.",
+    "err_terms": "Vă rugăm să bifați căsuța pentru a accepta Termenii.",
+    "used": "Această plată a fost deja făcută. Vă mulțumim.",
+    "expired": "Linkul de plată a expirat. Vă rugăm să ne contactați pentru unul nou.",
+    "not_found": "Nu am găsit acest link de plată. Vă rugăm să folosiți butonul din emailul nostru.",
+    "err_server": "A apărut o problemă. Vă rugăm să încercați din nou peste puțin timp."
   }
 }

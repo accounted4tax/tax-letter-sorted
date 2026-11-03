@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pay – Tax Letter Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Arriving from the emailed payment link: keep the private case link for this tab, then hide it from the address bar.
+  (function () {
+    var p = new URLSearchParams(location.search), c = p.get("case");
+    try { var lg = p.get("lang"); if (lg === "en" || lg === "ro") localStorage.setItem("tls_lang", lg); } catch (e) {}
+    void 0, l = p.get("l");
+    try {
+      if (c && /^[0-9a-f]{40,80}$/.test(c)) sessionStorage.setItem("tls_case", c);
+      if (l && /^[0-9a-f-]{36}$/.test(l)) sessionStorage.setItem("tls_paylink", l);
+    } catch (e) {}
+  })();
+</script>
+<script src="js/config.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/flow.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><b data-i18n="common.brand">Tax Letter Sorted</b><span data-i18n="common.by">by Accounted4Tax</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang-btn="ro" aria-pressed="false">RO</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0"><div class="spinner" aria-hidden="true"></div></section>
+  <p class="error" id="error" role="alert" hidden></p>
+  <section id="form" class="stack" hidden>
+    <h1 data-i18n="paylink.title">Your payment</h1>
+    <p class="callout" id="cancelled" hidden data-i18n="paylink.cancelled"></p>
+    <div class="deadline"><b id="amount"></b><span id="label"></span><span id="ref"></span></div>
+    <p class="lead" id="next"></p>
+    <label class="check" id="termsWrap"><input type="checkbox" id="terms"><span><span data-i18n="paylink.terms"></span> <a href="terms.html" target="_blank" rel="noopener" data-i18n="common.terms">Terms</a> · <a href="privacy.html" target="_blank" rel="noopener" data-i18n="common.privacy">Privacy Policy</a></span></label>
+    <button class="btn" type="button" id="pay" data-i18n="paylink.pay">Pay securely</button>
+    <p class="note" data-i18n="common.pay_stripe">You'll pay securely on Stripe. We never see your card.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="footer.trading_name_short">Tax Letter Sorted is a trading name of Accounted4Tax Ltd.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var F = window.TLS_FLOW, t = F.t, $ = function (id) { return document.getElementById(id); };
+  var params = new URLSearchParams(location.search);
+  if (params.get("case")) history.replaceState(null, "", "pay-link.html" + (params.get("cancelled") ? "?cancelled=1" : ""));
+  var link = F.get("tls_paylink"), info = null;
+  function fail(k) { $("loading").hidden = true; $("form").hidden = true; $("error").textContent = t(k); $("error").hidden = false; }
+
+  function render() {
+    if (!info) return;
+    $("amount").textContent = "£" + (info.amount_pence / 100).toFixed(2).replace(/\.00$/, "");
+    $("label").textContent = info.label || "";
+    $("ref").textContent = t("paylink.ref", { ref: info.ref });
+    $("next").textContent = t(info.target === "option3" ? "paylink.next_o3" : "paylink.next_o2");
+    $("cancelled").hidden = !params.get("cancelled");
+    $("loading").hidden = true; $("form").hidden = false;
+  }
+
+  $("pay").addEventListener("click", function () {
+    if (!$("terms").checked) { $("termsWrap").classList.add("invalid"); $("error").textContent = t("paylink.err_terms"); $("error").hidden = false; return; }
+    $("error").hidden = true; $("pay").disabled = true;
+    F.callFn("payments", { action: "link_checkout", link: link }).then(function (res) {
+      if (res.ok && res.j.url) { location.href = res.j.url; return; }
+      $("pay").disabled = false;
+      fail(res.j.error === "used" ? "paylink.used" : res.j.error === "expired" ? "paylink.expired" : "paylink.err_server");
+    }).catch(function () { $("pay").disabled = false; fail("paylink.err_server"); });
+  });
+
+  F.onLanguage(function () {
+    if (!F.get("tls_case") || !link) return fail("paylink.not_found");
+    if (info) { render(); return; }
+    F.callFn("payments", { action: "link_info", link: link }).then(function (res) {
+      if (!res.ok) return fail(res.status === 404 ? "paylink.not_found" : "paylink.err_server");
+      info = res.j;
+      if (info.used) return fail("paylink.used");
+      if (info.expired) return fail("paylink.expired");
+      if (info.letter_type) { var ex = F.getJSON("tls_explain") || {}; ex.letter_type = info.letter_type; F.setJSON("tls_explain", ex); }
+      render();
+    }).catch(function () { fail("paylink.err_server"); });
+  });
+})();
+</script>
+</body>
+</html>

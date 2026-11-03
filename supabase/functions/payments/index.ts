@@ -1,5 +1,6 @@
 // payments: Stripe Checkout for Option 2 (£19), Option 3 (£39) and the company accountant review (£59).
 //   checkout  – creates a Stripe Checkout page for the case and returns its address
+//   link_info / link_checkout – a payment link Eduard emailed after a call (£19 / £39 / £59 or a £20 / £40 top-up)
 //   confirm   – after Stripe sends the client back, checks with Stripe that the payment went through,
 //               then records the payment and the long-term customer record
 // The Stripe secret key lives only in Supabase secrets (STRIPE_SECRET_KEY).
@@ -104,12 +105,56 @@ Deno.serve(async (req) => {
       return reply(200, { url: session.url });
     }
 
+    // ---- payment links sent from the admin page ----
+    if (body.action === "link_info" || body.action === "link_checkout") {
+      const { data: link } = await db.from("payment_links").select("*").eq("id", String(body.link ?? "")).eq("case_id", c.id).maybeSingle();
+      if (!link) return reply(404, { error: "no_link" });
+      const expired = link.expires_at && new Date(link.expires_at) < new Date();
+      if (body.action === "link_info") {
+        return reply(200, { ref: c.ref, amount_pence: link.amount_pence, label: link.label, target: link.target, used: !!link.used_at, expired: !!expired, letter_type: c.letter_type });
+      }
+      if (link.used_at) return reply(400, { error: "used" });
+      if (expired) return reply(400, { error: "expired" });
+      const lang = c.language === "ro" ? "ro" : "en-GB";
+      const q = (s: string) => `${SITE}/${s}`;
+      const session = await stripe("checkout/sessions", {
+        mode: "payment",
+        "line_items[0][price_data][currency]": "gbp",
+        "line_items[0][price_data][unit_amount]": String(link.amount_pence),
+        "line_items[0][price_data][product_data][name]": "Tax Letter Sorted – " + String(link.label ?? link.product),
+        "line_items[0][quantity]": "1",
+        customer_email: String(d.email ?? ""),
+        client_reference_id: String(c.ref),
+        "metadata[case_ref]": String(c.ref),
+        "metadata[product]": String(link.product),
+        "metadata[payment_link]": String(link.id),
+        "payment_intent_data[description]": `${c.ref} · ${link.label ?? link.product}`,
+        "payment_intent_data[metadata][case_ref]": String(c.ref),
+        locale: lang,
+        success_url: q("paid.html?session={CHECKOUT_SESSION_ID}"),
+        cancel_url: q(`pay-link.html?l=${link.id}&cancelled=1`),
+        expires_at: String(Math.floor(Date.now() / 1000) + 60 * 60),
+      });
+      await db.from("payments").insert({
+        case_id: c.id, product: link.product, amount_pence: link.amount_pence, stripe_session_id: session.id, status: "pending", stripe_mode: mode(), payment_link_id: link.id,
+      });
+      await funnel(body.visit_id, "stripe_opened", c, String(link.product));
+      return reply(200, { url: session.url });
+    }
+
     if (body.action === "confirm") {
       const sid = String(body.session ?? "");
       if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sid)) return reply(400, { error: "bad_request" });
-      const { data: p } = await db.from("payments").select("id, status, product").eq("stripe_session_id", sid).eq("case_id", c.id).single();
+      const { data: p } = await db.from("payments").select("id, status, product, payment_link_id").eq("stripe_session_id", sid).eq("case_id", c.id).single();
       if (!p) return reply(404, { error: "no_payment" });
-      if (p.status === "paid") return reply(200, { paid: true, product: p.product });
+      // where the client goes next: option 3 (or a top-up to it) → identity check; a £19 link after a call → Eduard prepares it
+      let target = p.product === "option3_topup" ? "option3" : String(p.product);
+      if (p.payment_link_id) {
+        const { data: lk } = await db.from("payment_links").select("target").eq("id", p.payment_link_id).maybeSingle();
+        target = String(lk?.target ?? target);
+      }
+      const next = target === "option3" ? "id" : p.payment_link_id ? "done" : "review";
+      if (p.status === "paid") return reply(200, { paid: true, product: target, next });
       const s = await stripe(`checkout/sessions/${sid}`);
       if (s.payment_status !== "paid") return reply(200, { paid: false, status: s.status });
       const now = new Date().toISOString();
@@ -124,12 +169,14 @@ Deno.serve(async (req) => {
         customerId = cu?.id ?? null;
       }
       await db.from("payments").update({ status: "paid", paid_at: now, stripe_payment_intent: String(s.payment_intent ?? ""), customer_id: customerId }).eq("id", p.id);
-      const upd: Obj = { customer_id: customerId, status: p.product === "option3" ? "in_review" : "paid" };
-      if (p.product === "option3") upd.delete_after = null;     // Option 3 records are kept (AAT period)
+      const upd: Obj = { customer_id: customerId, status: target === "option3" || p.payment_link_id ? "in_review" : "paid" };
+      if (p.payment_link_id) upd.product = target;
+      if (target === "option3") upd.delete_after = null;     // Option 3 records are kept (AAT period)
       await db.from("cases").update(upd).eq("id", c.id);
+      if (p.payment_link_id) await db.from("payment_links").update({ used_at: now }).eq("id", p.payment_link_id);
       await db.from("audit_log").insert({ actor: "stripe", action: "payment_confirmed", case_id: c.id, detail: { product: p.product, mode: mode() } });
       await funnel(body.visit_id, "paid", c, String(p.product));
-      return reply(200, { paid: true, product: p.product });
+      return reply(200, { paid: true, product: target, next });
     }
 
     return reply(400, { error: "action" });

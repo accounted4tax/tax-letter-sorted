@@ -33,6 +33,9 @@
     <button class="btn" type="button" id="again"></button>
     <a class="btn secondary" href="details.html" data-i18n="common.back">Back</a>
   </div>
+  <section id="done" class="stack" hidden>
+    <div class="success" role="status"><b data-i18n="paid.done_title">Thank you, your payment is confirmed</b><p data-i18n="paid.done_text" style="margin-top:6px"></p></div>
+  </section>
   <p class="note" data-i18n="common.pay_stripe">You'll pay securely on Stripe. We never see your card.</p>
 </main>
 <script>
@@ -48,6 +51,7 @@
     F.callFn("payments", { action: "confirm", session: session }).then(function (res) {
       busy = false;
       if (res.ok && res.j.paid) { F.set("tls_product", res.j.product); F.set("tls_just_paid", "1"); var co = ["ct-late-filing", "companies-house-late-filing"].indexOf((F.getJSON("tls_explain") || {}).letter_type) > -1;
+        if (res.j.next === "done") { $("loading").hidden = true; $("done").hidden = false; return; }   // £19 link after a call: Eduard prepares it
         location.href = res.j.product === "option3" ? "id.html" : "review.html"; return; }   // companies: ID + authority, then contact preference
       $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false;
     }).catch(function () { busy = false; $("loading").hidden = true; $("msg").textContent = t("paid.not_yet"); $("again").textContent = t("paid.check_again"); $("problem").hidden = false; });

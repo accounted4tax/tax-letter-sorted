@@ -300,6 +300,39 @@ async function openCase(ref) {
     [company ? "CT UTR" : "UTR", det.utr], !company && ["NI number", det.ni_number], ["Marketing consent", det.marketing_consent ? "yes" : "no"],
   ])]));
 
+  // Charge the client (after a call): payment link by email
+  if (!c.data_deleted_at) {
+    const OPTS = [["o2", "£19 – I prepare the appeal (self-serve price)"], ["o3", "£39 – accountant review (Self Assessment)"], ["o3co", "£59 – company accountant review"],
+      ["top20", "£20 top-up – paid £19, upgrading to £39"], ["top40", "£40 top-up – paid £19, upgrading to £59"]];
+    const paid19 = r.payments.some((p) => p.status === "paid" && p.product === "option2");
+    const def = paid19 ? (company ? "top40" : "top20") : (company ? "o3co" : "o3");
+    const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Charge the client" }),
+      el("p", { class: "muted", text: "Emails a secure Stripe payment link. After paying, £39 / £59 / top-ups go to the ID check and the normal accountant-review steps; £19 comes to your queue for you to prepare." })]);
+    OPTS.forEach(([k, label]) => box.appendChild(el("label", { class: "check" }, [el("input", { type: "radio", name: "payopt", value: k, checked: k === def }), el("span", { text: label })])));
+    const pe = el("input", { class: "sm", type: "email", value: det.email || "", placeholder: "client@example.com", style: "width:100%" });
+    const pn = el("input", { class: "sm", value: det.full_name || "", placeholder: "Client's name", style: "width:100%" });
+    const pp = el("input", { class: "sm", value: det.phone || "", placeholder: "Phone (optional)", style: "width:100%" });
+    box.appendChild(el("div", { class: "grid2" }, [el("label", { class: "field" }, [el("span", { text: "Email" }), pe]), el("label", { class: "field" }, [el("span", { text: "Name" }), pn])]));
+    box.appendChild(el("label", { class: "field" }, [el("span", { text: "Phone" }), pp]));
+    const out = el("div", { class: "stack" });
+    box.appendChild(el("button", { class: "sbtn primary", type: "button", text: "Email payment link", onclick: async (ev) => {
+      const opt = (box.querySelector("input[name=payopt]:checked") || {}).value;
+      if (!confirm(`Email a payment link (${OPTS.find((o) => o[0] === opt)[1]}) to ${pe.value}?`)) return;
+      ev.target.disabled = true; out.innerHTML = "";
+      try {
+        const x = await api("payment_link", { ref: c.ref, option: opt, email: pe.value, name: pn.value, phone: pp.value });
+        out.appendChild(el("p", { class: x.sent ? "success" : "callout", text: x.sent ? "Payment link emailed." : "Link created, but the email didn't send. Copy the link below and send it yourself." }));
+        out.appendChild(el("button", { class: "sbtn", type: "button", text: "Copy the link", onclick: () => navigator.clipboard.writeText(x.url).then(() => toast("Link copied")) }));
+      } catch (e) { out.appendChild(el("p", { class: "error", text: e.message === "email" ? "Enter a valid email address." : "Could not create the link (" + e.message + ")." })); }
+      ev.target.disabled = false;
+    } }));
+    box.appendChild(out);
+    if ((r.payment_links || []).length) box.appendChild(el("div", { class: "stack" }, [el("b", { text: "Links sent" })].concat(r.payment_links.map((l) =>
+      el("div", { class: "row" }, [el("span", { style: "flex:1", text: `${money(l.amount_pence)} · ${l.label || ""}` }), el("span", { class: "muted", text: dt(l.created_at) }),
+        pill(l.used_at ? "paid" : new Date(l.expires_at) < new Date() ? "expired" : "waiting", l.used_at ? "green" : "amber")])))));
+    left.appendChild(box);
+  }
+
   // Contact preference (companies)
   if (r.contacts.length) {
     const rc = r.contacts[r.contacts.length - 1];
@@ -480,7 +513,10 @@ async function showRequests() {
       ["Message", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.note || "–" })]]);
     block("Call-back requests", callbacks, "callbacks", CB_STATUSES, [
       ["Received", (x) => txt(dt(x.created_at))], ["Who", (x) => txt(x.full_name, [x.phone, x.email].filter(Boolean).join(" · "))],
-      ["About", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.reason_summary || "–" })]]);
+      ["About", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.reason_summary || "–" })],
+      ["Case", (x) => x.case_ref
+        ? el("button", { class: "sbtn", type: "button", text: "Open " + x.case_ref, onclick: () => openCase(x.case_ref) })
+        : el("button", { class: "sbtn", type: "button", text: "Create case to charge", onclick: async () => { const y = await api("case_from_callback", { id: x.id }); openCase(y.ref); } })]]);
   } catch (e) { fail(e); }
 }
 

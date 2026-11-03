@@ -837,7 +837,9 @@
     "checking": "Checking your payment…",
     "not_yet": "We haven't received your payment yet. If you've just paid, wait a moment and check again.",
     "check_again": "Check again",
-    "thanks": "Thank you. Your payment is confirmed."
+    "thanks": "Thank you. Your payment is confirmed.",
+    "done_title": "Thank you, your payment is confirmed",
+    "done_text": "We'll prepare your appeal and email it to you, usually within 48 hours."
   },
   "idd": {
     "passport": "Current signed passport",
@@ -929,6 +931,21 @@
       "evidence": "If you have evidence (for example a hospital letter), send copies, never originals.",
       "keep": "We keep this PDF for 14 days, then delete it. Please save a copy.",
       "footer": "Tax Letter Sorted by Accounted4Tax Ltd · letters@accounted4tax.co.uk · 07563 811938"
+    },
+    "paylink": {
+      "subject": "Your payment link – {ref}",
+      "hello": "Hello {name},",
+      "body": "Thank you for speaking with us. As agreed, here is your secure payment link for: {label}.",
+      "amount": "Amount: {amount} (no VAT).",
+      "next_o3": "After you pay, we'll ask for your ID documents, then we'll prepare your appeal.",
+      "next_o2": "After you pay, we'll prepare your appeal and email it to you.",
+      "button": "Pay securely",
+      "expires": "The link works for 14 days.",
+      "opt_o2": "penalty appeal prepared after your call (£19)",
+      "opt_o3": "accountant review (£39)",
+      "opt_o3co": "company accountant review (£59)",
+      "opt_top20": "top-up to the accountant review (£20)",
+      "opt_top40": "top-up to the company accountant review (£40)"
     }
   },
   "fu": {
@@ -1032,5 +1049,19 @@
     "m_cis": "CIS returns: {amount} a month",
     "m_vat": "VAT: {amount} a month",
     "m_until": "Until the next year-end on {date}. We'll then agree the following year with you."
+  },
+  "paylink": {
+    "title": "Your payment",
+    "ref": "Case {ref}",
+    "next_o3": "After you pay, we'll ask for your ID documents, then we'll prepare your appeal.",
+    "next_o2": "After you pay, we'll prepare your appeal and email it to you.",
+    "terms": "I've read the Terms and Privacy Policy. Please start straight away.",
+    "pay": "Pay securely",
+    "cancelled": "The payment wasn't completed. You can try again.",
+    "err_terms": "Please tick the box to accept the Terms.",
+    "used": "This payment link has already been paid. Thank you.",
+    "expired": "This payment link has expired. Please contact us for a new one.",
+    "not_found": "We couldn't find this payment link. Please use the button in our email.",
+    "err_server": "Something went wrong. Please try again in a moment."
   }
 }

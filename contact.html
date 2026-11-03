@@ -262,7 +262,7 @@
       var monthly = Math.round((spread + payRate + cisRate + vatRate) * 100) / 100;
       $("monthTotal").textContent = t("pkg.m_total", { amount: gbpp(monthly), months: left });
       $("monthLines").textContent = mLines.join("\n") + "\n" + t("pkg.m_until", { date: ye.toLocaleDateString(F.lang() === "ro" ? "ro-RO" : "en-GB", { day: "numeric", month: "long", year: "numeric" }) });
-      est.monthly = { amount: monthly, months: left, year_end: $("pkYE").value, directors_sa: saF };
+      est.monthly = { amount: monthly, months: left, year_end: ye.getFullYear() + "-" + ("0" + (ye.getMonth() + 1)).slice(-2) + "-" + ("0" + ye.getDate()).slice(-2), year_end_given: $("pkYE").value, directors_sa: saF };
     }
   }
   function gbpp(n) { return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }

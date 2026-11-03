@@ -155,13 +155,14 @@ Deno.serve(async (req) => {
             name: (c.details as Obj)?.full_name ?? null, company: (c.details as Obj)?.company_name ?? null, todo,
             contact: rc ? { method: rc.method, confirmed_at: rc.confirmed_at, phone: rc.phone, email: rc.email, availability: rc.availability, note: rc.note } : null };
         }).sort((a, b) => String(a.appeal_deadline ?? "9999").localeCompare(String(b.appeal_deadline ?? "9999")));
-        const { count: newRequests } = await db.from("help_requests").select("id", { count: "exact", head: true }).eq("status", "new");
+        const { count: newRequests } = await db.from("help_requests").select("id", { count: "exact", head: true }).eq("status", "new").or("tax_year.is.null,tax_year.neq.package");
+        const { count: newQuotes } = await db.from("help_requests").select("id", { count: "exact", head: true }).eq("status", "new").eq("tax_year", "package");
         const { count: newCallbacks } = await db.from("callbacks").select("id", { count: "exact", head: true }).eq("status", "new");
         const { count: bounced } = await db.from("email_log").select("id", { count: "exact", head: true }).in("status", ["bounced", "complaint", "failed"]);
         const option2Unsent = (cs ?? []).filter((c) => c.product === "option2" && paidSet.has(c.id) && !c.sent_at).length;
         const since = new Date(Date.now() - 30 * 864e5).toISOString();
         const takings = (paid ?? []).filter((p) => p.paid_at && p.paid_at >= since).reduce((s, p) => s + Number(p.amount_pence ?? 0), 0);
-        return reply(200, { queue: q, new_requests: newRequests ?? 0, new_callbacks: newCallbacks ?? 0, email_problems: bounced ?? 0,
+        return reply(200, { queue: q, new_requests: newRequests ?? 0, new_quotes: newQuotes ?? 0, new_callbacks: newCallbacks ?? 0, email_problems: bounced ?? 0,
           option2_unsent: option2Unsent, takings_30d_pence: takings, live: !!settings?.live });
       }
 

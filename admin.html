@@ -22,6 +22,8 @@
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
   .kpi b{display:block;font-size:24px}
+  button.kpi{text-align:left;font:inherit;color:inherit;cursor:pointer}
+  button.kpi:hover{border-color:var(--teal);box-shadow:0 1px 4px rgba(20,33,61,.08)}
   .kpi span{font-size:13px;color:var(--muted)}
   table.t{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
   table.t th,table.t td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
@@ -77,6 +79,7 @@
     <nav class="tabs" role="tablist">
       <button type="button" data-tab="queue" aria-selected="true">Work queue<span class="count" id="cQueue" hidden></span></button>
       <button type="button" data-tab="cases">Cases</button>
+      <button type="button" data-tab="quotes">Quotes<span class="count" id="cQuote" hidden></span></button>
       <button type="button" data-tab="requests">Requests<span class="count" id="cReq" hidden></span></button>
       <button type="button" data-tab="emails">Emails<span class="count" id="cMail" hidden></span></button>
       <button type="button" data-tab="funnel">Funnel</button>
@@ -176,7 +179,7 @@ document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click
 function openTab(name) {
   tab = name;
   document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
-  ({ queue: showQueue, cases: showCases, requests: showRequests, emails: showEmails, funnel: showFunnel, data: showData })[name]();
+  ({ queue: showQueue, cases: showCases, quotes: showQuotes, requests: showRequests, emails: showEmails, funnel: showFunnel, data: showData })[name]();
 }
 function busy() { $("view").innerHTML = ""; $("view").appendChild(el("div", { class: "spinner", style: "margin:40px auto" })); }
 function fail(e) { if (e.message !== "signin") { $("view").innerHTML = ""; $("view").appendChild(el("p", { class: "error", text: "Something went wrong (" + e.message + "). Try again." })); } }
@@ -197,12 +200,16 @@ async function showQueue() {
     $("cQueue").hidden = !o.queue.length; $("cQueue").textContent = o.queue.length;
     $("cReq").hidden = !(o.new_requests + o.new_callbacks); $("cReq").textContent = o.new_requests + o.new_callbacks;
     $("cMail").hidden = !o.email_problems; $("cMail").textContent = o.email_problems;
+    $("cQuote").hidden = !o.new_quotes; $("cQuote").textContent = o.new_quotes;
+    // each box opens the matching list
+    const kpi = (n, label, go) => el("button", { type: "button", class: "kpi", onclick: go }, [el("b", { text: String(n) }), el("span", { text: label })]);
     v.appendChild(el("div", { class: "kpis" }, [
-      el("div", { class: "kpi" }, [el("b", { text: String(o.queue.length) }), el("span", { text: "Accountant reviews open" })]),
-      el("div", { class: "kpi" }, [el("b", { text: String(o.new_requests + o.new_callbacks) }), el("span", { text: "New requests / call-backs" })]),
-      el("div", { class: "kpi" }, [el("b", { text: String(o.option2_unsent) }), el("span", { text: "£19 paid, appeal not emailed yet" })]),
-      el("div", { class: "kpi" }, [el("b", { text: String(o.email_problems) }), el("span", { text: "Email problems (bounced / failed)" })]),
-      el("div", { class: "kpi" }, [el("b", { text: money(o.takings_30d_pence) }), el("span", { text: "Paid in the last 30 days" })]),
+      kpi(o.queue.length, "Accountant reviews open", () => { const t = $("queueTable"); if (t) t.scrollIntoView({ behavior: "smooth" }); }),
+      kpi(o.new_quotes || 0, "New quote requests (accounts + CT)", () => openTab("quotes")),
+      kpi(o.new_requests + o.new_callbacks, "New requests / call-backs", () => openTab("requests")),
+      kpi(o.option2_unsent, "£19 paid, appeal not emailed yet", () => { caseFilter = "option2"; openTab("cases"); }),
+      kpi(o.email_problems, "Email problems (bounced / failed)", () => { emailProblemsOnly = true; openTab("emails"); }),
+      kpi(money(o.takings_30d_pence), "Paid in the last 30 days", () => { caseFilter = "paid"; openTab("cases"); }),
     ]));
     if (!o.queue.length) { v.appendChild(el("p", { class: "success", text: "Nothing waiting. All accountant reviews are done." })); return; }
     const rows = o.queue.map((q) => {
@@ -218,7 +225,7 @@ async function showQueue() {
         el("td", { text: contact }),
       ]);
     });
-    v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [
+    v.appendChild(el("div", { class: "tablebox", id: "queueTable" }, [el("table", { class: "t" }, [
       el("thead", {}, [el("tr", {}, ["Case", "Client", "Letter", "Deadline", "To do", "Contact"].map((h) => el("th", { text: h })))]),
       el("tbody", {}, rows)])]));
     v.appendChild(el("p", { class: "muted", style: "margin-top:8px", text: "Sorted by appeal deadline. Click a case to open it." }));
@@ -539,7 +546,7 @@ async function showRequests() {
         }))])]));
     };
     const txt = (t, sub) => el("div", {}, [el("span", { text: t || "–" }), sub ? el("div", { class: "muted", text: sub }) : null]);
-    block("Help and quote requests", help, "help_requests", REQ_STATUSES, [
+    block("Help requests", help.filter((x) => x.tax_year !== "package"), "help_requests", REQ_STATUSES, [
       ["Received", (x) => txt(dt(x.created_at))], ["Who", (x) => txt(x.full_name, [x.email, x.phone].filter(Boolean).join(" · "))],
       ["Type", (x) => x.tax_year === "package" ? pill("Accounts + CT quote", "teal") : txt("Help · " + (x.tax_year || ""))],
       ["Message", (x) => el("div", { style: "max-width:380px;white-space:pre-wrap", text: x.note || "–" })]]);
@@ -552,13 +559,77 @@ async function showRequests() {
   } catch (e) { fail(e); }
 }
 
+// ---------- Quotes (accounts + Corporation Tax return, penalty appeal free) ----------
+function parseQuote(note) {
+  const q = { company: null, number: null, auth: null, total: null, answers: null, monthly: null, extra: [] };
+  String(note || "").split(" · ").forEach((p) => {
+    const json = (x) => { try { return JSON.parse(x.slice(x.indexOf(" – ") + 3)); } catch (e) { return null; } };
+    if (p.startsWith("[Quote")) return;
+    if (p.startsWith("Company number: ")) q.number = p.slice(16);
+    else if (p.startsWith("Company: ")) q.company = p.slice(9);
+    else if (p.startsWith("Companies House authentication code: ")) q.auth = p.slice(37);
+    else if (p.startsWith("CATCH-UP ESTIMATE £") || p.startsWith("ESTIMATE £")) { q.total = Number(p.match(/£([\d.]+)/)[1]); q.answers = json(p); }
+    else if (p.startsWith("MONTHLY FROM NOW £")) q.monthly = json(p);
+    else if (p.startsWith("Case: ")) q.case = p.slice(6);
+    else q.extra.push(p);
+  });
+  return q;
+}
+function quoteLines(a) {
+  if (!a) return [];
+  const L = [a.dormant ? "Dormant company" : "Trading company", `Overdue year-ends: ${a.years}`];
+  if (a.transactions != null) L.push(`Bookkeeping not done – about ${a.transactions} transactions`);
+  if (a.software) L.push(`Books kept in: ${a.software}`);
+  if (a.directors) L.push(`Directors: ${a.directors}`);
+  if (a.director_returns_missing) L.push(`Directors' tax returns missing: ${a.director_returns_missing}`);
+  if (a.payroll) L.push(`Payroll: ${a.payroll.employees} employees, ${a.payroll.months} months not submitted`);
+  if (a.cis) L.push(`CIS: ${a.cis.subcontractors} subcontractors, ${a.cis.months} months not submitted`);
+  if (a.vat) L.push(`VAT: ${a.vat.months} months not submitted`);
+  if (a.confirmation_statement) L.push("Confirmation statement due");
+  return L;
+}
+async function showQuotes() {
+  busy();
+  try {
+    const { help } = await api("requests");
+    const quotes = help.filter((x) => x.tax_year === "package");
+    const v = $("view"); v.innerHTML = "";
+    v.appendChild(el("p", { class: "muted", text: "Quote requests from the 'Free appeal with your annual accounts and Corporation Tax return' form, with the client's instant estimate." }));
+    if (!quotes.length) { v.appendChild(el("p", { class: "muted", text: "No quote requests yet." })); return; }
+    quotes.forEach((x) => {
+      const q = parseQuote(x.note);
+      const s = el("select", { class: "sm", onchange: async () => { await api("update_request", { table: "help_requests", id: x.id, status: s.value }); toast("Saved"); } },
+        REQ_STATUSES.map((o) => el("option", { value: o, text: o, selected: o === x.status })));
+      const n = el("textarea", { class: "small", placeholder: "Your notes" }); n.value = x.admin_notes || "";
+      n.addEventListener("change", async () => { await api("update_request", { table: "help_requests", id: x.id, notes: n.value }); toast("Notes saved"); });
+      v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [
+        el("div", { class: "row" }, [el("h2", { class: "sec", style: "flex:1", text: (q.company || "Company not given") + (q.number ? " · " + q.number : "") }),
+          x.status === "new" ? pill("new", "red") : pill(x.status), el("span", { class: "muted", text: dt(x.created_at) })]),
+        el("div", { class: "grid2" }, [
+          el("div", { class: "stack" }, [
+            el("dl", { class: "kv" }, [el("dt", { text: "Name" }), el("dd", { text: x.full_name }), el("dt", { text: "Email" }), el("dd", {}, [el("a", { href: "mailto:" + x.email, text: x.email })]),
+              el("dt", { text: "Phone" }), el("dd", { text: x.phone || "–" }), el("dt", { text: "CH auth code" }), el("dd", {}, [q.auth ? el("span", { class: "code", style: "font-size:16px;padding:4px 8px", text: q.auth }) : "–"]),
+              q.case ? el("dt", { text: "From case" }) : null, q.case ? el("dd", {}, [el("a", { href: "#", text: q.case, onclick: (e) => { e.preventDefault(); openCase(q.case); } })]) : null]),
+            q.extra.length ? el("p", { style: "white-space:pre-wrap", text: "Message: " + q.extra.join(" · ") }) : null]),
+          el("div", { class: "stack" }, [
+            q.total != null ? el("div", { class: "deadline" }, [el("b", { text: "Catch-up estimate: £" + q.total.toLocaleString("en-GB") }), el("span", { style: "white-space:pre-line", text: quoteLines(q.answers).join("\n") })]) : el("p", { class: "muted", text: "No estimate (older request)." }),
+            q.monthly ? el("div", { class: "kpi" }, [el("b", { text: `£${q.monthly.amount} a month × ${q.monthly.months}` }), el("span", { text: "From now until the next year-end, " + d(q.monthly.year_end) + (q.monthly.directors_sa ? " · incl. directors' returns" : "") })]) : null])]),
+        el("div", { class: "row" }, [el("span", { text: "Status:" }), s]), n]));
+    });
+  } catch (e) { fail(e); }
+}
+
 // ---------- Emails ----------
+let emailProblemsOnly = false;
 async function showEmails() {
   busy();
   try {
-    const { emails } = await api("emails");
+    const all = (await api("emails")).emails;
     const v = $("view"); v.innerHTML = "";
-    const probs = emails.filter((e) => e.problem);
+    const probs = all.filter((e) => e.problem);
+    const emails = emailProblemsOnly ? probs : all;
+    v.appendChild(el("label", { class: "check", style: "margin-bottom:8px" }, [el("input", { type: "checkbox", checked: emailProblemsOnly,
+      onchange: (e) => { emailProblemsOnly = e.target.checked; showEmails(); } }), el("span", { text: "Show only bounced / failed emails" })]));
     if (probs.length) v.appendChild(el("p", { class: "error", text: `${probs.length} email(s) bounced or failed. Check the address with the client.` }));
     v.appendChild(el("p", { class: "muted", text: "Delivery status updates arrive from Brevo once its webhook is set up. SHA-256 = fingerprint of the PDF that was sent." }));
     v.appendChild(el("div", { class: "tablebox" }, [el("table", { class: "t" }, [

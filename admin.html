@@ -360,7 +360,7 @@ async function openCase(ref) {
       payroll: false, employees: 1, pay_m: 0, cis: false, subs: 1, cis_m: 0, vat: false, vat_m: 0, cs: false, future: false,
       year_end: (c.extracted || {}).accounts_period_end || "", dir_sa: true };
     const inp = (k, type, attrs = {}) => { const i = el("input", Object.assign({ class: "sm", type: type || "number", min: "0", style: "width:100%" }, attrs));
-      if (type === "checkbox") { i.checked = !!Q[k]; i.className = ""; i.addEventListener("change", () => { Q[k] = i.checked; redraw(); }); }
+      if (type === "checkbox") { i.checked = !!Q[k]; i.className = ""; i.removeAttribute("style"); i.removeAttribute("min"); i.addEventListener("change", () => { Q[k] = i.checked; redraw(); }); }
       else { i.value = Q[k]; i.addEventListener("input", () => { Q[k] = type === "date" ? i.value : Number(i.value); preview(); }); }
       return i; };
     const yn = (k, label) => el("label", { class: "check" }, [inp(k, "checkbox"), el("span", { text: label })]);

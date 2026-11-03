@@ -314,13 +314,27 @@ async function openCase(ref) {
     const pp = el("input", { class: "sm", value: det.phone || "", placeholder: "Phone (optional)", style: "width:100%" });
     box.appendChild(el("div", { class: "grid2" }, [el("label", { class: "field" }, [el("span", { text: "Email" }), pe]), el("label", { class: "field" }, [el("span", { text: "Name" }), pn])]));
     box.appendChild(el("label", { class: "field" }, [el("span", { text: "Phone" }), pp]));
+    // £59 / £40 on a case without a company letter: say which company penalty it is (so the ID step asks for the
+    // certificate of incorporation and the authority to act, and the HMRC code for Corporation Tax)
+    const coType = el("select", { class: "sm", style: "width:100%" }, [el("option", { value: "", text: "Choose…" }),
+      el("option", { value: "ct-late-filing", text: "Corporation Tax late filing penalty" }), el("option", { value: "companies-house-late-filing", text: "Companies House late filing penalty" })]);
+    const coName = el("input", { class: "sm", value: det.company_name || "", placeholder: "Company name", style: "width:100%" });
+    const coNo = el("input", { class: "sm", value: det.company_number || "", placeholder: "Company number", style: "width:100%" });
+    const coBox = el("div", { class: "stack", hidden: true }, [
+      company ? null : el("label", { class: "field" }, [el("span", { text: "Which company penalty?" }), coType]),
+      el("div", { class: "grid2" }, [el("label", { class: "field" }, [el("span", { text: "Company name" }), coName]), el("label", { class: "field" }, [el("span", { text: "Company number" }), coNo])])]);
+    box.appendChild(coBox);
+    const showCo = () => { const o = (box.querySelector("input[name=payopt]:checked") || {}).value; coBox.hidden = !(o === "o3co" || o === "top40"); };
+    box.querySelectorAll("input[name=payopt]").forEach((i) => i.addEventListener("change", showCo)); showCo();
     const out = el("div", { class: "stack" });
     box.appendChild(el("button", { class: "sbtn primary", type: "button", text: "Email payment link", onclick: async (ev) => {
       const opt = (box.querySelector("input[name=payopt]:checked") || {}).value;
+      if ((opt === "o3co" || opt === "top40") && !company && !coType.value) { out.innerHTML = ""; out.appendChild(el("p", { class: "error", text: "Choose which company penalty this is." })); return; }
       if (!confirm(`Email a payment link (${OPTS.find((o) => o[0] === opt)[1]}) to ${pe.value}?`)) return;
       ev.target.disabled = true; out.innerHTML = "";
       try {
-        const x = await api("payment_link", { ref: c.ref, option: opt, email: pe.value, name: pn.value, phone: pp.value });
+        const x = await api("payment_link", { ref: c.ref, option: opt, email: pe.value, name: pn.value, phone: pp.value,
+          company_type: coType.value || undefined, company_name: coName.value, company_number: coNo.value });
         out.appendChild(el("p", { class: x.sent ? "success" : "callout", text: x.sent ? "Payment link emailed." : "Link created, but the email didn't send. Copy the link below and send it yourself." }));
         out.appendChild(el("button", { class: "sbtn", type: "button", text: "Copy the link", onclick: () => navigator.clipboard.writeText(x.url).then(() => toast("Link copied")) }));
       } catch (e) { out.appendChild(el("p", { class: "error", text: e.message === "email" ? "Enter a valid email address." : "Could not create the link (" + e.message + ")." })); }
@@ -369,6 +383,12 @@ async function openCase(ref) {
       try { const u = await api("file_url", { file_id: f.id }); if (w) w.location = u.url; else location.href = u.url; } catch (e) { if (w) w.close(); toast("Could not open the file"); }
     } })])));
   if (r.links.id_upload && c.product === "option3" && !c.id_completed_at) docs.appendChild(el("div", { class: "row" }, [
+    el("button", { class: "sbtn primary", type: "button", text: "Email the ID upload link now", onclick: async (ev) => {
+      if (!confirm("Email the client the link to upload their ID? Automatic reminders follow if they don't.")) return;
+      ev.target.disabled = true;
+      try { const x = await api("send_id_email", { ref: c.ref }); toast(x.sent ? "ID email sent" : "Email not sent"); openCase(c.ref); }
+      catch (e) { ev.target.disabled = false; toast(e.message === "not_paid" ? "The client hasn't paid yet" : "Could not send (" + e.message + ")"); }
+    } }),
     el("button", { class: "sbtn", type: "button", text: "Copy the client's upload link", onclick: () => navigator.clipboard.writeText(r.links.id_upload).then(() => toast("Link copied")) })]));
   left.appendChild(docs);
 
@@ -425,6 +445,7 @@ async function openCase(ref) {
       reasonSel.addEventListener("change", upd); upd();
     });
     ap.appendChild(el("label", { class: "field" }, [el("span", { text: "Reason on the appeal" }), reasonSel, reasonNote]));
+    const undo = el("button", { class: "sbtn", type: "button", text: "Undo correction", hidden: true });
     const ta = el("textarea", { class: "big", lang: "en", placeholder: "Write the appeal in English. Leave empty to use the automatic wording from the client's answers." });
     ta.value = c.admin_appeal_text || "";
     const auto = () => {
@@ -436,6 +457,17 @@ async function openCase(ref) {
     };
     ap.appendChild(el("div", { class: "row" }, [
       el("button", { class: "sbtn", type: "button", text: "Start from the client's wording", onclick: () => { if (!ta.value.trim() || confirm("Replace what you've written?")) ta.value = auto(); } }),
+      el("button", { class: "sbtn", type: "button", text: "Correct spelling", onclick: async (ev) => {
+        if (!ta.value.trim()) return;
+        const before = ta.value; ev.target.disabled = true; ev.target.textContent = "Correcting…";
+        try {
+          const x = await api("correct_text", { text: before });
+          ta.value = x.text; undo.hidden = false; undo.onclick = () => { ta.value = before; undo.hidden = true; };
+          toast("Spelling corrected – check it, then Save");
+        } catch (e) { toast("Could not correct it (" + e.message + ")"); }
+        ev.target.disabled = false; ev.target.textContent = "Correct spelling";
+      } }),
+      undo,
       el("span", { class: "muted", text: "Only use facts the client has confirmed." })]));
     ap.appendChild(ta);
     const status = el("p", { class: "muted" });

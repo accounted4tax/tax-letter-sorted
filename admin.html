@@ -104,6 +104,21 @@ const TODO = { id_not_started: ["ID not started", "amber"], waiting_for_id: ["Wa
   request_hmrc_code: ["Request HMRC code", "red"], hmrc_code_received: ["HMRC code received", "green"], write_appeal: ["Write appeal", "teal"] };
 
 const $ = (id) => document.getElementById(id);
+// reasons per letter type come from the rules files; labels from the English language file
+let EN = null;
+const labelOf = (key) => { const v = String(key || "").split(".").reduce((o, k) => (o || {})[k], EN || {}); return typeof v === "string" ? v : key; };
+async function loadRules(id) {
+  const d = await fetch("rules/" + id + ".json", { cache: "no-store" }).then((r) => r.json());
+  const parent = d.inherits_from || d.inherits;
+  return parent ? Object.assign({}, await loadRules(parent), d) : d;
+}
+async function reasonsFor(letterType) {
+  if (!EN) EN = await fetch("lang/en.json", { cache: "no-store" }).then((r) => r.json()).catch(() => ({}));
+  try {
+    const r = await loadRules(letterType), ex = r.exclude_reasons || [];
+    return (r.reasons_list || r.reasons || []).filter((x) => !ex.includes(x.id)).map((x) => ({ id: x.id, label: labelOf(x.label_key) }));
+  } catch (e) { return []; }
+}
 function el(tag, attrs, kids) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -365,12 +380,24 @@ async function openCase(ref) {
       field("Address line 1", "a1", (det.address_lines || [])[0]), field("Address line 2", "a2", (det.address_lines || [])[1]), field("Town", "a3", (det.address_lines || [])[2]),
       field("Postcode", "postcode", det.postcode), field("Phone", "phone", det.phone), field("Email (the PDF goes here)", "email", det.email)];
     ap.appendChild(el("details", {}, [el("summary", { text: "Client details on the appeal (click to edit)" }), el("div", { class: "stack", style: "margin-top:10px" }, fields)]));
+    // reason on the appeal (ticks the SA370 box and drives the automatic wording)
+    const aeNow = (r.answers || {}).answers_english || {};
+    const clientReason = aeNow.client_reason || aeNow.reason || ((r.answers || {}).answers || {}).reason || "";
+    const reasonSel = el("select", { class: "sm", id: "reasonSel", style: "width:100%" });
+    const reasonNote = el("span", { class: "muted" });
+    reasonsFor(c.letter_type).then((list) => {
+      if (!list.length) { reasonSel.appendChild(el("option", { value: "", text: "No reasons for this letter type" })); reasonSel.disabled = true; return; }
+      list.forEach((x) => reasonSel.appendChild(el("option", { value: x.id, text: x.label + (x.id === clientReason ? "  (client's choice)" : ""), selected: x.id === (aeNow.reason || clientReason) })));
+      const upd = () => { reasonNote.textContent = reasonSel.value !== clientReason && clientReason ? "Changed from the client's choice. Saved when you click Save or Build." : ""; };
+      reasonSel.addEventListener("change", upd); upd();
+    });
+    ap.appendChild(el("label", { class: "field" }, [el("span", { text: "Reason on the appeal" }), reasonSel, reasonNote]));
     const ta = el("textarea", { class: "big", lang: "en", placeholder: "Write the appeal in English. Leave empty to use the automatic wording from the client's answers." });
     ta.value = c.admin_appeal_text || "";
     const auto = () => {
       const a = (r.answers || {}).answers || {}, ae = (r.answers || {}).answers_english || {}, eng = ae.texts || {}, ext = c.extracted || {};
       const pens = (ext.penalties || []).filter((p) => p && (p.amount != null || p.description));
-      return composeAppeal({ letter_type: c.letter_type, reason: ae.reason || a.reason, tax_year: c.tax_year || ext.tax_year, penalty_count: Math.max(1, pens.length),
+      return composeAppeal({ letter_type: c.letter_type, reason: reasonSel.value || ae.reason || a.reason, tax_year: c.tax_year || ext.tax_year, penalty_count: Math.max(1, pens.length),
         story: eng.story, why_late: eng.why_late, nnf_other_text: eng.nnf_other_text, something_else_text: eng.something_else_text,
         date_from: a.date_from, date_to: a.date_to, filed_date: a.filed_date, filed_asap: a.filed_asap, evidence: a.evidence || [] });
     };
@@ -384,7 +411,7 @@ async function openCase(ref) {
       const addr = [f.a1.value, f.a2.value, f.a3.value].map((s) => s.trim()).filter(Boolean);
       const details = { address_lines: addr };
       for (const k of ["full_name", "company_name", "company_number", "penalty_reference", "utr", "ni_number", "postcode", "phone", "email"]) if (f[k]) details[k] = f[k].value;
-      await api("save_appeal", { ref: c.ref, details, appeal_text: ta.value });
+      await api("save_appeal", { ref: c.ref, details, appeal_text: ta.value, reason: reasonSel.value || undefined });
     };
     const sendBtn = el("button", { class: "sbtn primary", type: "button", text: "Send to client by email", disabled: true, onclick: async () => {
       if (!confirm(`Email the appeal PDF to ${f.email.value || "the client"}?`)) return;

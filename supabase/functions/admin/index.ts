@@ -211,6 +211,16 @@ Deno.serve(async (req) => {
         }
         if (Array.isArray(inD.address_lines)) d.address_lines = (inD.address_lines as unknown[]).map((x) => str(x, 80)).filter(Boolean).slice(0, 4);
         const text = body.appeal_text === undefined ? c.admin_appeal_text : (str(body.appeal_text, 12000) || null);
+        // Eduard can change the reason on the appeal (SA370 tick box and the automatic wording); the client's own choice is kept
+        if (typeof body.reason === "string" && /^[a-z_]{2,60}$/.test(body.reason)) {
+          const { data: ca } = await db.from("case_answers").select("answers, answers_english").eq("case_id", c.id).maybeSingle();
+          const ae = ((ca?.answers_english ?? {}) as Obj);
+          if (ae.reason !== body.reason) {
+            const next = { ...ae, reason: body.reason, client_reason: ae.client_reason ?? ae.reason ?? null, reason_changed_by: email };
+            await db.from("case_answers").upsert({ case_id: c.id, answers: ca?.answers ?? {}, answers_english: next, updated_at: new Date().toISOString() });
+            await log("reason_changed", c.id, { from: ae.reason ?? null, to: body.reason });
+          }
+        }
         await db.from("cases").update({ details: d, admin_appeal_text: text, details_saved_at: c.details_saved_at ?? new Date().toISOString() }).eq("id", c.id);
         await log("appeal_saved", c.id, { own_text: !!text });
         return reply(200, { ok: true });

@@ -338,7 +338,8 @@
       "appt.err_server",
       "fu.title_appt",
       "fu.intro_appt",
-      "fu.done_appt"
+      "fu.done_appt",
+      "appt.start_now"
     ]
   },
   "common": {
@@ -1414,7 +1415,7 @@
   "appt": {
     "title": "Programați o discuție cu un contabil",
     "intro": "Un contabil calificat (MAAT) vă va suna pentru a discuta scrisoarea, suma datorată și pașii următori.",
-    "point1": "O convorbire telefonică de până la 30 de minute, la ora aleasă de dvs.",
+    "point1": "O convorbire telefonică cu un contabil calificat, la o oră potrivită pentru dvs.",
     "point2": "Vă explicăm sumele, dobânda și eventualele penalități din extras",
     "point3": "Vă spunem ce opțiuni aveți, de exemplu plata în rate (Time to Pay)",
     "name": "Numele complet",
@@ -1427,6 +1428,7 @@
     "err_email": "Vă rugăm să introduceți o adresă de email validă.",
     "err_phone": "Vă rugăm să introduceți un număr de telefon valid.",
     "err_terms": "Vă rugăm să acceptați Termenii și Politica de confidențialitate pentru a continua.",
-    "err_server": "A apărut o eroare. Vă rugăm să încercați din nou peste un minut."
+    "err_server": "A apărut o eroare. Vă rugăm să încercați din nou peste un minut.",
+    "start_now": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat – înțeleg că, după ce discuția a avut loc, nu o mai pot anula pentru rambursare."
   }
 }

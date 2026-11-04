@@ -2,7 +2,7 @@
 // (Client register sheet + Client files/<ref> – <name>/01 Onboarding, 02 Documents, 03 ID).
 // Only what is new is sent: every item copied is remembered in drive_sync_items, so a second run adds
 // only new rows (new payment, new quote, changed phone number…) and new files. Nothing is overwritten.
-// Called every 15 minutes by pg_cron, and by the admin page ("Copy to Google Drive now"), with x-cron-secret.
+// Who: every client except £19 self-serve, paid or not. Called every 15 minutes by pg_cron, and by the admin page ("Copy to Google Drive now"), with x-cron-secret.
 // Secrets (Supabase → Edge Functions → Secrets): GDRIVE_URL (the Apps Script web app address), GDRIVE_SECRET.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -247,17 +247,25 @@ Deno.serve(async (req) => {
 
   try {
     if (body.action === "ping") return new Response(JSON.stringify(await post({ action: "ping" })), { status: 200 });
-    // clients who needed Eduard's input: paid, not the £19 self-serve product
+    // Every client except the £19 self-serve product, paid or not (they may pay later) – Eduard 4 Nov 2026:
+    // accountant reviews, appointments, call-backs, and any case with a quote or a payment link.
+    // Automatic runs start only once the site is live (before that every case is a test); "Copy now" always works.
+    if (!body.ref && !settings?.live) return new Response(JSON.stringify({ ok: true, skipped: "not_live" }), { status: 200 });
     let q = db.from("cases").select("id, ref, created_at, language, letter_type, product, status, tax_year, notice_date, appeal_deadline, penalty_amount, utr, details, details_saved_at, facts_confirmed_at, approved_at, id_completed_at, authority_to_act_at, authority_name, authority_version, hmrc_code_at, hmrc_code_requested_at")
-      .is("data_deleted_at", null).neq("product", "option2").not("product", "is", null).order("created_at", { ascending: false }).limit(200);
+      .is("data_deleted_at", null).or("product.is.null,product.neq.option2").order("created_at", { ascending: false }).limit(300);
     if (body.ref) q = q.eq("ref", String(body.ref));
     const { data: cases } = await q;
-    const ids = (cases ?? []).map((c) => c.id);
-    // automatic runs copy only cases paid for real (live Stripe); test-mode cases only when Eduard presses "Copy now"
-    const { data: paid } = ids.length ? await db.from("payments").select("case_id").eq("status", "paid").eq("stripe_mode", "live").in("case_id", ids) : { data: [] };
-    const paidSet = new Set((paid ?? []).map((p) => p.case_id));
+    const { data: withLinks } = await db.from("payment_links").select("case_id");
+    const { data: withQuotes } = await db.from("help_requests").select("note").eq("tax_year", "package").ilike("note", "%Case: TLS-%");
+    const linkSet = new Set((withLinks ?? []).map((l) => l.case_id));
+    const quoteRefs = new Set((withQuotes ?? []).map((h) => /Case: (TLS-\d+)/.exec(String(h.note))?.[1]).filter(Boolean));
+    const eligible = (c: Obj) => {
+      const d = (c.details ?? {}) as Obj;
+      if (!d.full_name && !d.email && !d.company_name) return false;             // nobody to file yet
+      return ["option3", "appointment", "call"].includes(String(c.product)) || linkSet.has(c.id) || quoteRefs.has(String(c.ref));
+    };
     const results: Obj[] = [];
-    for (const c of (cases ?? []).filter((c) => paidSet.has(c.id) || body.ref)) {
+    for (const c of (cases ?? []).filter((c) => body.ref || eligible(c as Obj))) {
       try { results.push(await syncCase(c as Obj)); }
       catch (e) { results.push({ ref: c.ref, error: String((e as Error).message ?? e).slice(0, 200) }); }
     }

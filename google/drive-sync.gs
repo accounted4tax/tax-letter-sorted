@@ -17,7 +17,7 @@ const ROOT_FOLDER_NAME = 'Tax Letter Sorted';
 const REGISTER_NAME = 'Client register';
 const FILES_FOLDER_NAME = 'Client files';
 const SUBFOLDERS = ['01 Onboarding', '02 Documents', '03 ID'];
-const SECTIONS = ['Case and client', 'Service and payment', "Client's answers", 'Identity check (AML)', 'Appeal, agent and emails', 'Your notes'];
+const SECTIONS = ['Case and client', 'Director', 'Service and payment', "Client's answers", 'Identity check (AML)', 'Appeal, agent and emails', 'Your notes'];
 const TABS = {
   'Clients': ['Case ref', 'First contact', 'Client name', 'Business', 'Sole trader / Ltd', 'Company no.', 'Email', 'Phone', 'Address',
     'UTR', 'VAT no.', 'PAYE ref', 'AO ref', 'Letter type', 'Service', 'Status', 'ID check done', 'Drive folder', 'Last copied'],
@@ -67,7 +67,7 @@ function doPost(e) {
 //         quotes: [[...]], payments: [[...]] }
 function syncCase_(b) {
   const folder = caseFolder_(b.ref, b.folder_name);
-  const doc = caseDoc_(folder, b.ref, b.folder_name);
+  const doc = caseDoc_(folder, b.ref, b.title || b.folder_name, !!b.company);
   let added = 0;
   Object.keys(b.sections || {}).forEach(function (name) {
     const rows = b.sections[name] || [];
@@ -118,21 +118,23 @@ function caseFolder_(ref, name) {
 function folderPath_(name) { return FILES_FOLDER_NAME + '/' + name; }
 
 // ---------- the case record (Google Doc) ----------
-function caseDoc_(folder, ref, name) {
+// title: "<business or taxpayer name> – Case record (<ref>)"; the Director section only for limited companies
+function caseDoc_(folder, ref, name, company) {
   const onb = childFolder_(folder, SUBFOLDERS[0]);
   const it = onb.getFiles();
   while (it.hasNext()) {
     const f = it.next();
-    if (f.getMimeType() === MimeType.GOOGLE_DOCS && f.getName().indexOf('Case record') === 0) return DocumentApp.openById(f.getId());
+    if (f.getMimeType() === MimeType.GOOGLE_DOCS && f.getName().indexOf('Case record') > -1) return DocumentApp.openById(f.getId());
   }
-  const doc = DocumentApp.create('Case record – ' + (name || ref));
+  const title = (name ? name + ' – ' : '') + 'Case record (' + ref + ')';
+  const doc = DocumentApp.create(title);
   DriveApp.getFileById(doc.getId()).moveTo(onb);
   const body = doc.getBody();
   body.clear();
-  body.appendParagraph('Case record – ' + ref).setHeading(DocumentApp.ParagraphHeading.TITLE).setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  body.appendParagraph(title).setHeading(DocumentApp.ParagraphHeading.TITLE).setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   body.appendParagraph('Each section is updated in place: new information is added as a new dated row. You can add rows yourself (right-click a row → Insert row below).')
     .editAsText().setForegroundColor('#4A5568');
-  SECTIONS.forEach(function (s) { newSection_(body, s); });
+  SECTIONS.forEach(function (s) { if (s !== 'Director' || company) newSection_(body, s); });
   return doc;
 }
 function newSection_(body, name) {
@@ -160,7 +162,7 @@ function sectionTable_(doc, name) {
       }
     }
   }
-  return newSection_(body, name);
+  return newSection_(body, name);   // (added at the end if Eduard removed it)
 }
 function appendRow_(table, r) {
   const row = table.appendTableRow();

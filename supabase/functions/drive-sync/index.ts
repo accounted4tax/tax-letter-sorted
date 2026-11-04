@@ -70,10 +70,10 @@ async function syncCase(c: Obj) {
     ["Case", ref],
     ["Letter", (TYPE[String(c.letter_type)] ?? String(c.letter_type ?? "")) + (c.penalty_amount ? " – £" + Number(c.penalty_amount).toFixed(2) : "") + (c.tax_year ? " (" + c.tax_year + ")" : "")],
     ["Notice date / appeal deadline", [fmt(c.notice_date), fmt(c.appeal_deadline)].filter(Boolean).join(" / ")],
-    ["Client", String(d.full_name ?? "") + (d.role ? " (" + d.role + ")" : "")],
+    ["Client", company ? "" : String(d.full_name ?? "")],
     ["Business", [d.business_name ?? d.company_name, d.business_type ? (d.business_type === "company" ? "limited company" : "sole trader") : (company ? "limited company" : ""), d.company_number ? "company number " + d.company_number : ""].filter(Boolean).join(" · ")],
     ["Address", [...((d.address_lines as string[]) ?? []), d.postcode].filter(Boolean).join(", ")],
-    ["Phone / email", [d.phone, d.email].filter(Boolean).join(" · ")],
+    ["Phone / email", company ? "" : [d.phone, d.email].filter(Boolean).join(" · ")],
     ["UTR", String(d.utr ?? c.utr ?? "")],
     ["NI number", String(d.ni_number ?? "")],
     ["VAT", [d.vat_number, d.vat_registration_date ? "registered " + fmt(d.vat_registration_date) : "", d.vat_returns_up_to_date ? "returns up to date: " + d.vat_returns_up_to_date : ""].filter(Boolean).join(" · ")],
@@ -86,6 +86,23 @@ async function syncCase(c: Obj) {
     const k = "cc:" + item + ":" + await hash(val);
     const seenBefore = [...done].some((x) => x.startsWith(ref + ":cc:" + item + ":"));
     add("Case and client", seenBefore ? new Date().toISOString() : c.created_at, seenBefore ? item + " (changed)" : item, val, k);
+  }
+
+  // Director (limited companies): name, role, contact; home address is on the proof of address in 03 ID
+  if (company) {
+    const dir: [string, string][] = [
+      ["Name", String(d.full_name ?? c.authority_name ?? "")],
+      ["Role", String(d.role ?? "Director")],
+      ["Phone / email", [d.phone, d.email].filter(Boolean).join(" · ")],
+      ["Home address", String(d.director_address ?? "")],
+      ["Date of birth", d.director_dob ? fmt(d.director_dob) : ""],
+    ];
+    for (const [item, val] of dir) {
+      if (!val) continue;
+      const k = "dir:" + item + ":" + await hash(val);
+      const seenBefore = [...done].some((x) => x.startsWith(ref + ":dir:" + item + ":"));
+      add("Director", seenBefore ? new Date().toISOString() : c.created_at, seenBefore ? item + " (changed)" : item, val, k);
+    }
   }
 
   // Service and payment
@@ -164,7 +181,8 @@ async function syncCase(c: Obj) {
   const anything = Object.keys(sections).length || payRows.length || quoteRows.length;
   const fileQueue = (files ?? []).filter((f) => isNew("file:" + f.id) && (f.kind === "letter" || f.kind === "appeal_pdf" || ID_KIND[f.kind]));
   if (!anything && !fileQueue.length) return { ref, added: 0, files: 0 };
-  await post({ action: "case", ref, folder_name: folderName, client_row: clientRow, sections, quotes: quoteRows, payments: payRows });
+  const title = name || ref;
+  await post({ action: "case", ref, folder_name: folderName, title, company, client_row: clientRow, sections, quotes: quoteRows, payments: payRows });
   if (newKeys.length) await db.from("drive_sync_items").upsert(newKeys.map((k) => ({ item_key: k, case_id: c.id })), { onConflict: "item_key" });
 
   let copied = 0;

@@ -18,7 +18,7 @@ const APPEAL_ROUTES = ["appeal", "choice", "hmrc_check_first"];
 const SA_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment"];
 const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
 // VAT, PAYE, CIS: free / £19 letter / £39 accountant review (letter for the client to post + agent account) – Eduard 3-4 Nov 2026
-const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];
+const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];   // PAYE kept for older cases; new PAYE letters get no appeal options
 const BIZ_SUBJECT: Record<string, string> = {
   "vat-late-submission": "Appeal against VAT late submission penalty",
   "paye-employer-penalty": "Appeal against PAYE late filing penalty",

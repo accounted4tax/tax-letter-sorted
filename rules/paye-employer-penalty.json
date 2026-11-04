@@ -43,15 +43,9 @@
     "never_needed_to_file"
   ],
   "options": {
-    "free": "copy the wording and appeal online/by post",
-    "option2": "£19 appeal letter emailed, client prints, signs, posts",
-    "option3": "£39 accountant review: ID check; letter for the client to post AND appeal through the agent account (Eduard 4 Nov 2026, regardless of the deadline)"
-  },
-  "agent_route": {
-    "how": "Eduard requests the agent authorisation code through Agent Services; HMRC posts it to the employer",
-    "needs": [
-      "paye_ref",
-      "accounts_office_ref"
+    "decision": "Eduard 4 Nov 2026: explain the letter and ask if they need help with payroll. No appeal options (no free / £19 / £39).",
+    "actions": [
+      "service_payroll"
     ]
   },
   "checked": "4 Nov 2026 by Claude against GOV.UK 'What happens if you don't report payroll information on time' – amounts, exceptions and BX9 1BX address match. GOV.UK page gives no appeal time limit; the 30 days comes from the penalty notice / general appeals guidance."

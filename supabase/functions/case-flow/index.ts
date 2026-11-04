@@ -17,7 +17,8 @@ const RULES: Record<string, string> = {
   "vat-late-submission": "vat-late-submission", "paye-employer-penalty": "paye-employer-penalty",
   "cis-late-return": "cis-late-return", "sa-statement": "sa-statement", "companies-house-strike-off": "companies-house-strike-off",
 };
-const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];   // free / £19 letter / £39 (Eduard 3-4 Nov 2026)
+// free / £19 letter / £39 (Eduard 3-4 Nov 2026). PAYE: explanation + payroll offer only, no appeal options (Eduard 4 Nov 2026)
+const BIZ_TYPES = ["vat-late-submission", "cis-late-return"];
 const APPEAL_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing", "companies-house-late-filing", ...BIZ_TYPES];
 const FILING_TYPES = ["sa-late-filing-100", "sa-late-filing-later"];
 const HEALTH_REASONS = ["hospital", "serious_illness", "disability_mental_illness", "bereavement", "ch_director_illness_death"];
@@ -118,7 +119,6 @@ function actionsFor(t: string, ext: Obj) {
     const a: Obj[] = [{ id: "check_appeal" }];
     if (FILING_TYPES.includes(t)) a.push({ id: "help_return" });
     // service offers (Eduard 3 Nov 2026): run the payroll / CIS returns, or file the VAT returns
-    if (t === "paye-employer-penalty") a.push({ id: "service_payroll" });
     if (t === "cis-late-return") a.push({ id: "service_cis" });
     if (t === "vat-late-submission") a.push({ id: "service_vat" });
     a.push({ id: "how_to_pay", url: pay });
@@ -127,6 +127,8 @@ function actionsFor(t: string, ext: Obj) {
   switch (t) {
     case "vat-late-payment":
       return [{ id: "talk_accountant" }, { id: "how_to_pay", url: pay }];
+    case "paye-employer-penalty":   // explain the letter, then only: "Would you like an accountant to run your payroll?"
+      return [{ id: "service_payroll" }];
     case "companies-house-strike-off":   // stop it by filing the confirmation statement; fee as per quote (Eduard 4 Nov 2026)
       return [{ id: "stop_strike_off" }, { id: "talk_accountant" }];
     case "sa-notice-to-file":

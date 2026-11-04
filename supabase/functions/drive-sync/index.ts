@@ -239,7 +239,7 @@ async function syncLooseQuotes() {
 }
 
 Deno.serve(async (req) => {
-  const { data: settings } = await db.from("app_settings").select("cron_secret").eq("id", 1).single();
+  const { data: settings } = await db.from("app_settings").select("cron_secret, live").eq("id", 1).single();
   if (!settings?.cron_secret || (req.headers.get("x-cron-secret") ?? "") !== settings.cron_secret) return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
   if (!Deno.env.get("GDRIVE_URL") || !Deno.env.get("GDRIVE_SECRET")) return new Response(JSON.stringify({ error: "not_configured" }), { status: 200 });
   let body: Obj = {};
@@ -253,14 +253,16 @@ Deno.serve(async (req) => {
     if (body.ref) q = q.eq("ref", String(body.ref));
     const { data: cases } = await q;
     const ids = (cases ?? []).map((c) => c.id);
-    const { data: paid } = ids.length ? await db.from("payments").select("case_id").eq("status", "paid").in("case_id", ids) : { data: [] };
+    // automatic runs copy only cases paid for real (live Stripe); test-mode cases only when Eduard presses "Copy now"
+    const { data: paid } = ids.length ? await db.from("payments").select("case_id").eq("status", "paid").eq("stripe_mode", "live").in("case_id", ids) : { data: [] };
     const paidSet = new Set((paid ?? []).map((p) => p.case_id));
     const results: Obj[] = [];
     for (const c of (cases ?? []).filter((c) => paidSet.has(c.id) || body.ref)) {
       try { results.push(await syncCase(c as Obj)); }
       catch (e) { results.push({ ref: c.ref, error: String((e as Error).message ?? e).slice(0, 200) }); }
     }
-    const loose = body.ref ? 0 : await syncLooseQuotes().catch(() => 0);
+    // website quote / service requests: only once the site is live (before that they are all tests)
+    const loose = body.ref || !settings?.live ? 0 : await syncLooseQuotes().catch(() => 0);
     return new Response(JSON.stringify({ ok: true, cases: results.filter((r) => r.added || r.files || r.error), loose_quotes: loose }), { status: 200 });
   } catch (e) {
     return new Response(JSON.stringify({ error: String((e as Error).message ?? e).slice(0, 300) }), { status: 502 });

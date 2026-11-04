@@ -39,7 +39,7 @@
 
   <section id="form" class="stack" hidden>
     <h1 data-i18n="code.title">Send us the HMRC authorisation code</h1>
-    <p class="lead" data-i18n="code.intro"></p>
+    <p class="lead" id="intro"></p>
     <p class="note" id="refLine"></p>
     <div class="card">
       <label class="field" id="codeRow"><span data-i18n="code.label">Authorisation code</span>
@@ -74,6 +74,7 @@
     $("loading").hidden = true;
     if (st.hmrc_code_received) { $("form").hidden = true; $("done").hidden = false; return; }
     $("refLine").textContent = t("code.ref", { ref: st.ref, company: st.company_name || "" });
+    $("intro").textContent = t(st.letter_type === "paye-employer-penalty" || st.letter_type === "cis-late-return" ? "code.intro_employer" : "code.intro");
     $("form").hidden = false;
     if (errKey) err(errKey);
   }

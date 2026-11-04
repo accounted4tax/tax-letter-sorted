@@ -33,3 +33,4 @@ Admin sign-in: Supabase Auth email + password; the user must be created in the d
 - 016_requests_retention – applied 3 Nov 2026 (pg_cron 'requests-retention-daily': help/quote/call-back requests deleted after 12 months, except status 'client')
 - 017_payment_links_amounts – applied 3 Nov 2026 (payment_links amount/target/label/sent_to/created_by; payments.payment_link_id)
 - 018_more_letters_appointment – applied 3 Nov 2026 (letter types sa-statement, cis-late-return; product appointment on cases and payments)
+- 019_strike_off – applied 4 Nov 2026 (letter type companies-house-strike-off)

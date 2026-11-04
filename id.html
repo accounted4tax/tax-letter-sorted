@@ -159,12 +159,14 @@
     var box = $("authority"); box.innerHTML = "";
     if (!st.company) return;
     var co = (st.company_name || "").trim();
-    var text = co ? t("auth.instruct", { company: co + (st.company_number ? " (" + st.company_number + ")" : "") }) : t("auth.instruct_noname");
+    // strike-off: the instruction is to file the confirmation statement; VAT / PAYE / CIS: "this penalty" for the business
+    var sk = st.letter_type === "companies-house-strike-off" ? "_strike" : "";
+    var text = co ? t("auth.instruct" + sk, { company: co + (st.company_number ? " (" + st.company_number + ")" : "") }) : t("auth.instruct_noname" + sk);
     var kids = [el("h2", { text: t("auth.title") })];
     if (st.authority) kids.push(el("p", { class: "got", text: t("auth.confirmed") }));
     kids.push(el("label", { class: "check" }, [el("input", { type: "checkbox", id: "authAgree", checked: !!st.authority, disabled: !!st.authority || authBusy,
       onchange: function (e) { if (e.target.checked) confirmInstruction(); } }), el("span", { text: text })]));
-    kids.push(el("p", { class: "hint", text: t("auth.scope_short") }));
+    kids.push(el("p", { class: "hint", text: t("auth.scope_short" + sk) }));
     if (authErr) kids.push(el("p", { class: "error", role: "alert", text: t(authErr) }));
     box.appendChild(el("section", { class: "card part" + (authErr ? " invalid" : "") }, kids));
   }

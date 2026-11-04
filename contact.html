@@ -101,6 +101,27 @@
       </div>
       <p class="hint" data-i18n="pkg.disclaimer"></p>
     </div>
+    <!-- Service request from a VAT / PAYE / CIS penalty letter (Eduard, 3 Nov 2026) -->
+    <div class="card" id="svcCard" hidden>
+      <label class="field" id="svcBizRow"><span data-i18n="svc.business_name">Business or company name</span>
+        <input id="svc_business" autocomplete="organization" maxlength="160"></label>
+      <label class="field" id="svcVatRow" hidden><span data-i18n="svc.vat_number">VAT registration number</span>
+        <input id="svc_vat" inputmode="numeric" maxlength="14"></label>
+      <label class="field" id="svcVatMRow" hidden><span data-i18n="svc.vat_missing">How many VAT returns are not submitted?</span>
+        <input id="svc_vat_n" type="number" inputmode="numeric" min="0" value="1" style="max-width:120px"></label>
+      <label class="field" id="svcUtrRow" hidden><span data-i18n="common.utr">UTR</span>
+        <input id="svc_utr" inputmode="numeric" maxlength="13"></label>
+      <label class="field" id="svcPayeRow" hidden><span data-i18n="svc.paye_ref">Employer PAYE reference</span>
+        <span class="hint" data-i18n="svc.paye_ref_hint"></span>
+        <input id="svc_paye" maxlength="14" autocapitalize="characters"></label>
+      <label class="field" id="svcAoRow" hidden><span data-i18n="svc.ao_ref">Accounts Office reference</span>
+        <span class="hint" data-i18n="svc.ao_ref_hint"></span>
+        <input id="svc_ao" maxlength="16" autocapitalize="characters"></label>
+      <label class="field" id="svcPeopleRow" hidden><span id="svcPeopleLabel"></span>
+        <input id="svc_people" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
+      <div class="deadline" id="svcBox" aria-live="polite"><b id="svcTotal"></b><span id="svcLines" style="white-space:pre-line"></span></div>
+      <p class="hint" data-i18n="pkg.disclaimer"></p>
+    </div>
     <div class="card">
       <label class="field"><span data-i18n="common.full_name">Full name</span>
         <input id="full_name" autocomplete="name" maxlength="120"></label>
@@ -110,9 +131,9 @@
         <input id="email" type="email" autocomplete="email" maxlength="200"></label>
       <label class="field" id="companyRow" hidden><span data-i18n="contact.company_name">Company name</span>
         <input id="company_name" autocomplete="organization" maxlength="160"></label>
-      <label class="field" id="companyNoRow" hidden><span><span data-i18n="details.company_number">Company number</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+      <label class="field" id="companyNoRow" hidden><span><span data-i18n="details.company_number">Company number</span> <span class="hint opt" data-i18n="common.optional">(optional)</span></span>
         <input id="company_number" maxlength="10" autocapitalize="characters"></label>
-      <label class="field" id="authCodeRow" hidden><span><span data-i18n="contact.ch_auth_code">Companies House authentication code</span> <span class="hint" data-i18n="common.optional">(optional)</span></span>
+      <label class="field" id="authCodeRow" hidden><span><span data-i18n="contact.ch_auth_code">Companies House authentication code</span> <span class="hint opt" data-i18n="common.optional">(optional)</span></span>
         <span class="hint" data-i18n="contact.ch_auth_code_hint"></span>
         <input id="ch_auth_code" maxlength="10" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
       <label class="field" id="yearRow" hidden><span data-i18n="help.which_year">Which tax year?</span>
@@ -146,7 +167,12 @@
   var $ = function (id) { return document.getElementById(id); };
   var kindParam = new URLSearchParams(location.search).get("kind");
   var isPackage = kindParam === "package";          // quote: accounts + CT return, appeal included free
-  var kind = (kindParam === "help" || isPackage) ? "help" : "callback";
+  var qp = new URLSearchParams(location.search);
+  // strike-off: stop it by filing the confirmation statement (and any overdue accounts); fee as per quote (Eduard 4 Nov 2026)
+  var isStrike = isPackage && qp.get("strike") === "1";
+  // service request from a VAT / PAYE / CIS penalty: run the payroll / CIS returns, or file the VAT returns
+  var svc = kindParam === "service" ? (["payroll", "cis", "vat"].indexOf(qp.get("svc")) > -1 ? qp.get("svc") : "payroll") : null;
+  var kind = (kindParam === "help" || isPackage || svc) ? "help" : "callback";
   var ctx = F.getJSON("tls_explain") || {};
   var isHelp = kind === "help";
 
@@ -157,17 +183,20 @@
   }
 
   function render() {
-    var titleKey = isPackage ? "contact.package_title" : isHelp ? "help.title" : "contact.callback_title";
+    var titleKey = svc ? "svc.title_" + svc : isStrike ? "strike.title" : isPackage ? "contact.package_title" : isHelp ? "help.title" : "contact.callback_title";
     $("stepName").textContent = t(titleKey);
     $("title").textContent = t(titleKey);
-    $("intro").textContent = t(isPackage ? "contact.package_intro" : isHelp ? "help.intro" : "contact.callback_intro");
+    $("intro").textContent = t(svc ? "svc.intro_" + svc : isStrike ? "strike.intro" : isPackage ? "contact.package_intro" : isHelp ? "help.intro" : "contact.callback_intro");
     $("companyRow").hidden = !isPackage; $("companyNoRow").hidden = !isPackage;
     $("authCodeRow").hidden = !isPackage;   // asked for only here: we file the accounts (Eduard, 1 Nov 2026)
+    document.querySelectorAll("#companyNoRow .opt, #authCodeRow .opt").forEach(function (n) { n.hidden = isStrike; });   // required to stop a strike-off
+    $("svcCard").hidden = !svc;
+    if (svc) service();
     $("noteLabel").textContent = t(isHelp ? "help.notes" : "contact.best_time");
     $("submit").textContent = t(isPackage ? "contact.package_submit" : isHelp ? "help.submit" : "talk.submit");
     $("phoneOpt").hidden = !isHelp;   // a call-back needs a phone number; help requests need at least the email
-    $("yearRow").hidden = !isHelp || isPackage;
-    if (isHelp && !isPackage) {
+    $("yearRow").hidden = !isHelp || isPackage || !!svc;
+    if (isHelp && !isPackage && !svc) {
       var sel = $("tax_year"), cur = sel.value || ctx.tax_year || "";
       sel.innerHTML = "";
       taxYears().forEach(function (y) { sel.appendChild(el("option", { value: y, text: y })); });
@@ -177,9 +206,11 @@
     var hasCase = !!F.get("tls_case");
     $("retention").hidden = isHelp || !hasCase || !ctx.appeal_deadline;
     if (!$("retention").hidden) $("retention").textContent = t("talk.retention", { date: F.fmtDate(ctx.appeal_deadline) });
-    $("sentTitle").textContent = t(isPackage ? "contact.package_sent_title" : isHelp ? "help.sent_title" : "callback.title");
-    $("sentText").textContent = t(isPackage ? "contact.package_sent_text" : isHelp ? "help.sent_text" : "callback.text");
-    $("waitCard").hidden = isPackage;
+    $("sentTitle").textContent = t(isPackage || svc ? "contact.package_sent_title" : isHelp ? "help.sent_title" : "callback.title");
+    $("sentText").textContent = t(isStrike ? "strike.sent_text" : isPackage || svc ? "contact.package_sent_text" : isHelp ? "help.sent_text" : "callback.text");
+    if (isStrike) $("submit").textContent = t("strike.submit");
+    if (svc) $("submit").textContent = t("svc.submit");
+    $("waitCard").hidden = isPackage || !!svc;
     $("estCard").hidden = !isPackage;
     if (isPackage) estimate();
   }
@@ -210,14 +241,15 @@
     $("saQs").hidden = radio("sa") !== "no";
     $("futureQs").hidden = radio("future") !== "yes";
     $("saFutureRow").hidden = dormant;
-    var years = num("pkYears", 1, L.years), lines = [], total = 0, a = { dormant: dormant, years: years };
+    var years = num("pkYears", isStrike ? 0 : 1, L.years), lines = [], total = 0, a = { dormant: dormant, years: years };
+    if (isStrike) { a.strike_off = true; if (years === 0) $("tradingQs").hidden = true; }
     var add = function (key, vars, amount) { if (amount > 0) { lines.push(t(key, Object.assign({ amount: gbp(amount) }, vars))); total += amount; } };
     var yearEnd = dormant ? P.year_end.dormant : P.year_end.trading;
     var sw = $("pkSw").value, needsSoftware = !dormant && (!booksDone || sw === "excel" || sw === "paper");
     var dirs = num("pkDirs", 1, L.people);
     var payM = 0, cisM = 0, vatM = 0, payRate = 0, cisRate = 0, vatRate = 0;
     add(dormant ? "pkg.l_yearend_dormant" : "pkg.l_yearend", { n: years, each: gbp(yearEnd) }, years * yearEnd);
-    if (!dormant) {
+    if (!dormant && years > 0) {
       if (!booksDone) {
         var tx = num("pkTx", 0, L.transactions), batches = Math.ceil(tx / P.bookkeeping.batch_size);
         a.transactions = tx;
@@ -241,7 +273,7 @@
       if (radio("vat") === "yes") { vatM = num("pkVatM", 0, L.months); vatRate = P.vat.per_month; a.vat = { months: vatM }; add("pkg.l_vat", { n: vatM }, vatM * vatRate); }
     }
     if (radio("cs") === "yes") { a.confirmation_statement = true; add("pkg.l_cs", {}, P.confirmation_statement.price); }
-    lines.push(t("pkg.l_appeal"));
+    if (!isStrike) lines.push(t("pkg.l_appeal"));
     $("estTotal").textContent = t("pkg.total", { amount: gbp(total) });
     $("estLines").textContent = lines.join("\n");
     est = { total: total, answers: a, lines: lines, monthly: null };
@@ -267,6 +299,46 @@
   }
   function gbpp(n) { return "£" + n.toLocaleString("en-GB", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
   document.querySelectorAll("#estCard input, #estCard select").forEach(function (i) { i.addEventListener(i.type === "radio" || i.tagName === "SELECT" || i.type === "checkbox" ? "change" : "input", estimate); });
+  if (isStrike) {   // the confirmation statement is what stops the strike-off; accounts only if they are overdue too
+    $("pkYears").min = "0"; $("pkYears").value = "0";
+    document.querySelector('input[name=cs][value=yes]').checked = true;
+    var ctxS = F.getJSON("tls_explain") || {};
+    if (ctxS.company_name && !$("company_name").value) $("company_name").value = ctxS.company_name;
+    if (ctxS.company_number && !$("company_number").value) $("company_number").value = ctxS.company_number;
+  }
+  // ---------- service estimate (payroll / CIS / VAT) ----------
+  function service() {
+    if (!P) return;
+    $("svcVatRow").hidden = $("svcVatMRow").hidden = svc !== "vat";
+    $("svcPayeRow").hidden = $("svcAoRow").hidden = svc === "vat";
+    $("svcUtrRow").hidden = svc !== "cis";
+    $("svcPeopleRow").hidden = svc === "vat";
+    $("svcPeopleLabel").textContent = t(svc === "cis" ? "pkg.subs" : "pkg.employees");
+    var lines = [], total;
+    if (svc === "vat") {
+      var n = num("svc_vat_n", 0, P.limits.months * 3);
+      total = n * P.vat.per_month;   // per month not submitted (a quarterly return covers 3 months)
+      lines.push(t("svc.vat_line", { each: gbp(P.vat.per_month) }));
+      $("svcTotal").textContent = t("svc.vat_total", { amount: gbp(total), n: n });
+    } else {
+      var R = svc === "cis" ? P.cis : P.payroll, ppl = num("svc_people", 1, P.limits.people);
+      total = R.per_month + Math.max(0, ppl - R.included) * R.extra_each;
+      lines.push(t("svc.rate_line", { base: gbp(R.per_month), included: R.included, extra: gbp(R.extra_each) }));
+      $("svcTotal").textContent = t("svc.monthly_total", { amount: gbp(total) });
+    }
+    $("svcLines").textContent = lines.join("\n");
+    svcEst = total;
+  }
+  var svcEst = null;
+  if (svc) {
+    fetch("rules/package-prices.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (j) { P = j; service(); }).catch(function () {});
+    document.querySelectorAll("#svcCard input").forEach(function (i) { i.addEventListener("input", service); });
+    var cx = F.getJSON("tls_explain") || {}, d0 = cx.ids || {};
+    if (d0.vat_number) $("svc_vat").value = d0.vat_number;
+    if (d0.paye_ref) $("svc_paye").value = d0.paye_ref;
+    if (d0.accounts_office_ref) $("svc_ao").value = d0.accounts_office_ref;
+    if (d0.utr) $("svc_utr").value = d0.utr;
+  }
   if (isPackage) { var pe = (F.getJSON("tls_explain") || {}).accounts_period_end; if (/^\d{4}-\d{2}-\d{2}$/.test(pe || "")) $("pkYE").value = pe; }
 
   function err(key) { $("error").textContent = t(key); $("error").hidden = false; }
@@ -281,11 +353,25 @@
     if (F.demo) { done(); return; }
     $("submit").disabled = true; $("submit").textContent = t("contact.sending");
     var body = { action: "contact", kind: kind, full_name: name, phone: phone, email: email, consent: true, note: $("note").value.trim() };
-    if (isHelp && !isPackage) body.tax_year = $("tax_year").value;
+    if (isHelp && !isPackage && !svc) body.tax_year = $("tax_year").value;
+    if (isStrike && (!$("company_name").value.trim() || !$("company_number").value.trim() || !$("ch_auth_code").value.trim())) { $("submit").disabled = false; render(); return err("strike.err_company"); }
+    if (svc) {
+      if (!$("svc_business").value.trim()) { $("submit").disabled = false; render(); return err("svc.err_business"); }
+      body.tax_year = "package";
+      var SV = { payroll: "[Service: run the payroll]", cis: "[Service: CIS monthly returns]", vat: "[Service: file the VAT returns]" };
+      body.note = [SV[svc], "Business: " + $("svc_business").value.trim(),
+        svc === "vat" ? "VAT number: " + ($("svc_vat").value.trim() || "-") + " · VAT returns not submitted: " + $("svc_vat_n").value : "",
+        svc === "cis" ? "UTR: " + ($("svc_utr").value.trim() || "-") : "",
+        svc !== "vat" ? "PAYE ref: " + ($("svc_paye").value.trim().toUpperCase() || "-") + " · Accounts Office ref: " + ($("svc_ao").value.trim().toUpperCase() || "-") : "",
+        svc !== "vat" ? (svc === "cis" ? "Subcontractors: " : "Employees: ") + $("svc_people").value : "",
+        svcEst != null ? (svc === "vat" ? "ESTIMATE £" + svcEst + " (catch-up)" : "ESTIMATE £" + svcEst + " per month") : "",
+        ctx.ref ? "Case: " + ctx.ref : "", body.note].filter(Boolean).join(" · ");
+    }
     if (isPackage) {
       // stored with the help requests, clearly labelled for Eduard
       body.tax_year = "package";
-      body.note = ["[Quote: annual accounts + Corporation Tax return, penalty appeal free]",
+      body.company = { company_name: $("company_name").value.trim(), company_number: $("company_number").value.trim() };
+      body.note = [isStrike ? "[STRIKE-OFF: stop it – confirmation statement" + (est && est.answers.years ? " + overdue accounts" : "") + "]" : "[Quote: annual accounts + Corporation Tax return, penalty appeal free]",
         "Company: " + ($("company_name").value.trim() || "-"),
         "Company number: " + ($("company_number").value.trim().toUpperCase() || "-"),
         $("ch_auth_code").value.trim() ? "Companies House authentication code: " + $("ch_auth_code").value.trim().toUpperCase() : "",

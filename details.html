@@ -76,6 +76,44 @@
         <input id="postcode" autocomplete="postal-code" maxlength="10" autocapitalize="characters" style="max-width:180px"></label>
     </div>
 
+    <!-- VAT / PAYE / CIS penalties: the business and its HMRC references (Eduard 3-4 Nov 2026) -->
+    <div class="card" id="bizCard" hidden>
+      <fieldset class="q" data-f="business_type">
+        <legend data-i18n="details.business_type">Is the business a sole trader or a limited company?</legend>
+        <div class="yn">
+          <label class="opt"><input type="radio" name="business_type" value="sole_trader"><span data-i18n="details.bt_sole_trader">Sole trader</span></label>
+          <label class="opt"><input type="radio" name="business_type" value="company"><span data-i18n="details.bt_company">Limited company</span></label>
+        </div>
+      </fieldset>
+      <label class="field" data-f="business_name"><span data-i18n="details.business_name">Business or company name</span>
+        <input id="business_name" autocomplete="organization" maxlength="160"></label>
+      <label class="field" data-f="company_number" id="bizCoNoRow" hidden><span data-i18n="details.company_number">Company number</span>
+        <span class="hint" data-i18n="details.company_number_hint"></span>
+        <input id="biz_company_number" maxlength="10" autocapitalize="characters"></label>
+      <label class="field" data-f="vat_number" id="vatNoRow" hidden><span data-i18n="details.vat_number">VAT registration number</span>
+        <span class="hint" data-i18n="details.vat_number_hint"></span>
+        <input id="vat_number" inputmode="numeric" maxlength="14"></label>
+      <label class="field" data-f="vat_registration_date" id="vatDateRow" hidden><span data-i18n="details.vat_reg_date">VAT registration date</span>
+        <span class="hint" data-i18n="details.vat_reg_date_hint"></span>
+        <input id="vat_registration_date" type="date" style="max-width:220px"></label>
+      <fieldset class="q" data-f="vat_returns_up_to_date" id="vatUtdRow" hidden>
+        <legend data-i18n="details.vat_up_to_date">Are all the VAT returns submitted up to date?</legend>
+        <div class="yn">
+          <label class="opt"><input type="radio" name="vat_utd" value="yes"><span data-i18n="common.yes">Yes</span></label>
+          <label class="opt"><input type="radio" name="vat_utd" value="no"><span data-i18n="common.no">No</span></label>
+        </div>
+      </fieldset>
+      <label class="field" data-f="utr" id="cisUtrRow" hidden><span><span data-i18n="common.utr">UTR</span> <span class="hint" id="cisUtrOpt" data-i18n="common.optional">(optional)</span></span>
+        <span class="hint" data-i18n="details.cis_utr_hint"></span>
+        <input id="cis_utr" inputmode="numeric" maxlength="13"></label>
+      <label class="field" data-f="paye_ref" id="payeRow" hidden><span data-i18n="svc.paye_ref">Employer PAYE reference</span>
+        <span class="hint" data-i18n="svc.paye_ref_hint"></span>
+        <input id="paye_ref" maxlength="14" autocapitalize="characters"></label>
+      <label class="field" data-f="accounts_office_ref" id="aoRow" hidden><span><span data-i18n="svc.ao_ref">Accounts Office reference</span> <span class="hint" id="aoOpt" data-i18n="common.optional">(optional)</span></span>
+        <span class="hint" data-i18n="svc.ao_ref_hint"></span>
+        <input id="accounts_office_ref" maxlength="16" autocapitalize="characters"></label>
+    </div>
+
     <div class="card" id="saCard" hidden>
       <label class="field" data-f="utr"><span data-i18n="common.utr">UTR</span>
         <span class="hint" data-i18n="details.utr_hint"></span>
@@ -121,6 +159,9 @@
 
   function T() { return info ? info.letter_type : ""; }
   function isCompany() { return T() === "ct-late-filing" || T() === "companies-house-late-filing"; }
+  var BIZ = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];
+  function isBiz() { return BIZ.indexOf(T()) > -1; }
+  function bizType() { var r = document.querySelector('input[name=business_type]:checked'); return r ? r.value : ""; }
 
   function render() {
     if (!info) return;
@@ -131,6 +172,17 @@
     $("companyCard").hidden = !company; $("roleRow").hidden = !company; $("addrTitle").hidden = !company;
     $("ctUtrRow").hidden = ch; $("penRefOpt").hidden = ch;
     $("saCard").hidden = !sa;
+    var biz = isBiz(), agent = product === "option3", tp = T();
+    $("bizCard").hidden = !biz;
+    if (biz) {
+      $("bizCoNoRow").hidden = !(agent && bizType() === "company");
+      $("vatNoRow").hidden = tp !== "vat-late-submission";
+      $("vatDateRow").hidden = $("vatUtdRow").hidden = !(tp === "vat-late-submission" && agent);
+      $("payeRow").hidden = $("aoRow").hidden = tp === "vat-late-submission";
+      $("aoOpt").hidden = agent;
+      $("cisUtrRow").hidden = tp !== "cis-late-return"; $("cisUtrOpt").hidden = agent;
+      $("intro").textContent = t(agent ? "details.intro_biz_agent" : "details.intro_biz");
+    }
     $("previewNote").hidden = !preview;
     $("submit").textContent = t(info.needs_payment ? "details.continue_pay" : "details.continue_preview");
     if (!filled) {
@@ -154,6 +206,17 @@
       $("marketing").checked = d.marketing_consent === true;
       if (params.get("cancelled")) { $("error").textContent = t("details.cancelled"); $("error").hidden = false; }
       if (d.role === "Company Secretary") document.querySelector('input[name=role][value=secretary]').checked = true;
+      if (isBiz()) {
+        if (d.business_type) { var bt = document.querySelector('input[name=business_type][value=' + d.business_type + ']'); if (bt) bt.checked = true; }
+        $("business_name").value = d.business_name || p.company_name || "";
+        $("biz_company_number").value = d.company_number || p.company_number || "";
+        $("vat_number").value = d.vat_number || p.vat_number || "";
+        $("vat_registration_date").value = d.vat_registration_date || p.vat_registration_date || "";
+        if (d.vat_returns_up_to_date) document.querySelector('input[name=vat_utd][value=' + d.vat_returns_up_to_date + ']').checked = true;
+        $("paye_ref").value = d.paye_ref || p.paye_ref || "";
+        $("accounts_office_ref").value = d.accounts_office_ref || p.accounts_office_ref || "";
+        $("cis_utr").value = d.utr || p.utr || "";
+      }
     }
     $("loading").hidden = true; $("form").hidden = false;
   }
@@ -174,6 +237,13 @@
       details.company_name = $("company_name").value; details.company_number = $("company_number").value;
       details.penalty_reference = $("penalty_reference").value; details.utr = $("ct_utr").value;
       details.role = (document.querySelector('input[name=role]:checked') || {}).value;
+    } else if (isBiz()) {
+      details.business_type = bizType(); details.business_name = $("business_name").value;
+      details.company_number = $("biz_company_number").value;
+      details.vat_number = $("vat_number").value; details.vat_registration_date = $("vat_registration_date").value;
+      details.vat_returns_up_to_date = (document.querySelector('input[name=vat_utd]:checked') || {}).value;
+      details.paye_ref = $("paye_ref").value; details.accounts_office_ref = $("accounts_office_ref").value;
+      details.utr = $("cis_utr").value;
     } else {
       details.utr = $("utr").value; details.ni_number = $("ni_number").value;
     }
@@ -193,6 +263,8 @@
       var first = document.querySelector(".invalid"); if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
     }).catch(function () { $("submit").disabled = false; render(); $("error").textContent = t("details.err_server"); $("error").hidden = false; });
   });
+
+  document.querySelectorAll('input[name=business_type]').forEach(function (r) { r.addEventListener("change", render); });
 
   F.onLanguage(function () {
     if (info) { render(); return; }

@@ -20,10 +20,32 @@
   "appeal_output": {
     "form": "letter",
     "language": "en",
-    "post_to": "National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX",
-    "online_alternative": "PAYE for employers → Appeal a penalty"
+    "template": "business_appeal_letter",
+    "signed_by": "the business owner or a director",
+    "post_to": "the address on the penalty notice",
+    "post_to_rule": "Eduard 4 Nov 2026: use the HMRC address printed on the penalty notice (read from the letter); if it could not be read, tell the client to use the address on the notice.",
+    "known_address_to_check": "National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX",
+    "online_alternative": "PAYE for employers → Appeal a penalty",
+    "online_url": "https://www.gov.uk/guidance/what-happens-if-you-dont-report-payroll-information-on-time"
   },
   "sources": [
     "https://www.gov.uk/guidance/what-happens-if-you-dont-report-payroll-information-on-time"
-  ]
+  ],
+  "inherits_from": "sa-late-filing-100",
+  "inherits_note": "Reasons, not-accepted list and routes come from the Self Assessment late filing rules (HMRC's reasonable excuse list is the same).",
+  "exclude_reasons": [
+    "never_needed_to_file"
+  ],
+  "options": {
+    "free": "copy the wording and appeal online/by post",
+    "option2": "£19 appeal letter emailed, client prints, signs, posts",
+    "option3": "£39 accountant review: ID check; letter for the client to post AND appeal through the agent account (Eduard 4 Nov 2026, regardless of the deadline)"
+  },
+  "agent_route": {
+    "how": "Eduard requests the agent authorisation code through Agent Services; HMRC posts it to the employer",
+    "needs": [
+      "paye_ref",
+      "accounts_office_ref"
+    ]
+  }
 }

@@ -55,6 +55,9 @@
   var route = res.route, note = res.route_note || (ans && ans.route_note);
   var T = ctx.letter_type || res.letter_type || "";
   var isSA = T.indexOf("sa-") === 0, isCH = T === "companies-house-late-filing", isCT = T === "ct-late-filing", isPay = T === "sa-late-payment";
+  // VAT / PAYE / CIS: free / £19 letter / £39 accountant review with agent follow-up (Eduard 3-4 Nov 2026)
+  var BIZ = { "vat-late-submission": "vat", "paye-employer-penalty": "paye", "cis-late-return": "cis" }, biz = BIZ[T] || null;
+  var SVC = { vat: "vat", paye: "payroll", cis: "cis" };
   var deadline = ctx.appeal_deadline || res.appeal_deadline;
   var amount = ctx.penalty_amount || res.penalty_amount;
   var SA_PHONE = "0300 200 3820";   // rules/sa-late-payment.json payment_help (recheck before launch)
@@ -107,6 +110,15 @@
         el("p", { class: "soon", text: t(canBuy ? (window.TLS_CONFIG.live ? "common.pay_stripe" : "details.preview_note") : "outcome.coming_soon") })
       ]);
     }
+    if (biz) {
+      return el("section", { class: "stack", id: "offers" }, [
+        freeCopy(biz),
+        offer(false, "outcome.o2_title", ["outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta", "option2"),
+        offer(true, "outcome.o3_title", ["outcome.biz_o3_b1", "outcome.biz_o3_b2", "outcome.biz_o3_b3_" + biz, "outcome.o3_b4"], "outcome.o3_cta", "option3"),
+        el("p", { class: "soon", text: t(canBuy ? (window.TLS_CONFIG.live ? "common.pay_stripe" : "details.preview_note") : "outcome.coming_soon") }),
+        serviceCard()
+      ]);
+    }
     return el("section", { class: "stack", id: "offers" }, [
       offer(false, "outcome.o2_title", [isSA ? "outcome.o2_b1" : "outcome.o2_b1_letter", "outcome.o2_b2", "outcome.o2_b3"], "outcome.o2_cta", "option2"),
       offer(true, "outcome.o3_title", ["outcome.o3_b1", "outcome.o3_b2", "outcome.o3_b3", "outcome.o3_b4"], "outcome.o3_cta", "option3"),
@@ -120,8 +132,20 @@
   var FREE = {
     sa: { title: "outcome.online_alt", how: null, url: "https://www.gov.uk/tax-appeals/penalty", btn: "outcome.online_open" },
     ct: { title: "outcome.co_free_title", how: "outcome.co_free_ct", url: "https://www.gov.uk/company-tax-returns/penalties-for-late-filing", btn: "outcome.co_free_open_ct" },
-    ch: { title: "outcome.co_free_title", how: "outcome.co_free_ch", url: "https://www.gov.uk/appeal-a-penalty-for-filing-your-company-accounts-late", btn: "outcome.co_free_open_ch" }
+    ch: { title: "outcome.co_free_title", how: "outcome.co_free_ch", url: "https://www.gov.uk/appeal-a-penalty-for-filing-your-company-accounts-late", btn: "outcome.co_free_open_ch" },
+    vat: { title: "outcome.co_free_title", how: "outcome.biz_free_vat", url: "https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late", btn: "outcome.co_free_open_ct" },
+    paye: { title: "outcome.co_free_title", how: "outcome.biz_free_paye", url: "https://www.gov.uk/guidance/what-happens-if-you-dont-report-payroll-information-on-time", btn: "outcome.co_free_open_ct" },
+    cis: { title: "outcome.co_free_title", how: "outcome.biz_free_cis", url: "https://www.gov.uk/tax-appeals/penalty", btn: "outcome.co_free_open_ct" }
   };
+  // "Would you like an accountant to run your payroll / CIS returns / VAT returns?" (Eduard 3 Nov 2026)
+  function serviceCard() {
+    if (!biz) return null;
+    return el("div", { class: "offer" }, [
+      el("h2", { text: t("outcome.svc_title_" + SVC[biz]) }),
+      el("p", { text: t("outcome.svc_text_" + SVC[biz]) }),
+      link("btn secondary", "contact.html?kind=service&svc=" + SVC[biz] + (F.demo ? "&demo=1" : ""), "outcome.svc_cta")
+    ]);
+  }
   var copyState = null;
   function freeCopy(kind) {
     var f = FREE[kind], txt = F.get("tls_appeal_text") || "";
@@ -201,6 +225,8 @@
         box.appendChild(el("p", { class: "note", text: t("pay.call_hmrc", { phone: SA_PHONE }) + " · " + t("pay.hours") }));
       } else if (isCT) {
         box.appendChild(link("btn", "https://www.gov.uk/pay-corporation-tax", "na.option.pay_penalty", true));
+      } else if (biz) {
+        box.appendChild(link("btn", biz === "vat" ? "https://www.gov.uk/pay-vat" : "https://www.gov.uk/pay-paye-tax", "na.option.pay_penalty", true));
       } else {
         if (state.filed === "no") {
           box.appendChild(el("p", { text: t("na.file_to_stop_more_penalties") }));
@@ -209,6 +235,7 @@
         box.appendChild(link(state.filed === "no" ? "btn secondary" : "btn", "https://www.gov.uk/pay-self-assessment-tax-bill", "na.option.pay_penalty", true));
       }
       add(box);
+      add(serviceCard());
       add(el("p", { class: "note", text: t("ne.change_answers_hint") }));
       add(link("btn secondary", "questions.html" + qs, "ne.change_answers"));
       add(el("div", { class: "card" }, [el("b", { text: t("ne.not_sure") }), el("p", { text: t("ne.not_sure_text") }), link("btn secondary", "contact.html?kind=callback" + (F.demo ? "&demo=1" : ""), "ne.talk_to_us")]));

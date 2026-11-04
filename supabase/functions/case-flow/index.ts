@@ -15,9 +15,10 @@ const RULES: Record<string, string> = {
   "p800": "p800", "simple-assessment": "simple-assessment", "ct-late-filing": "ct-late-filing",
   "companies-house-late-filing": "companies-house-late-filing",
   "vat-late-submission": "vat-late-submission", "paye-employer-penalty": "paye-employer-penalty",
-  "cis-late-return": "cis-late-return", "sa-statement": "sa-statement",
+  "cis-late-return": "cis-late-return", "sa-statement": "sa-statement", "companies-house-strike-off": "companies-house-strike-off",
 };
-const APPEAL_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing", "companies-house-late-filing"];
+const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];   // free / £19 letter / £39 (Eduard 3-4 Nov 2026)
+const APPEAL_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing", "companies-house-late-filing", ...BIZ_TYPES];
 const FILING_TYPES = ["sa-late-filing-100", "sa-late-filing-later"];
 const HEALTH_REASONS = ["hospital", "serious_illness", "disability_mental_illness", "bereavement", "ch_director_illness_death"];
 
@@ -116,12 +117,18 @@ function actionsFor(t: string, ext: Obj) {
   if (APPEAL_TYPES.includes(t)) {
     const a: Obj[] = [{ id: "check_appeal" }];
     if (FILING_TYPES.includes(t)) a.push({ id: "help_return" });
+    // service offers (Eduard 3 Nov 2026): run the payroll / CIS returns, or file the VAT returns
+    if (t === "paye-employer-penalty") a.push({ id: "service_payroll" });
+    if (t === "cis-late-return") a.push({ id: "service_cis" });
+    if (t === "vat-late-submission") a.push({ id: "service_vat" });
     a.push({ id: "how_to_pay", url: pay });
     return a;
   }
   switch (t) {
-    case "vat-late-submission": case "vat-late-payment": case "paye-employer-penalty":
+    case "vat-late-payment":
       return [{ id: "talk_accountant" }, { id: "how_to_pay", url: pay }];
+    case "companies-house-strike-off":   // stop it by filing the confirmation statement; fee as per quote (Eduard 4 Nov 2026)
+      return [{ id: "stop_strike_off" }, { id: "talk_accountant" }];
     case "sa-notice-to-file":
       return [{ id: "help_return" }, { id: "file_yourself", url: "https://www.gov.uk/log-in-file-self-assessment-tax-return" },
         { id: "dont_need_to_file", url: "https://www.gov.uk/check-if-you-need-tax-return" }];
@@ -139,8 +146,6 @@ function actionsFor(t: string, ext: Obj) {
       return [{ id: "help_return" }, { id: "talk_accountant" }];
     case "sa-statement":   // explanation only; a paid £59 appointment for next steps (Eduard, 3 Nov 2026)
       return [{ id: "book_appointment" }, { id: "how_to_pay", url: pay }];
-    case "cis-late-return":
-      return [{ id: "talk_accountant" }, { id: "how_to_pay", url: pay }];
     default:
       return [{ id: "talk_accountant" }];
   }
@@ -217,6 +222,8 @@ async function explain(c: Obj, lang: string, body: Obj) {
     pay_by_date: ext.pay_by_date ?? null, penalty_amount: c.penalty_amount ?? ext.penalty_total ?? null,
     tax_year: c.tax_year ?? ext.tax_year ?? null, issuer: ext.issuer ?? null,
     accounts_period_end: ext.accounts_period_end ?? null,
+    company_name: ((ext.confirmed ?? {}) as Obj).company_name ?? ext.company_name ?? null, company_number: ext.company_number ?? null,
+    ids: { vat_number: ext.vat_number ?? null, paye_ref: ext.employer_paye_ref ?? null, accounts_office_ref: ext.accounts_office_ref ?? null, utr: c.utr ?? ext.utr ?? null },
     actions: actionsFor(letterType, ext), can_appeal_here: APPEAL_TYPES.includes(letterType),
   };
   if (cached) return { ...base, explanation: cached, cached: true };
@@ -390,6 +397,17 @@ async function contact(c: Obj | null, body: Obj) {
   if (kind === "help") {
     await db.from("help_requests").insert({ full_name: name, email: email || "(none)", phone: phone || null,
       tax_year: str(body.tax_year, 40) || null, note: str(body.note, 3000) || null });
+    // a quote or service request from a letter: keep the case 30 days so Eduard can charge it and run the ID check
+    if (c && str(body.tax_year, 40) === "package") {
+      const keep: Obj = { delete_after: new Date(Date.now() + 30 * 864e5).toISOString() };
+      const co = (body.company ?? {}) as Obj;
+      if (str(co.company_name, 160) || str(co.company_number, 10)) {
+        const { data: cur } = await db.from("cases").select("details").eq("id", c.id).single();
+        keep.details = { ...((cur?.details ?? {}) as Obj), full_name: name, email: email || undefined, phone: phone || undefined,
+          company_name: str(co.company_name, 160).toUpperCase() || undefined, company_number: str(co.company_number, 10).replace(/\s/g, "").toUpperCase() || undefined, role: "Director" };
+      }
+      await db.from("cases").update(keep).eq("id", c.id);
+    }
     await funnel(body.visit_id, "help_requested", c?.letter_type, lang);
   } else {
     if (!phone) return { status: 400, body: { error: "phone" } };
@@ -435,7 +453,7 @@ Deno.serve(async (req) => {
   if (token) {
     if (!/^[0-9a-f]{40,80}$/.test(token)) return reply(400, { error: "bad_request" });
     const { data } = await db.from("cases")
-      .select("id, ref, language, status, letter_type, notice_date, appeal_deadline, penalty_amount, tax_year, extracted, data_deleted_at")
+      .select("id, ref, language, status, letter_type, notice_date, appeal_deadline, penalty_amount, tax_year, utr, extracted, data_deleted_at")
       .eq("private_token", token).single();
     if (!data || data.data_deleted_at) return reply(404, { error: "not_found" });
     c = data as Obj;

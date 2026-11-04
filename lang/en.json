@@ -160,7 +160,11 @@
     "btn_p800_pay": "How to pay what you owe (GOV.UK)",
     "demo": "Sample explanation – no letter was read.",
     "ref": "Your case: {ref}",
-    "btn_book_appointment": "Book an appointment with an accountant · £59"
+    "btn_book_appointment": "Book an appointment with an accountant · £59",
+    "btn_service_payroll": "Would you like an accountant to run your payroll?",
+    "btn_service_cis": "Would you like us to deal with your CIS returns?",
+    "btn_service_vat": "Would you like us to file your VAT returns?",
+    "btn_stop_strike_off": "Stop the strike-off – get a quote"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -237,6 +241,9 @@
     },
     "cis_late_return": {
       "title": "CIS late monthly return penalty"
+    },
+    "companies_house_strike_off": {
+      "title": "Companies House strike-off notice"
     }
   },
   "q": {
@@ -406,7 +413,22 @@
     "co_free_open_ch": "Open the Companies House appeal service",
     "co_copied": "Copied. Paste it into the appeal, then check it before you send it.",
     "co_o3_b4_ct": "We need the company's UTR. HMRC will post an authorisation code to the company (about 2 weeks)",
-    "co_o3_b4_ch": "We need the company number and the penalty reference"
+    "co_o3_b4_ch": "We need the company number and the penalty reference",
+    "biz_free_vat": "Copy the wording below. You can ask HMRC to review the penalty in the business's VAT online account, or print it, sign it and post it to the address on the penalty notice.",
+    "biz_free_paye": "Copy the wording below. You can appeal in HMRC's PAYE for employers service ('Appeal a penalty'), or print it, sign it and post it to the address on the penalty notice.",
+    "biz_free_cis": "Copy the wording below. You can appeal online through HMRC, or print it, sign it and post it to the address on the penalty notice.",
+    "biz_o3_b1": "A qualified accountant (MAAT) contacts you and prepares the appeal letter, emailed to you to sign and post",
+    "biz_o3_b2": "We also follow the appeal up with HMRC from our agent account",
+    "biz_o3_b3_vat": "We need the VAT number and VAT registration date. You'll get a link from HMRC to approve us as your agent",
+    "biz_o3_b3_paye": "We need the employer PAYE reference and Accounts Office reference. HMRC will post an authorisation code to the business",
+    "biz_o3_b3_cis": "We need the UTR, the employer PAYE reference and the Accounts Office reference. HMRC will post an authorisation code to the business",
+    "svc_title_payroll": "Would you like an accountant to run your payroll?",
+    "svc_text_payroll": "We send the payroll reports to HMRC on time every month, so there are no more penalties.",
+    "svc_title_cis": "Would you like us to deal with your CIS returns?",
+    "svc_text_cis": "We send the monthly CIS returns to HMRC on time, so there are no more penalties.",
+    "svc_title_vat": "Would you like us to file your VAT returns?",
+    "svc_text_vat": "We catch up any VAT returns not yet submitted and can file them on time from now on.",
+    "svc_cta": "See the price and ask us"
   },
   "ne": {
     "title": "An appeal is unlikely to succeed",
@@ -538,7 +560,19 @@
     "cancelled": "Payment cancelled. You haven't been charged.",
     "option3_company": "Accountant review · £59",
     "ct_utr_hint": "10 digits. It's on the company's Corporation Tax letters from HMRC.",
-    "start_now": "I've read the Terms and Privacy Policy. Please start straight away – I understand that once my appeal is ready, I can no longer cancel for a refund."
+    "start_now": "I've read the Terms and Privacy Policy. Please start straight away – I understand that once my appeal is ready, I can no longer cancel for a refund.",
+    "intro_biz": "These go on the appeal letter exactly as you type them. Use the business's details as they appear on the penalty notice.",
+    "intro_biz_agent": "These go on the appeal letter, and we need the references to act for the business with HMRC. Use the details as they appear on HMRC's letters.",
+    "business_type": "Is the business a sole trader or a limited company?",
+    "bt_sole_trader": "Sole trader",
+    "bt_company": "Limited company",
+    "business_name": "Business or company name",
+    "vat_number": "VAT registration number",
+    "vat_number_hint": "9 digits, on your VAT certificate or HMRC's letters.",
+    "vat_reg_date": "VAT registration date",
+    "vat_reg_date_hint": "The 'effective date of registration' on your VAT certificate. HMRC asks for it before we can act for you.",
+    "vat_up_to_date": "Are all the VAT returns submitted up to date?",
+    "cis_utr_hint": "The business's 10-digit Unique Taxpayer Reference."
   },
   "review": {
     "step": "Review your appeal",
@@ -924,7 +958,10 @@
       "body": "Thank you, we have the documents and your confirmation. We are asking HMRC for authorisation to act for the company's Corporation Tax. HMRC will post a letter with an authorisation code to the company's registered office, usually within about 2 weeks.",
       "action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
       "meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
-      "button": "Send the HMRC code"
+      "button": "Send the HMRC code",
+      "subject_employer": "HMRC will post an authorisation code to the business ({ref})",
+      "body_employer": "Thank you, we have your documents. We are asking HMRC for authorisation to act for the business's PAYE scheme, so we can follow up the appeal from our agent account. HMRC will post a letter with an authorisation code to the business, usually within about 2 weeks.",
+      "meanwhile_employer": "Meanwhile we will email you the appeal letter to sign and post, so the deadline is not missed."
     },
     "appeal": {
       "subject": "Your penalty appeal is ready ({ref})",
@@ -995,7 +1032,10 @@
     "instruct": "I'm a director of {company} and I ask Accounted4Tax to deal with this penalty for the company.",
     "instruct_noname": "I'm a director of the company and I ask Accounted4Tax to deal with this penalty for the company.",
     "confirmed": "Confirmed",
-    "scope_short": "This covers only this penalty appeal. Any other work needs a separate agreement."
+    "scope_short": "This covers only this penalty appeal. Any other work needs a separate agreement.",
+    "instruct_strike": "I'm a director of {company} and I ask Accounted4Tax to file the confirmation statement and deal with the strike-off notice for the company.",
+    "instruct_noname_strike": "I'm a director of the company and I ask Accounted4Tax to file the confirmation statement and deal with the strike-off notice for the company.",
+    "scope_short_strike": "This covers only the work in your quote. Any other work needs a separate agreement."
   },
   "code": {
     "title": "Send us the HMRC authorisation code",
@@ -1006,7 +1046,8 @@
     "submit": "Send the code",
     "err_code": "Please check the code. It should be 4 to 20 letters and numbers.",
     "done_title": "Thank you, we have the code",
-    "done_text": "Our accountant will use it to finish the authorisation with HMRC. We'll be in touch about the appeal."
+    "done_text": "Our accountant will use it to finish the authorisation with HMRC. We'll be in touch about the appeal.",
+    "intro_employer": "HMRC has posted a letter to the business with an authorisation code. It lets us act for the business's PAYE scheme. Type the code exactly as it appears in the letter."
   },
   "pkg": {
     "title": "Your instant estimate",
@@ -1088,5 +1129,33 @@
     "err_terms": "Please accept the Terms and Privacy Policy to continue.",
     "err_server": "Something went wrong. Please try again in a minute.",
     "start_now": "I have read the Terms and Privacy Policy. Please start straight away – I understand that I can't cancel for a refund less than 1 hour before the appointment, or once it has taken place."
+  },
+  "svc": {
+    "title_payroll": "Payroll – ask for our help",
+    "title_cis": "CIS returns – ask for our help",
+    "title_vat": "VAT returns – ask for our help",
+    "intro_payroll": "We run the payroll and send the reports to HMRC every month. Tell us a little about the business and we'll get back to you.",
+    "intro_cis": "We send the CIS monthly returns to HMRC for you. Tell us a little about the business and we'll get back to you.",
+    "intro_vat": "We file the VAT returns that are not yet submitted. Tell us a little about the business and we'll get back to you.",
+    "business_name": "Business or company name",
+    "vat_number": "VAT registration number",
+    "vat_missing": "How many months of VAT returns are not submitted? (a quarter = 3 months)",
+    "paye_ref": "Employer PAYE reference",
+    "paye_ref_hint": "For example 123/AB45678. It's on HMRC's letters to the employer.",
+    "ao_ref": "Accounts Office reference",
+    "ao_ref_hint": "13 characters, for example 123PA00045678. It's on HMRC's letters to the employer.",
+    "rate_line": "{base} a month for up to {included}, then {extra} a month for each extra person",
+    "monthly_total": "Estimate: {amount} a month",
+    "vat_line": "{each} for each month of VAT returns not submitted",
+    "vat_total": "Estimate: {amount} to catch up {n} months",
+    "submit": "Send my request",
+    "err_business": "Please enter the business or company name."
+  },
+  "strike": {
+    "title": "Stop the strike-off",
+    "intro": "Companies House plans to remove the company from the register, usually because the confirmation statement (or the accounts) is overdue. Filing it normally stops the strike-off. Get your price below; once you accept it, we check the director's ID and file it for the company.",
+    "submit": "Send my request",
+    "sent_text": "Thank you. We'll check the company and email you the price and a payment link. After you pay, we'll ask for the director's ID and file the confirmation statement.",
+    "err_company": "Please enter the company name, company number and Companies House authentication code. We need them to file for the company."
   }
 }

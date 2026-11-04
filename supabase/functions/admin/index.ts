@@ -42,7 +42,10 @@ const LINK_OPTIONS: Record<string, { pence: number; product: string; target: str
   o3co: { pence: 5900, product: "option3", target: "option3", label: "Company accountant review (£59)" },
   top20: { pence: 2000, product: "option3_topup", target: "option3", label: "Top-up to the accountant review (£20)" },
   top40: { pence: 4000, product: "option3_topup", target: "option3", label: "Top-up to the company accountant review (£40)" },
+  // a quoted fee (e.g. stop a strike-off: confirmation statement), amount typed by Eduard; then the ID check (Eduard 4 Nov 2026)
+  quote: { pence: 0, product: "option3", target: "option3", label: "Work as quoted" },
 };
+const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
 const EMAIL_EN: Record<string, string> = {
   "email.paylink.subject": "Your payment link – {ref}",
@@ -202,8 +205,14 @@ Deno.serve(async (req) => {
           else if (c.product !== "option3") todo.push("write_appeal");
           if (company(c.letter_type) && rc && rc.method === "phone" && !rc.confirmed_at) todo.push("confirm_call");
           if (c.letter_type === "ct-late-filing" && c.id_completed_at && !c.hmrc_code_requested_at) todo.push("request_hmrc_code");
+          // VAT £39: send the Agent Services authorisation link; PAYE / CIS £39: request the agent code (Eduard 4 Nov 2026)
+          if (c.product === "option3" && c.id_completed_at && !c.hmrc_code_requested_at) {
+            if (c.letter_type === "vat-late-submission") todo.push("send_asa_link");
+            if (c.letter_type === "paye-employer-penalty" || c.letter_type === "cis-late-return") todo.push("request_agent_code");
+          }
+          if (c.letter_type === "companies-house-strike-off" && c.id_completed_at) todo.push("file_confirmation_statement");
           if (c.hmrc_code_at) todo.push("hmrc_code_received");
-          if (c.product === "option3" && c.id_completed_at) todo.push("write_appeal");
+          if (c.product === "option3" && c.id_completed_at && c.letter_type !== "companies-house-strike-off") todo.push("write_appeal");
           return { ref: c.ref, letter_type: c.letter_type, status: c.status, appeal_deadline: c.appeal_deadline,
             name: (c.details as Obj)?.full_name ?? null, company: (c.details as Obj)?.company_name ?? null, todo,
             contact: rc ? { method: rc.method, confirmed_at: rc.confirmed_at, phone: rc.phone, email: rc.email, availability: rc.availability, note: rc.note } : null };
@@ -260,7 +269,7 @@ Deno.serve(async (req) => {
           contacts: rcs.data ?? [], history: hist.data ?? [], payment_links: links ?? [],
           links: c.data_deleted_at ? {} : {
             id_upload: `${site}/id.html?case=${c.private_token}&lang=${c.language}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`),
-            hmrc_code: c.letter_type === "ct-late-filing" ? `${site}/code.html?case=${c.private_token}&lang=${c.language}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`) : null,
+            hmrc_code: ["ct-late-filing", "paye-employer-penalty", "cis-late-return"].includes(String(c.letter_type)) ? `${site}/code.html?case=${c.private_token}&lang=${c.language}` + (settings?.live ? "" : `&preview=${settings?.preview_code}`) : null,
           },
         });
       }
@@ -398,8 +407,15 @@ Deno.serve(async (req) => {
         const c = await caseByRef(body.ref);
         if (!c) return reply(404, { error: "not_found" });
         if (c.data_deleted_at) return reply(400, { error: "deleted" });
-        const opt = LINK_OPTIONS[String(body.option ?? "")];
-        if (!opt) return reply(400, { error: "option" });
+        const base = LINK_OPTIONS[String(body.option ?? "")];
+        if (!base) return reply(400, { error: "option" });
+        const opt = { ...base };
+        if (String(body.option) === "quote") {
+          const pounds = Number(body.amount);
+          if (!Number.isFinite(pounds) || pounds < 1 || pounds > 5000) return reply(400, { error: "amount" });
+          opt.pence = Math.round(pounds * 100);
+          opt.label = str(body.label, 120) || base.label;
+        }
         const d = { ...((c.details ?? {}) as Obj) };
         const to = str(body.email, 200).toLowerCase() || String(d.email ?? "");
         if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return reply(400, { error: "email" });
@@ -408,9 +424,9 @@ Deno.serve(async (req) => {
         if (str(body.phone, 30)) d.phone = str(body.phone, 30);
         // company review on a case without a company letter: Eduard says which penalty it is, so the ID step
         // asks for the certificate of incorporation and the authority to act (and the HMRC code for Corporation Tax)
-        const COMPANY = ["ct-late-filing", "companies-house-late-filing"];
+        const COMPANY = ["ct-late-filing", "companies-house-late-filing", "companies-house-strike-off"];
         let letterType = String(c.letter_type ?? "");
-        if (String(body.option) === "o3co" || String(body.option) === "top40") {
+        if (String(body.option) === "o3co" || String(body.option) === "top40" || (String(body.option) === "quote" && body.company_type)) {
           if (!COMPANY.includes(letterType)) {
             if (!COMPANY.includes(String(body.company_type ?? ""))) return reply(400, { error: "company_type" });
             letterType = String(body.company_type);
@@ -430,7 +446,7 @@ Deno.serve(async (req) => {
         // the email
         const t = await texts(lang);
         const amount = "£" + (opt.pence / 100).toFixed(2).replace(/\.00$/, "");
-        const label = t("email.paylink.opt_" + String(body.option)) !== "email.paylink.opt_" + String(body.option) && t("email.paylink.opt_" + String(body.option)) ? t("email.paylink.opt_" + String(body.option)) : opt.label;
+        const label = String(body.option) === "quote" && str(body.label, 120) ? opt.label : t("email.paylink.opt_" + String(body.option)) !== "email.paylink.opt_" + String(body.option) && t("email.paylink.opt_" + String(body.option)) ? t("email.paylink.opt_" + String(body.option)) : opt.label;
         const name = String(d.full_name ?? "").trim();
         const paras = [t("email.paylink.body", { label }), t("email.paylink.amount", { amount }),
           t(opt.target === "option3" ? "email.paylink.next_o3" : "email.paylink.next_o2"), t("email.paylink.expires")];

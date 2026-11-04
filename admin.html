@@ -110,11 +110,15 @@ const STATUSES = ["uploaded","explained","questions","outcome","callback_request
 const REQ_STATUSES = ["new","contacted","client","closed"];
 const CB_STATUSES = ["new","called","link_sent","no_appeal","closed"];
 const TYPE = { "sa-late-filing-100": "SA late filing £100", "sa-late-filing-later": "SA late filing (later)", "sa-late-payment": "SA late payment",
-  "ct-late-filing": "Corporation Tax late filing", "companies-house-late-filing": "Companies House late filing" };
+  "ct-late-filing": "Corporation Tax late filing", "companies-house-late-filing": "Companies House late filing",
+  "vat-late-submission": "VAT late submission", "paye-employer-penalty": "PAYE late filing", "cis-late-return": "CIS late return",
+  "sa-statement": "SA statement / debt", "companies-house-strike-off": "Companies House strike-off" };
+const BIZ = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];
 const PRODUCT = { option1: "Free", option2: "£19 self-serve", option3: "Accountant review", appointment: "£59 appointment", call: "Call" };
 const TODO = { id_not_started: ["ID not started", "amber"], waiting_for_id: ["Waiting for ID", "amber"], confirm_call: ["Confirm call time", "red"],
   request_hmrc_code: ["Request HMRC code", "red"], hmrc_code_received: ["HMRC code received", "green"], write_appeal: ["Write appeal", "teal"],
-  waiting_for_times: ["Waiting for call times", "amber"], hold_appointment: ["Hold the appointment", "teal"] };
+  waiting_for_times: ["Waiting for call times", "amber"], hold_appointment: ["Hold the appointment", "teal"],
+  send_asa_link: ["Send ASA link", "red"], request_agent_code: ["Request agent code", "red"], file_confirmation_statement: ["File confirmation statement", "teal"] };
 
 const $ = (id) => document.getElementById(id);
 // reasons per letter type come from the rules files; labels from the English language file
@@ -289,7 +293,8 @@ async function openCase(ref) {
   let r;
   try { r = await api("case", { ref }); } catch (e) { return fail(e); }
   const c = r.case, det = c.details || {}, v = $("view"); v.innerHTML = ""; v.dataset.ref = c.ref;
-  const company = c.letter_type === "ct-late-filing" || c.letter_type === "companies-house-late-filing";
+  const company = c.letter_type === "ct-late-filing" || c.letter_type === "companies-house-late-filing" || c.letter_type === "companies-house-strike-off";
+  const biz = BIZ.includes(c.letter_type);
   const paid = r.payments.find((p) => p.status === "paid");
   v.appendChild(el("button", { class: "back", type: "button", text: "← Back", onclick: () => openTab(tab) }));
   v.appendChild(el("div", { class: "row", style: "margin:6px 0 14px" }, [
@@ -315,15 +320,21 @@ async function openCase(ref) {
     company && ["Company", det.company_name], company && ["Company number", det.company_number], company && ["Penalty reference", det.penalty_reference],
     ["Name", det.full_name], company && ["Role", det.role], ["Email", det.email], ["Phone", det.phone],
     ["Address", [...(det.address_lines || []), det.postcode].filter(Boolean).join(", ")],
-    [company ? "CT UTR" : "UTR", det.utr], !company && ["NI number", det.ni_number], ["Marketing consent", det.marketing_consent ? "yes" : "no"],
-  ])]));
+    [company ? "CT UTR" : "UTR", det.utr], !company && !biz && ["NI number", det.ni_number],
+    biz && ["Business", (det.business_name || "–") + (det.business_type ? " (" + (det.business_type === "company" ? "limited company" : "sole trader") + ")" : "")],
+    biz && det.company_number && ["Company number", det.company_number],
+    biz && ["VAT number", det.vat_number], biz && ["VAT registration date", d(det.vat_registration_date)],
+    biz && det.vat_returns_up_to_date && ["VAT returns up to date", det.vat_returns_up_to_date],
+    biz && ["Employer PAYE ref", det.paye_ref], biz && ["Accounts Office ref", det.accounts_office_ref],
+    ["Marketing consent", det.marketing_consent ? "yes" : "no"],
+  ].filter((x) => x && (x[1] != null && x[1] !== "" && x[1] !== "–" || !biz)))]));
 
   // Charge the client (after a call): payment link by email
   if (!c.data_deleted_at) {
     const OPTS = [["o2", "£19 – I prepare the appeal (self-serve price)"], ["o3", "£39 – accountant review (Self Assessment)"], ["o3co", "£59 – company accountant review"],
-      ["top20", "£20 top-up – paid £19, upgrading to £39"], ["top40", "£40 top-up – paid £19, upgrading to £59"]];
+      ["top20", "£20 top-up – paid £19, upgrading to £39"], ["top40", "£40 top-up – paid £19, upgrading to £59"], ["quote", "Quoted amount – e.g. stop a strike-off (then ID check)"]];
     const paid19 = r.payments.some((p) => p.status === "paid" && p.product === "option2");
-    const def = paid19 ? (company ? "top40" : "top20") : (company ? "o3co" : "o3");
+    const def = c.letter_type === "companies-house-strike-off" ? "quote" : paid19 ? (company ? "top40" : "top20") : (company ? "o3co" : "o3");
     const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Charge the client" }),
       el("p", { class: "muted", text: "Emails a secure Stripe payment link. After paying, £39 / £59 / top-ups go to the ID check and the normal accountant-review steps; £19 comes to your queue for you to prepare." })]);
     OPTS.forEach(([k, label]) => box.appendChild(el("label", { class: "check" }, [el("input", { type: "radio", name: "payopt", value: k, checked: k === def }), el("span", { text: label })])));
@@ -335,27 +346,33 @@ async function openCase(ref) {
     // £59 / £40 on a case without a company letter: say which company penalty it is (so the ID step asks for the
     // certificate of incorporation and the authority to act, and the HMRC code for Corporation Tax)
     const coType = el("select", { class: "sm", style: "width:100%" }, [el("option", { value: "", text: "Choose…" }),
-      el("option", { value: "ct-late-filing", text: "Corporation Tax late filing penalty" }), el("option", { value: "companies-house-late-filing", text: "Companies House late filing penalty" })]);
+      el("option", { value: "ct-late-filing", text: "Corporation Tax late filing penalty" }), el("option", { value: "companies-house-late-filing", text: "Companies House late filing penalty" }),
+      el("option", { value: "companies-house-strike-off", text: "Companies House strike-off (confirmation statement)" })]);
+    const qAmt = el("input", { class: "sm", type: "number", min: "1", step: "0.01", placeholder: "e.g. 99", style: "width:100%" });
+    const qLab = el("input", { class: "sm", value: c.letter_type === "companies-house-strike-off" ? "Confirmation statement to stop the strike-off" : "", placeholder: "What it's for (shown to the client)", style: "width:100%" });
+    const qBox = el("div", { class: "grid2", hidden: true }, [el("label", { class: "field" }, [el("span", { text: "Amount (£)" }), qAmt]), el("label", { class: "field" }, [el("span", { text: "Description" }), qLab])]);
     const coName = el("input", { class: "sm", value: det.company_name || "", placeholder: "Company name", style: "width:100%" });
     const coNo = el("input", { class: "sm", value: det.company_number || "", placeholder: "Company number", style: "width:100%" });
     const coBox = el("div", { class: "stack", hidden: true }, [
       company ? null : el("label", { class: "field" }, [el("span", { text: "Which company penalty?" }), coType]),
       el("div", { class: "grid2" }, [el("label", { class: "field" }, [el("span", { text: "Company name" }), coName]), el("label", { class: "field" }, [el("span", { text: "Company number" }), coNo])])]);
-    box.appendChild(coBox);
-    const showCo = () => { const o = (box.querySelector("input[name=payopt]:checked") || {}).value; coBox.hidden = !(o === "o3co" || o === "top40"); };
+    box.appendChild(qBox); box.appendChild(coBox);
+    const showCo = () => { const o = (box.querySelector("input[name=payopt]:checked") || {}).value; coBox.hidden = !(o === "o3co" || o === "top40" || o === "quote"); qBox.hidden = o !== "quote"; };
     box.querySelectorAll("input[name=payopt]").forEach((i) => i.addEventListener("change", showCo)); showCo();
     const out = el("div", { class: "stack" });
     box.appendChild(el("button", { class: "sbtn primary", type: "button", text: "Email payment link", onclick: async (ev) => {
       const opt = (box.querySelector("input[name=payopt]:checked") || {}).value;
       if ((opt === "o3co" || opt === "top40") && !company && !coType.value) { out.innerHTML = ""; out.appendChild(el("p", { class: "error", text: "Choose which company penalty this is." })); return; }
-      if (!confirm(`Email a payment link (${OPTS.find((o) => o[0] === opt)[1]}) to ${pe.value}?`)) return;
+      if (opt === "quote" && !(Number(qAmt.value) >= 1)) { out.innerHTML = ""; out.appendChild(el("p", { class: "error", text: "Enter the quoted amount." })); return; }
+      if (!confirm(`Email a payment link (${opt === "quote" ? "£" + Number(qAmt.value).toFixed(2) + " – " + (qLab.value || "work as quoted") : OPTS.find((o) => o[0] === opt)[1]}) to ${pe.value}?`)) return;
       ev.target.disabled = true; out.innerHTML = "";
       try {
         const x = await api("payment_link", { ref: c.ref, option: opt, email: pe.value, name: pn.value, phone: pp.value,
-          company_type: coType.value || undefined, company_name: coName.value, company_number: coNo.value });
+          company_type: coType.value || undefined, company_name: coName.value, company_number: coNo.value,
+          amount: opt === "quote" ? Number(qAmt.value) : undefined, label: opt === "quote" ? qLab.value : undefined });
         out.appendChild(el("p", { class: x.sent ? "success" : "callout", text: x.sent ? "Payment link emailed." : "Link created, but the email didn't send. Copy the link below and send it yourself." }));
         out.appendChild(el("button", { class: "sbtn", type: "button", text: "Copy the link", onclick: () => navigator.clipboard.writeText(x.url).then(() => toast("Link copied")) }));
-      } catch (e) { out.appendChild(el("p", { class: "error", text: e.message === "email" ? "Enter a valid email address." : "Could not create the link (" + e.message + ")." })); }
+      } catch (e) { out.appendChild(el("p", { class: "error", text: e.message === "email" ? "Enter a valid email address." : e.message === "amount" ? "Enter an amount between £1 and £5,000." : "Could not create the link (" + e.message + ")." })); }
       ev.target.disabled = false;
     } }));
     box.appendChild(out);
@@ -489,14 +506,19 @@ async function openCase(ref) {
     el("button", { class: "sbtn", type: "button", text: "Copy the client's upload link", onclick: () => navigator.clipboard.writeText(r.links.id_upload).then(() => toast("Link copied")) })]));
   left.appendChild(docs);
 
-  // HMRC agent authorisation code (Corporation Tax)
-  if (c.letter_type === "ct-late-filing" && c.product === "option3") {
-    const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "HMRC agent authorisation (Corporation Tax)" })]);
-    box.appendChild(el("p", { class: "muted", text: c.hmrc_code_requested_at ? "You requested the code on " + dt(c.hmrc_code_requested_at) : "Not requested yet. Request it in your agent services account, then mark it here." }));
+  // HMRC agent authorisation: Corporation Tax / PAYE / CIS (code posted by HMRC), VAT (ASA link sent to the client)
+  const AGENT = { "ct-late-filing": "Corporation Tax", "paye-employer-penalty": "PAYE", "cis-late-return": "CIS (PAYE scheme)", "vat-late-submission": "VAT" };
+  if (AGENT[c.letter_type] && c.product === "option3") {
+    const vat = c.letter_type === "vat-late-submission";
+    const box = el("section", { class: "card" }, [el("h2", { class: "sec", text: "HMRC agent authorisation (" + AGENT[c.letter_type] + ")" })]);
+    if (biz) box.appendChild(el("p", { class: "muted", text: "£39 route: email the client the appeal letter to post (Write the appeal box) and follow up from your agent account." }));
+    box.appendChild(el("p", { class: "muted", text: c.hmrc_code_requested_at ? (vat ? "You sent the ASA authorisation link on " : "You requested the code on ") + dt(c.hmrc_code_requested_at)
+      : vat ? "Not sent yet. Create the authorisation request in your Agent Services Account (VAT number " + (det.vat_number || "–") + ", registered " + (d(det.vat_registration_date) || "–") + "), send the link to the client, then mark it here."
+      : "Not requested yet. Request it in your agent services account, then mark it here." }));
     box.appendChild(el("div", { class: "row" }, [
-      !c.hmrc_code_requested_at ? el("button", { class: "sbtn primary", type: "button", text: "I've requested the code from HMRC", onclick: async () => { await api("update_case", { ref: c.ref, hmrc_code_requested: true }); toast("Saved"); openCase(c.ref); } })
+      !c.hmrc_code_requested_at ? el("button", { class: "sbtn primary", type: "button", text: vat ? "I've sent the ASA link to the client" : "I've requested the code from HMRC", onclick: async () => { await api("update_case", { ref: c.ref, hmrc_code_requested: true }); toast("Saved"); openCase(c.ref); } })
         : el("button", { class: "sbtn", type: "button", text: "Undo 'requested'", onclick: async () => { await api("update_case", { ref: c.ref, hmrc_code_requested: false }); openCase(c.ref); } }),
-      r.links.hmrc_code ? el("button", { class: "sbtn", type: "button", text: "Copy the client's code link", onclick: () => navigator.clipboard.writeText(r.links.hmrc_code).then(() => toast("Link copied")) }) : null,
+      r.links.hmrc_code && !vat ? el("button", { class: "sbtn", type: "button", text: "Copy the client's code link", onclick: () => navigator.clipboard.writeText(r.links.hmrc_code).then(() => toast("Link copied")) }) : null,
     ]));
     if (c.hmrc_code) {
       box.appendChild(el("div", {}, [el("div", { class: "muted", text: "Code from the client (" + dt(c.hmrc_code_at) + "):" }), el("span", { class: "code", text: c.hmrc_code })]));

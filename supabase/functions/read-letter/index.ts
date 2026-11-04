@@ -13,7 +13,7 @@ const LETTER_TYPES = [
   "vat-late-submission", "vat-late-payment", "vat-other",
   "paye-employer-penalty", "paye-other", "cis-late-return",
   "ct-late-filing", "ct-other",
-  "companies-house-late-filing", "companies-house-other",
+  "companies-house-late-filing", "companies-house-strike-off", "companies-house-other",
   "compliance-check", "hmrc-other", "not-recognised",
 ];
 const PENALTY_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "ct-late-filing",
@@ -54,7 +54,8 @@ Corporation Tax and Companies House:
 - ct-late-filing: HMRC Corporation Tax (Company Tax Return) late filing penalty.
 - ct-other: any other Corporation Tax letter (notice to deliver a Company Tax Return CT603, interest, determination, payment reminder).
 - companies-house-late-filing: Companies House late filing penalty for annual accounts (not HMRC).
-- companies-house-other: any other Companies House letter (confirmation statement or accounts reminder, strike-off notice, registered office).
+- companies-house-strike-off: Companies House says it intends to strike the company off the register (compulsory strike-off, "First Gazette notice", "we intend to strike the company off"), usually because a confirmation statement or accounts are overdue.
+- companies-house-other: any other Companies House letter (confirmation statement or accounts reminder, registered office).
 Other:
 - compliance-check: HMRC is checking or enquiring into a return or records (CC/FS factsheets, "I'm checking your tax return", information notice, enquiry under section 9A).
 - hmrc-other: any other HMRC letter (agent authorisation, repayment security check, CIS registration or other CIS letters, Child Benefit, Inheritance Tax, Capital Gains, debt).
@@ -109,6 +110,7 @@ const TOOL = {
       accounts_office_ref: { type: ["string", "null"], description: "employer Accounts Office reference (13 characters, e.g. 123PA00045678), if printed" },
       vat_registration_date: { type: ["string", "null"], description: "VAT registration date as YYYY-MM-DD, if printed" },
       period: { type: ["string", "null"], description: "VAT or PAYE period the letter is about, as printed" },
+      penalty_reference: { type: ["string", "null"], description: "penalty reference, charge reference or unique penalty ID printed on a penalty notice (not the UTR)" },
       accounts_period_end: { type: ["string", "null"], description: "Corporation Tax or Companies House letters: the end date of the company's accounting period / 'accounts made up to' date, as YYYY-MM-DD" },
       hmrc_phone: { type: ["string", "null"] },
       return_address: { type: ["string", "null"], description: "HMRC address to write to, if printed" },

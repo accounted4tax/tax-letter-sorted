@@ -1,0 +1,30 @@
+{
+  "id": "companies-house-strike-off",
+  "version": "0.1",
+  "status": "Draft 4 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "title_key": "letters.companies_house_strike_off.title",
+  "tax": "Companies House",
+  "kind": "compulsory_strike_off",
+  "recognition": "A Companies House letter or Gazette notice saying the registrar intends to strike the company off the register (compulsory strike-off, 'First Gazette notice'), usually because a confirmation statement or accounts are overdue.",
+  "facts_for_explanation": {
+    "what_it_is": "Companies House thinks the company is no longer trading because a document is overdue (often the confirmation statement or the accounts). It plans to remove ('strike off') the company from the register.",
+    "what_happens": "A notice is published in The Gazette. If nothing is done, the company is usually struck off about 2 months later and dissolved. A dissolved company's bank accounts are frozen and its money and property pass to the Crown.",
+    "how_to_stop_it": "File the overdue documents (for example the confirmation statement and any overdue accounts) as soon as possible. Once they are filed, Companies House normally stops the strike-off. A company can also object to the strike-off.",
+    "what_you_need": "The company number and the Companies House authentication code (a 6-character code sent to the registered office).",
+    "service": "Accounted4Tax can file the confirmation statement (and any overdue accounts) for the company. The fee is quoted first; the director's ID is checked before we start."
+  },
+  "service": {
+    "product": "quote",
+    "needs": [
+      "company_name",
+      "company_number",
+      "ch_auth_code",
+      "director ID (photo ID, selfie with photo ID, proof of address, certificate of incorporation)"
+    ],
+    "price": "as per quote (confirmation statement £99 including the Companies House fee; overdue accounts per package prices)"
+  },
+  "sources": [
+    "https://www.gov.uk/government/publications/strike-off-dissolution-and-restoration/strike-off-dissolution-and-restoration",
+    "https://www.gov.uk/file-your-confirmation-statement-with-companies-house"
+  ]
+}

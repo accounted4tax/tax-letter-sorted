@@ -339,7 +339,70 @@
       "fu.title_appt",
       "fu.intro_appt",
       "fu.done_appt",
-      "appt.start_now"
+      "appt.start_now",
+      "letters.companies_house_strike_off.title",
+      "explain.btn_service_payroll",
+      "explain.btn_service_cis",
+      "explain.btn_service_vat",
+      "explain.btn_stop_strike_off",
+      "outcome.biz_free_vat",
+      "outcome.biz_free_paye",
+      "outcome.biz_free_cis",
+      "outcome.biz_o3_b1",
+      "outcome.biz_o3_b2",
+      "outcome.biz_o3_b3_vat",
+      "outcome.biz_o3_b3_paye",
+      "outcome.biz_o3_b3_cis",
+      "outcome.svc_title_payroll",
+      "outcome.svc_text_payroll",
+      "outcome.svc_title_cis",
+      "outcome.svc_text_cis",
+      "outcome.svc_title_vat",
+      "outcome.svc_text_vat",
+      "outcome.svc_cta",
+      "details.intro_biz",
+      "details.intro_biz_agent",
+      "details.business_type",
+      "details.bt_sole_trader",
+      "details.bt_company",
+      "details.business_name",
+      "details.vat_number",
+      "details.vat_number_hint",
+      "details.vat_reg_date",
+      "details.vat_reg_date_hint",
+      "details.vat_up_to_date",
+      "details.cis_utr_hint",
+      "svc.title_payroll",
+      "svc.title_cis",
+      "svc.title_vat",
+      "svc.intro_payroll",
+      "svc.intro_cis",
+      "svc.intro_vat",
+      "svc.business_name",
+      "svc.vat_number",
+      "svc.vat_missing",
+      "svc.paye_ref",
+      "svc.paye_ref_hint",
+      "svc.ao_ref",
+      "svc.ao_ref_hint",
+      "svc.rate_line",
+      "svc.monthly_total",
+      "svc.vat_line",
+      "svc.vat_total",
+      "svc.submit",
+      "svc.err_business",
+      "strike.title",
+      "strike.intro",
+      "strike.submit",
+      "strike.sent_text",
+      "strike.err_company",
+      "auth.instruct_strike",
+      "auth.instruct_noname_strike",
+      "auth.scope_short_strike",
+      "code.intro_employer",
+      "email.code.subject_employer",
+      "email.code.body_employer",
+      "email.code.meanwhile_employer"
     ]
   },
   "common": {
@@ -494,7 +557,11 @@
     "btn_p800_pay": "Cum plătiți suma datorată",
     "demo": "Explicație de probă – nu a fost citită nici o scrisoare.",
     "ref": "Dosarul dvs.: {ref}",
-    "btn_book_appointment": "Programați o discuție cu un contabil · £59"
+    "btn_book_appointment": "Programați o discuție cu un contabil · £59",
+    "btn_service_payroll": "Doriți ca un contabil să se ocupe de salarizare (payroll)?",
+    "btn_service_cis": "Doriți să ne ocupăm de declarațiile CIS?",
+    "btn_service_vat": "Doriți să depunem noi declarațiile de TVA (VAT returns)?",
+    "btn_stop_strike_off": "Opriți radierea companiei – cereți o ofertă"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -571,6 +638,9 @@
     },
     "cis_late_return": {
       "title": "Penalitate pentru declarația lunară CIS depusă cu întârziere"
+    },
+    "companies_house_strike_off": {
+      "title": "Notificare Companies House de radiere a companiei (strike-off)"
     }
   },
   "q": {
@@ -740,7 +810,22 @@
     "co_free_open_ch": "Deschideți serviciul de contestații Companies House",
     "co_copied": "Copiat. Lipiți textul în contestație și verificați-l înainte de a o trimite.",
     "co_o3_b4_ct": "Avem nevoie de UTR-ul companiei. HMRC va trimite prin poștă un cod de autorizare la companie (aproximativ 2 săptămâni)",
-    "co_o3_b4_ch": "Avem nevoie de numărul companiei și de referința penalității"
+    "co_o3_b4_ch": "Avem nevoie de numărul companiei și de referința penalității",
+    "biz_free_vat": "Copiați textul de mai jos. Puteți cere HMRC să revizuiască penalitatea din contul online de TVA al afacerii sau îl puteți tipări, semna și trimite prin poștă la adresa de pe notificarea de penalitate.",
+    "biz_free_paye": "Copiați textul de mai jos. Puteți contesta din serviciul HMRC PAYE for employers („Appeal a penalty”) sau îl puteți tipări, semna și trimite prin poștă la adresa de pe notificarea de penalitate.",
+    "biz_free_cis": "Copiați textul de mai jos. Puteți contesta online prin HMRC sau îl puteți tipări, semna și trimite prin poștă la adresa de pe notificarea de penalitate.",
+    "biz_o3_b1": "Un contabil calificat (MAAT) vă contactează și pregătește scrisoarea de contestație, trimisă pe email ca s-o semnați și s-o trimiteți prin poștă",
+    "biz_o3_b2": "Urmărim contestația și la HMRC, din contul nostru de agent",
+    "biz_o3_b3_vat": "Avem nevoie de numărul de TVA și de data înregistrării în scopuri de TVA. Veți primi un link de la HMRC ca să ne aprobați ca agent",
+    "biz_o3_b3_paye": "Avem nevoie de referința PAYE a angajatorului și de referința Accounts Office. HMRC va trimite prin poștă un cod de autorizare la afacere",
+    "biz_o3_b3_cis": "Avem nevoie de UTR, de referința PAYE a angajatorului și de referința Accounts Office. HMRC va trimite prin poștă un cod de autorizare la afacere",
+    "svc_title_payroll": "Doriți ca un contabil să se ocupe de salarizare (payroll)?",
+    "svc_text_payroll": "Trimitem lunar, la timp, raportările de salarii către HMRC, ca să nu mai primiți penalități.",
+    "svc_title_cis": "Doriți să ne ocupăm de declarațiile CIS?",
+    "svc_text_cis": "Trimitem la timp declarațiile lunare CIS către HMRC, ca să nu mai primiți penalități.",
+    "svc_title_vat": "Doriți să depunem noi declarațiile de TVA (VAT returns)?",
+    "svc_text_vat": "Recuperăm declarațiile de TVA nedepuse și le putem depune la timp de acum înainte.",
+    "svc_cta": "Vedeți prețul și cereți-ne"
   },
   "ne": {
     "title": "O contestație are puține șanse de reușită",
@@ -872,7 +957,19 @@
     "cancelled": "Plata a fost anulată. Nu ați plătit nimic.",
     "option3_company": "Analiză de către contabil · £59",
     "ct_utr_hint": "10 cifre. Apare pe scrisorile HMRC despre impozitul pe profit al companiei.",
-    "start_now": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat – înțeleg că, după ce contestația este gata, nu mai pot anula pentru rambursare."
+    "start_now": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat – înțeleg că, după ce contestația este gata, nu mai pot anula pentru rambursare.",
+    "intro_biz": "Acestea apar în scrisoarea de contestație exact cum le scrieți. Folosiți datele afacerii așa cum apar pe notificarea de penalitate.",
+    "intro_biz_agent": "Acestea apar în scrisoarea de contestație, iar referințele ne trebuie ca să reprezentăm afacerea la HMRC. Folosiți datele așa cum apar pe scrisorile HMRC.",
+    "business_type": "Afacerea este persoană fizică autorizată (sole trader) sau societate cu răspundere limitată (limited company)?",
+    "bt_sole_trader": "Sole trader (persoană fizică)",
+    "bt_company": "Limited company (societate)",
+    "business_name": "Numele afacerii sau al companiei",
+    "vat_number": "Numărul de înregistrare în scopuri de TVA (VAT registration number)",
+    "vat_number_hint": "9 cifre, pe certificatul de TVA sau pe scrisorile HMRC.",
+    "vat_reg_date": "Data înregistrării în scopuri de TVA",
+    "vat_reg_date_hint": "„Effective date of registration” de pe certificatul de TVA. HMRC o cere înainte să vă putem reprezenta.",
+    "vat_up_to_date": "Sunt depuse la zi toate declarațiile de TVA?",
+    "cis_utr_hint": "Codul unic de contribuabil al afacerii, din 10 cifre (UTR)."
   },
   "review": {
     "step": "Verificați contestația",
@@ -1266,7 +1363,10 @@
       "body": "Vă mulțumim, am primit documentele și confirmarea dvs. Solicităm la HMRC autorizarea de a acționa pentru impozitul pe profit al companiei. HMRC va trimite prin poștă o scrisoare cu un cod de autorizare la sediul social al companiei, de obicei în aproximativ 2 săptămâni.",
       "action": "Când primiți scrisoarea, vă rugăm să ne trimiteți codul imediat, folosind butonul de mai jos. Codul este valabil doar o perioadă limitată.",
       "meanwhile": "Între timp pregătim contestația, ca să nu fie depășit termenul.",
-      "button": "Trimiteți codul HMRC"
+      "button": "Trimiteți codul HMRC",
+      "subject_employer": "HMRC va trimite prin poștă un cod de autorizare afacerii ({ref})",
+      "body_employer": "Vă mulțumim, avem documentele. Cerem HMRC autorizația de a reprezenta schema PAYE a afacerii, ca să putem urmări contestația din contul nostru de agent. HMRC va trimite prin poștă afacerii o scrisoare cu un cod de autorizare, de obicei în aproximativ 2 săptămâni.",
+      "meanwhile_employer": "Între timp vă trimitem pe email scrisoarea de contestație ca s-o semnați și s-o trimiteți prin poștă, ca să nu ratați termenul."
     },
     "appeal": {
       "subject": "Contestația dvs. este gata ({ref})",
@@ -1337,7 +1437,10 @@
     "instruct": "Sunt director al {company} și cer Accounted4Tax să se ocupe de această penalitate pentru companie.",
     "instruct_noname": "Sunt director al companiei și cer Accounted4Tax să se ocupe de această penalitate pentru companie.",
     "confirmed": "Confirmat",
-    "scope_short": "Aceasta acoperă doar contestația acestei penalități. Orice altă lucrare necesită un acord separat."
+    "scope_short": "Aceasta acoperă doar contestația acestei penalități. Orice altă lucrare necesită un acord separat.",
+    "instruct_strike": "Sunt director al {company} și cer Accounted4Tax să depună declarația de confirmare și să se ocupe de notificarea de radiere pentru companie.",
+    "instruct_noname_strike": "Sunt director al companiei și cer Accounted4Tax să depună declarația de confirmare și să se ocupe de notificarea de radiere pentru companie.",
+    "scope_short_strike": "Acoperă doar lucrările din oferta dvs. Orice altă lucrare necesită un acord separat."
   },
   "code": {
     "title": "Trimiteți-ne codul de autorizare HMRC",
@@ -1348,7 +1451,8 @@
     "submit": "Trimiteți codul",
     "err_code": "Vă rugăm să verificați codul. Trebuie să aibă între 4 și 20 de litere și cifre.",
     "done_title": "Vă mulțumim, am primit codul",
-    "done_text": "Contabilul nostru îl va folosi pentru a finaliza autorizarea la HMRC. Vă vom contacta în legătură cu contestația."
+    "done_text": "Contabilul nostru îl va folosi pentru a finaliza autorizarea la HMRC. Vă vom contacta în legătură cu contestația.",
+    "intro_employer": "HMRC a trimis prin poștă afacerii o scrisoare cu un cod de autorizare. Acesta ne permite să reprezentăm schema PAYE a afacerii. Introduceți codul exact cum apare în scrisoare."
   },
   "pkg": {
     "title": "Estimarea dvs. instant",
@@ -1430,5 +1534,33 @@
     "err_terms": "Vă rugăm să acceptați Termenii și Politica de confidențialitate pentru a continua.",
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou peste un minut.",
     "start_now": "Am citit Termenii și Politica de confidențialitate. Vă rog să începeți imediat – înțeleg că nu pot anula cu rambursare cu mai puțin de 1 oră înainte de discuție sau după ce aceasta a avut loc."
+  },
+  "svc": {
+    "title_payroll": "Salarizare (payroll) – cereți ajutorul nostru",
+    "title_cis": "Declarații CIS – cereți ajutorul nostru",
+    "title_vat": "Declarații de TVA – cereți ajutorul nostru",
+    "intro_payroll": "Ne ocupăm de salarizare și trimitem lunar raportările la HMRC. Spuneți-ne câteva lucruri despre afacere și revenim noi.",
+    "intro_cis": "Trimitem pentru dvs. declarațiile lunare CIS la HMRC. Spuneți-ne câteva lucruri despre afacere și revenim noi.",
+    "intro_vat": "Depunem declarațiile de TVA care nu au fost încă depuse. Spuneți-ne câteva lucruri despre afacere și revenim noi.",
+    "business_name": "Numele afacerii sau al companiei",
+    "vat_number": "Numărul de înregistrare în scopuri de TVA",
+    "vat_missing": "Câte luni de declarații de TVA nu sunt depuse? (un trimestru = 3 luni)",
+    "paye_ref": "Referința PAYE a angajatorului (employer PAYE reference)",
+    "paye_ref_hint": "De exemplu 123/AB45678. Apare pe scrisorile HMRC către angajator.",
+    "ao_ref": "Referința Accounts Office",
+    "ao_ref_hint": "13 caractere, de exemplu 123PA00045678. Apare pe scrisorile HMRC către angajator.",
+    "rate_line": "{base} pe lună pentru maximum {included} persoane, apoi {extra} pe lună pentru fiecare persoană în plus",
+    "monthly_total": "Estimare: {amount} pe lună",
+    "vat_line": "{each} pentru fiecare lună de declarații de TVA nedepuse",
+    "vat_total": "Estimare: {amount} pentru recuperarea a {n} luni",
+    "submit": "Trimiteți cererea",
+    "err_business": "Vă rugăm să introduceți numele afacerii sau al companiei."
+  },
+  "strike": {
+    "title": "Opriți radierea companiei",
+    "intro": "Companies House intenționează să radieze compania din registru, de obicei pentru că declarația de confirmare (confirmation statement) sau conturile anuale sunt întârziate. Depunerea lor oprește de regulă radierea. Vedeți prețul mai jos; după ce îl acceptați, verificăm identitatea directorului și o depunem pentru companie.",
+    "submit": "Trimiteți cererea",
+    "sent_text": "Vă mulțumim. Verificăm compania și vă trimitem pe email prețul și un link de plată. După plată vă cerem actele de identitate ale directorului și depunem declarația de confirmare.",
+    "err_company": "Vă rugăm să introduceți numele companiei, numărul companiei și codul de autentificare Companies House. Avem nevoie de ele ca să depunem pentru companie."
   }
 }

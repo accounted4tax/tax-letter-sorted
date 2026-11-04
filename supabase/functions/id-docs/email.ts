@@ -21,6 +21,9 @@ const EN_DEFAULT: Record<string, string> = {
   "email.code.action": "When the letter arrives, please send us the code straight away using the button below. It is only valid for a limited time.",
   "email.code.meanwhile": "We will still prepare the appeal in the meantime, so the deadline is not missed.",
   "email.code.button": "Send the HMRC code",
+  "email.code.subject_employer": "HMRC will post an authorisation code to the business ({ref})",
+  "email.code.body_employer": "Thank you, we have your documents. We are asking HMRC for authorisation to act for the business's PAYE scheme, so we can follow up the appeal from our agent account. HMRC will post a letter with an authorisation code to the business, usually within about 2 weeks.",
+  "email.code.meanwhile_employer": "Meanwhile we will email you the appeal letter to sign and post, so the deadline is not missed.",
 };
 
 function esc(s: string) {
@@ -131,11 +134,13 @@ export async function sendCodeEmail(db: any, c: any, opts: { previewCode?: strin
   const { l, t } = await lang(c);
   const name = String(d.full_name ?? "").trim();
   const link = `${SITE}/code.html?case=${c.private_token}&lang=${l}` + (opts.previewCode ? `&preview=${opts.previewCode}` : "");
-  const paras = [t("email.code.body"), t("email.code.action"), t("email.code.meanwhile")];
+  // PAYE / CIS (£39): the code for the employer's PAYE scheme is posted to the business
+  const emp = c.letter_type === "paye-employer-penalty" || c.letter_type === "cis-late-return";
+  const paras = [t(emp ? "email.code.body_employer" : "email.code.body"), t("email.code.action"), t(emp ? "email.code.meanwhile_employer" : "email.code.meanwhile")];
   const hello = t("email.id.hello", { name });
   const html = page(hello, paras, t("email.code.button"), link, t("email.id.footer"));
   const text = [hello, ...paras, `${t("email.code.button")}: ${link}`, t("email.id.footer")].join("\n\n");
-  return await brevo(db, c.id, String(d.email ?? ""), name, t("email.code.subject", { ref: String(c.ref) }), html, text, "hmrc_code_request", "hmrc_code");
+  return await brevo(db, c.id, String(d.email ?? ""), name, t(emp ? "email.code.subject_employer" : "email.code.subject", { ref: String(c.ref) }), html, text, "hmrc_code_request", "hmrc_code");
 }
 
 // Short alert to Eduard (letters@)

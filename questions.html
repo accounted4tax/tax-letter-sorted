@@ -55,7 +55,7 @@
   var F = window.TLS_FLOW, t = F.t, el = F.el;
   var $ = function (id) { return document.getElementById(id); };
   var FILING = ["sa-late-filing-100", "sa-late-filing-later"];
-  var APPEAL = FILING.concat(["sa-late-payment", "ct-late-filing", "companies-house-late-filing"]);
+  var APPEAL = FILING.concat(["sa-late-payment", "ct-late-filing", "companies-house-late-filing", "vat-late-submission", "paye-employer-penalty", "cis-late-return"]);
   var EVIDENCE = ["discharge_letter", "doctor_letter", "death_certificate", "repair_receipt", "police_report", "other", "none"];
 
   if (F.demo && !F.getJSON("tls_explain")) F.setJSON("tls_explain", { letter_type: "sa-late-filing-100", appeal_deadline: "2026-12-20", ref: "TLS-DEMO" });

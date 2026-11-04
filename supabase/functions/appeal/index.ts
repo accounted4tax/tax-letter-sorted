@@ -17,6 +17,14 @@ const SITE = "https://taxletters.accounted4tax.co.uk";
 const APPEAL_ROUTES = ["appeal", "choice", "hmrc_check_first"];
 const SA_TYPES = ["sa-late-filing-100", "sa-late-filing-later", "sa-late-payment"];
 const COMPANY_TYPES = ["ct-late-filing", "companies-house-late-filing"];
+// VAT, PAYE, CIS: free / £19 letter / £39 accountant review (letter for the client to post + agent account) – Eduard 3-4 Nov 2026
+const BIZ_TYPES = ["vat-late-submission", "paye-employer-penalty", "cis-late-return"];
+const BIZ_SUBJECT: Record<string, string> = {
+  "vat-late-submission": "Appeal against VAT late submission penalty",
+  "paye-employer-penalty": "Appeal against PAYE late filing penalty",
+  "cis-late-return": "Appeal against CIS late return penalty",
+};
+const NOTICE_ADDRESS = "the HMRC address shown on your penalty notice";
 const CH_APPEAL_URL = "https://www.gov.uk/appeal-a-penalty-for-filing-your-company-accounts-late";
 
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
@@ -49,7 +57,7 @@ async function rules(id: string): Promise<Obj | null> {
 }
 
 // ---------- validation of the details form ----------
-function cleanDetails(c: Obj, d: Obj) {
+function cleanDetails(c: Obj, d: Obj, product = "option2") {
   const t = String(c.letter_type);
   const company = COMPANY_TYPES.includes(t);
   const out: Obj = {
@@ -87,6 +95,38 @@ function cleanDetails(c: Obj, d: Obj) {
     if (t === "ct-late-filing" && !/^\d{10}K?$/.test(String(out.utr ?? ""))) errors.push("utr");
     if (t === "companies-house-late-filing" && String(out.penalty_reference ?? "").length < 4) errors.push("penalty_reference");
     if (!/^(\d{8}|[A-Z]{2}\d{6})$/.test(String(out.company_number))) errors.push("company_number");
+  }
+  if (BIZ_TYPES.includes(t)) {
+    const agent = product === "option3";   // £39: we also appeal from the agent account, so more references are needed
+    out.business_type = d.business_type === "company" ? "company" : d.business_type === "sole_trader" ? "sole_trader" : null;
+    if (!out.business_type) errors.push("business_type");
+    out.business_name = str(d.business_name, 160);
+    if (String(out.business_name).length < 2) errors.push("business_name");
+    if (out.business_type === "company") {
+      out.company_name = String(out.business_name).toUpperCase();
+      out.company_number = str(d.company_number, 10).replace(/\s/g, "").toUpperCase() || null;
+      out.role = "Director";
+      if (agent && !/^(\d{8}|[A-Z]{2}\d{6})$/.test(String(out.company_number ?? ""))) errors.push("company_number");
+    }
+    if (t === "vat-late-submission") {
+      out.vat_number = str(d.vat_number, 16).replace(/[\s]/g, "").toUpperCase().replace(/^GB/, "");
+      if (!/^\d{9}$/.test(String(out.vat_number))) errors.push("vat_number");
+      if (agent) {
+        out.vat_registration_date = /^\d{4}-\d{2}-\d{2}$/.test(String(d.vat_registration_date ?? "")) ? d.vat_registration_date : null;
+        if (!out.vat_registration_date) errors.push("vat_registration_date");
+        out.vat_returns_up_to_date = d.vat_returns_up_to_date === "yes" ? "yes" : d.vat_returns_up_to_date === "no" ? "no" : null;
+        if (!out.vat_returns_up_to_date) errors.push("vat_returns_up_to_date");
+      }
+    } else {
+      out.paye_ref = str(d.paye_ref, 14).replace(/\s/g, "").toUpperCase();
+      if (!/^\d{3}\/?[A-Z0-9]{1,10}$/.test(String(out.paye_ref))) errors.push("paye_ref");
+      out.accounts_office_ref = str(d.accounts_office_ref, 16).replace(/\s/g, "").toUpperCase() || null;
+      if (agent && !/^\d{3}P[A-Z]\d{7}[0-9X]?$/.test(String(out.accounts_office_ref ?? ""))) errors.push("accounts_office_ref");
+      if (t === "cis-late-return") {
+        out.utr = str(d.utr, 13).replace(/\s/g, "").toUpperCase() || null;
+        if ((agent || out.utr) && !/^\d{10}K?$/.test(String(out.utr ?? ""))) errors.push("utr");
+      }
+    }
   }
   return { out, errors };
 }
@@ -133,6 +173,28 @@ async function buildPdf(c: Obj) {
     return { bytes: new Uint8Array(bytes), kind: "sa370", send: { how: "post", to: String(map.send_to) } };
   }
 
+  // VAT / PAYE / CIS: an appeal letter to the address on the penalty notice
+  if (BIZ_TYPES.includes(t)) {
+    const to = bizAddress(ext);
+    const refs = [`Business: ${d.business_name ?? d.full_name}` + (d.company_number ? ` (company number ${d.company_number})` : "")];
+    if (d.vat_number) refs.push(`VAT registration number: ${d.vat_number}`);
+    if (d.paye_ref) refs.push(`Employer PAYE reference: ${d.paye_ref}`);
+    if (d.accounts_office_ref) refs.push(`Accounts Office reference: ${d.accounts_office_ref}`);
+    if (d.utr) refs.push(`UTR: ${d.utr}`);
+    if (ext.period) refs.push(`Period: ${ext.period}`);
+    if (ext.penalty_reference) refs.push(`Penalty reference: ${ext.penalty_reference}`);
+    if (c.notice_date) refs.push(`Penalty notice dated: ${new Date(String(c.notice_date) + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}`);
+    if (c.penalty_amount) refs.push(`Penalty amount: £${Number(c.penalty_amount).toFixed(2)}`);
+    const bytes = await buildLetter(PDFLib, {
+      from_lines: [String(d.business_name ?? d.full_name), ...(d.address_lines as string[]), String(d.postcode)],
+      contact: [d.phone, d.email].filter(Boolean).join(" · "),
+      date: new Date().toISOString().slice(0, 10), to_lines: to.lines,
+      subject: BIZ_SUBJECT[t], ref_lines: refs, body: text,
+      signer: String(d.full_name), signer_role: d.business_type === "company" ? "Director" : "Owner",
+    });
+    return { bytes: new Uint8Array(bytes), kind: "letter", send: { how: "post", to: to.sendTo } };
+  }
+
   // Company penalties: an appeal letter
   const ch = t === "companies-house-late-filing";
   const r = await rules(t);
@@ -156,6 +218,14 @@ async function buildPdf(c: Obj) {
   return { bytes: new Uint8Array(bytes), kind: "letter",
     // Companies House lists only its online appeal service (GOV.UK, checked 1 Nov 2026) – no email or post route
     send: ch ? { how: "online", to: CH_APPEAL_URL } : { how: "post", to: to.join(", ") } };
+}
+
+// HMRC address for VAT / PAYE / CIS: the one printed on the penalty notice (Eduard 4 Nov 2026)
+function bizAddress(ext: Obj) {
+  const raw = typeof ext.return_address === "string" ? ext.return_address.trim() : "";
+  const lines = raw ? raw.split(/\s*[,\n]\s*/).filter(Boolean).slice(0, 7) : [];
+  if (lines.length >= 2) return { lines, sendTo: lines.join(", ") };
+  return { lines: ["HM Revenue and Customs", "(address as shown on the penalty notice)"], sendTo: NOTICE_ADDRESS };
 }
 
 async function signedUrl(path: string, seconds = 900) {
@@ -203,6 +273,7 @@ async function sendInfo(c: Obj) {
   const t = String(c.letter_type);
   if (SA_TYPES.includes(t)) { const { map } = await sa370Template(); return { send: { how: "post", to: String(map.send_to) } }; }
   if (t === "companies-house-late-filing") return { send: { how: "online", to: CH_APPEAL_URL } };
+  if (BIZ_TYPES.includes(t)) return { send: { how: "post", to: bizAddress((c.extracted ?? {}) as Obj).sendTo } };
   const r = await rules(t);
   return { send: { how: "post", to: String(((r?.appeal_output ?? {}) as Obj).post_to ?? "Corporation Tax Services, HM Revenue and Customs, BX9 1AX") } };
 }
@@ -275,14 +346,16 @@ Deno.serve(async (req) => {
         appeal_deadline: c.appeal_deadline, can_continue: !!c.facts_confirmed_at && APPEAL_ROUTES.includes(String(c.outcome_route)),
         details: c.details ?? null, needs_payment: mustPay,
         prefill: { full_name: conf.name_on_letter ?? ext.name_on_letter ?? null, utr: c.utr ?? ext.utr ?? null,
-          company_name: conf.company_name ?? ext.company_name ?? null, company_number: ext.company_number ?? null },
+          company_name: conf.company_name ?? ext.company_name ?? null, company_number: ext.company_number ?? null,
+          vat_number: ext.vat_number ?? null, paye_ref: ext.employer_paye_ref ?? null, accounts_office_ref: ext.accounts_office_ref ?? null,
+          vat_registration_date: ext.vat_registration_date ?? null },
       });
     }
 
     if (body.action === "save_details") {
       if (!c.facts_confirmed_at || !APPEAL_ROUTES.includes(String(c.outcome_route))) return reply(400, { error: "not_ready" });
       const product = body.product === "option3" || COMPANY_TYPES.includes(String(c.letter_type)) ? "option3" : "option2";
-      const { out, errors } = cleanDetails(c, (body.details ?? {}) as Obj);
+      const { out, errors } = cleanDetails(c, (body.details ?? {}) as Obj, product);
       if (errors.length) return reply(400, { error: "invalid", fields: errors });
       await db.from("cases").update({
         details: out, details_saved_at: new Date().toISOString(), product, status: "awaiting_payment",

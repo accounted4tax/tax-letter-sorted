@@ -48,12 +48,15 @@ async function currentFiles(caseId: string) {
     .eq("case_id", caseId).in("kind", Object.values(KIND)).is("deleted_at", null);
   return data ?? [];
 }
-function partsFor(cat: Obj, letterType: string) {
-  return ((cat.company_types as string[]).includes(letterType) ? cat.parts_company : cat.parts_individual) as string[];
+// company: CT / Companies House / strike-off letters, or a VAT / PAYE / CIS case where the business is a limited company
+function partsFor(cat: Obj, letterType: string, d: Obj = {}) {
+  const company = (cat.company_types as string[]).includes(letterType) || d.business_type === "company";
+  return (company ? cat.parts_company : cat.parts_individual) as string[];
 }
+const CODE_TYPES = ["ct-late-filing", "paye-employer-penalty", "cis-late-return"];
 async function statusOf(c: Obj) {
   const cat = await docs();
-  const parts = partsFor(cat, String(c.letter_type));
+  const parts = partsFor(cat, String(c.letter_type), (c.details ?? {}) as Obj);
   const files = await currentFiles(String(c.id));
   const out: Record<string, Obj> = {};
   for (const p of parts) {
@@ -66,9 +69,9 @@ async function statusOf(c: Obj) {
     ref: c.ref, letter_type: c.letter_type, company, parts: out,
     all_received: parts.every((p) => out[p].received), completed: !!c.id_completed_at,
     authority: !!c.authority_to_act_at, authority_name: c.authority_name ?? null, later_requested: !!c.id_requested_at, appeal_deadline: c.appeal_deadline,
-    company_name: company ? d.company_name ?? null : null, company_number: company ? d.company_number ?? null : null,
+    company_name: company ? d.company_name ?? null : (d.business_name as string) ?? null, company_number: company ? d.company_number ?? null : null,
     director: company ? d.full_name ?? null : null,
-    needs_hmrc_code: c.letter_type === "ct-late-filing", hmrc_code_received: !!c.hmrc_code_at,
+    needs_hmrc_code: CODE_TYPES.includes(String(c.letter_type)), hmrc_code_received: !!c.hmrc_code_at,
   };
 }
 
@@ -119,7 +122,7 @@ Deno.serve(async (req) => {
       if (c.id_completed_at) return reply(400, { error: "already_complete" });
       const cat = await docs();
       const part = String(body.part ?? "");
-      if (!partsFor(cat, String(c.letter_type)).includes(part)) return reply(400, { error: "part" });
+      if (!partsFor(cat, String(c.letter_type), (c.details ?? {}) as Obj).includes(part)) return reply(400, { error: "part" });
       const docType = part === "selfie" ? "selfie" : String(body.doc_type ?? "");
       const list = (cat[part] ?? []) as Obj[];
       const entry = list.find((x) => x.id === docType);
@@ -186,7 +189,7 @@ Deno.serve(async (req) => {
     }
 
     if (body.action === "hmrc_code") {
-      if (c.letter_type !== "ct-late-filing") return reply(400, { error: "not_ct" });
+      if (!CODE_TYPES.includes(String(c.letter_type))) return reply(400, { error: "not_ct" });
       const code = String(body.code ?? "").replace(/[\s-]/g, "").toUpperCase();
       if (!/^[A-Z0-9]{4,20}$/.test(code)) return reply(400, { error: "code" });
       const now = new Date().toISOString();
@@ -194,7 +197,7 @@ Deno.serve(async (req) => {
       await db.from("audit_log").insert({ actor: "client", action: "hmrc_code_received", case_id: c.id });
       await alertEduard(db, c, `HMRC authorisation code received for ${c.ref}`, [
         `The client has sent the HMRC agent authorisation code for ${c.ref}.`,
-        `Company: ${((c.details ?? {}) as Obj).company_name ?? "-"}`,
+        `Company / business: ${((c.details ?? {}) as Obj).company_name ?? ((c.details ?? {}) as Obj).business_name ?? "-"}`,
         "Open the admin page to see it.",
       ]).catch(() => {});
       return reply(200, { ok: true });

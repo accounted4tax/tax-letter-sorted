@@ -72,18 +72,26 @@ const BECAUSE_CLOSE = {
 //   story, why_late, nnf_other_text, something_else_text   (English, as confirmed)
 //   date_from, date_to, filed_date, filed_asap ("yes"/"no"), evidence: []
 // }
+// VAT, PAYE and CIS penalties: the business (sole trader or company) appeals; worded for either.
+const BIZ = {
+  "vat-late-submission": { pen: "late submission penalty", pens: "late submission penalties", doc: "its VAT return", docs: "VAT return", extra: " (including the penalty points)" },
+  "paye-employer-penalty": { pen: "PAYE late filing penalty", pens: "PAYE late filing penalties", doc: "its PAYE return (Full Payment Submission)", docs: "PAYE return", extra: "" },
+  "cis-late-return": { pen: "penalty for the late CIS monthly return", pens: "penalties for the late CIS monthly returns", doc: "its CIS monthly return", docs: "CIS monthly return", extra: "" },
+};
 export function composeAppeal(a) {
   const pay = a.letter_type === "sa-late-payment";
   const company = a.letter_type === "ct-late-filing";
   const ch = a.letter_type === "companies-house-late-filing";
+  const biz = BIZ[a.letter_type];
+  const org = company || ch || !!biz;   // written for an organisation ("the company" / "the business")
   const plural = (a.penalty_count ?? 1) > 1;
-  const penaltyWords = (pay ? "late payment penalt" : "late filing penalt") + (plural ? "ies" : "y");
-  const year = /^\d{4}-\d{2}$/.test(a.tax_year ?? "") && !company && !ch
+  const penaltyWords = biz ? (plural ? biz.pens : biz.pen) + biz.extra : (pay ? "late payment penalt" : "late filing penalt") + (plural ? "ies" : "y");
+  const year = /^\d{4}-\d{2}$/.test(a.tax_year ?? "") && !org
     ? ` for the tax year ${a.tax_year.slice(0, 4)} to 20${a.tax_year.slice(5)}` : "";
-  const doc = ch ? "its accounts" : company ? "its company tax return" : pay ? "the tax" : "my tax return";
-  const who = company || ch ? "The company was" : "I was";
-  const act = pay ? "pay my tax" : company ? "file its company tax return" : ch ? "file its accounts" : "file my tax return";
-  const filedVerb = pay ? "paid" : "filed";
+  const doc = biz ? biz.doc : ch ? "its accounts" : company ? "its company tax return" : pay ? "the tax" : "my tax return";
+  const who = biz ? "The business was" : company || ch ? "The company was" : "I was";
+  const act = biz ? (biz.docs === "VAT return" ? "submit " : "send ") + biz.doc : pay ? "pay my tax" : company ? "file its company tax return" : ch ? "file its accounts" : "file my tax return";
+  const filedVerb = pay ? "paid" : biz ? "sent" : "filed";
   const deadline = pay ? "the payment deadline" : "the filing deadline";
   // one or more reasons the client chose (only those with appeal wording are named)
   const reasons = (Array.isArray(a.reasons) && a.reasons.length ? a.reasons : [a.reason]).filter(Boolean);
@@ -107,13 +115,13 @@ export function composeAppeal(a) {
   const extra = [];
   if (a.date_from && a.date_to) extra.push(`The problem lasted from ${fmt(a.date_from)} to ${fmt(a.date_to)}.`);
   else if (a.date_from) extra.push(`The problem started on ${fmt(a.date_from)}.`);
-  const subj = company || ch ? "The company" : "I";
+  const subj = biz ? "The business" : company || ch ? "The company" : "I";
   if (a.filed_date) {
     extra.push(a.filed_asap === "yes"
-      ? `${subj} ${filedVerb} ${doc} on ${fmt(a.filed_date)}, as soon as ${company || ch ? "it was" : "I was"} able to.`
+      ? `${subj} ${filedVerb} ${doc} on ${fmt(a.filed_date)}, as soon as ${org ? "it was" : "I was"} able to.`
       : `${subj} ${filedVerb} ${doc} on ${fmt(a.filed_date)}.`);
   } else if (a.filed_asap === "yes") {
-    extra.push(`${subj} ${filedVerb} ${doc} as soon as ${company || ch ? "it was" : "I was"} able to.`);
+    extra.push(`${subj} ${filedVerb} ${doc} as soon as ${org ? "it was" : "I was"} able to.`);
   }
   const ev = (a.evidence ?? []).filter((k) => EVIDENCE_EN[k]).map((k) => EVIDENCE_EN[k]);
   if (ev.length) extra.push(`I can provide ${list(ev)} if you need it.`);

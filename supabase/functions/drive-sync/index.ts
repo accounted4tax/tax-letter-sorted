@@ -47,6 +47,15 @@ async function post(payload: Obj) {
   return j;
 }
 
+// English labels from the website's language file (reasons, evidence)
+let EN: Obj | null = null;
+async function en() {
+  if (EN) return EN;
+  try { const r = await fetch("https://taxletters.accounted4tax.co.uk/lang/en.json"); EN = r.ok ? await r.json() : {}; } catch { EN = {}; }
+  return EN!;
+}
+const month = (v: unknown) => /^\d{4}-\d{2}$/.test(String(v ?? "")) ? new Date(String(v) + "-15T12:00:00Z").toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }) : fmt(v);
+
 // ---------- one case ----------
 async function syncCase(c: Obj) {
   const ref = String(c.ref), d = (c.details ?? {}) as Obj;
@@ -118,7 +127,7 @@ async function syncCase(c: Obj) {
     const label = (links ?? []).find((l) => l.id === p.payment_link_id)?.label ?? PRODUCT[String(p.product)] ?? String(p.product);
     const sref = String(p.stripe_payment_intent ?? p.stripe_session_id ?? "");
     if (isNew("pay:" + p.id)) payRows.push([fmt(p.paid_at), ref, name, label, (Number(p.amount_pence) / 100).toFixed(2), sref, String(p.stripe_mode ?? "")]);
-    add("Service and payment", p.paid_at, "Paid", `${money(p.amount_pence)} – ${label} · Stripe ${sref}${p.stripe_mode === "test" ? " (test)" : ""}`, "pay:" + p.id);
+    add("Service and payment", p.paid_at, "Paid", `${money(p.amount_pence)} – ${label}${sref ? " · Stripe " + sref : ""}${p.stripe_mode === "test" ? " (test)" : ""}`, "pay:" + p.id);
   }
   const { data: quotes } = await db.from("help_requests").select("id, note, created_at, status").eq("tax_year", "package").ilike("note", `%Case: ${ref}%`).order("created_at");
   const quoteRows: string[][] = [];
@@ -135,16 +144,21 @@ async function syncCase(c: Obj) {
   const { data: ans } = await db.from("case_answers").select("answers, answers_english, updated_at").eq("case_id", c.id).maybeSingle();
   if (ans && c.facts_confirmed_at) {
     const a = (ans.answers ?? {}) as Obj, ae = (ans.answers_english ?? {}) as Obj, eng = (ae.texts ?? {}) as Obj;
+    const L = await en(), rid = String(ae.reason ?? a.reason ?? "");
+    const reasonLabel = String(((L.reason ?? {}) as Obj)[rid] ?? rid.replace(/_/g, " "));
+    const evLabels = ((L.q ?? {}) as Obj).evidence_opt as Obj ?? {};
     const items: [string, string][] = [
-      ["Reason chosen", String(ae.reason ?? a.reason ?? "").replace(/_/g, " ")],
-      ["Dates", [a.date_from, a.date_to].filter(Boolean).join(" to ")],
+      ["Reason chosen", reasonLabel],
+      ["Dates", [a.date_from, a.date_to].filter(Boolean).map(month).join(" to ")],
       ["Filed / paid", a.filed_date ? fmt(a.filed_date) + (a.filed_asap === "yes" ? " (as soon as able)" : "") : ""],
       ["Client wrote", String(a.story ?? "")],
       ["English (confirmed)", String(eng.story ?? "")],
       ["Why late (appeal)", String(eng.why_late ?? "")],
-      ["Evidence held", ((a.evidence as string[]) ?? []).join(", ").replace(/_/g, " ")],
+      ["Evidence held", ((a.evidence as string[]) ?? []).map((k) => String(evLabels[k] ?? k.replace(/_/g, " "))).join(", ")],
     ];
-    for (const [item, val] of items) if (val) add("Client's answers", c.facts_confirmed_at, item, val, "ans:" + item + ":" + await hash(val));
+    // the key uses the raw answer, so a change of wording on the website never adds a duplicate row
+    const raw: Record<string, string> = { "Reason chosen": rid, "Dates": [a.date_from, a.date_to].filter(Boolean).join(" to "), "Evidence held": ((a.evidence as string[]) ?? []).join(",") };
+    for (const [item, val] of items) if (val) add("Client's answers", c.facts_confirmed_at, item, val, "ans:" + item + ":" + await hash(raw[item] ?? val));
   }
 
   // Identity check (AML) and agent steps
@@ -177,7 +191,7 @@ async function syncCase(c: Obj) {
     d.business_type ? (d.business_type === "company" ? "Ltd" : "Sole trader") : (company ? "Ltd" : (d.full_name ? "Individual" : "")),
     String(d.company_number ?? ""), String(d.email ?? ""), String(d.phone ?? ""), [...((d.address_lines as string[]) ?? []), d.postcode].filter(Boolean).join(", "),
     String(d.utr ?? c.utr ?? ""), String(d.vat_number ?? ""), String(d.paye_ref ?? ""), String(d.accounts_office_ref ?? ""),
-    TYPE[String(c.letter_type)] ?? String(c.letter_type ?? ""), service, String(c.status ?? ""), fmt(c.id_completed_at)];
+    TYPE[String(c.letter_type)] ?? String(c.letter_type ?? ""), service, String(c.status ?? "").replace(/_/g, " "), fmt(c.id_completed_at)];
 
   // 1) the record + register, 2) each new file on its own (keeps each request small)
   const anything = Object.keys(sections).length || payRows.length || quoteRows.length;

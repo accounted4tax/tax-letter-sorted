@@ -239,6 +239,24 @@ async function syncLooseQuotes() {
   return n;
 }
 
+// Email Eduard when the copy fails (at most once a day), e.g. Google permission removed after a password change
+const ALERT_TO = "letters@accounted4tax.co.uk";
+async function alertFailure(problem: string) {
+  const since = new Date(Date.now() - 24 * 3600e3).toISOString();
+  const { data: recent } = await db.from("audit_log").select("id").eq("action", "drive_sync_alert").gte("at", since).limit(1);
+  if (recent?.length) return;
+  await db.from("audit_log").insert({ actor: "system", action: "drive_sync_alert", detail: { problem: problem.slice(0, 300) } });
+  const key = Deno.env.get("BREVO_API_KEY");
+  if (!key) return;
+  const lines = ["The automatic copy to Google Drive did not work.", "Problem: " + problem.slice(0, 300),
+    "Nothing is lost: the website keeps everything and the copy catches up as soon as it works again.",
+    "Usual fix: open the Google script (Drive → Tax Letter Sorted → Developer), run \"setup\" once and allow access again. Or ask Claude to check."];
+  await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({ sender: { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" }, to: [{ email: ALERT_TO }],
+      subject: "Google Drive copy stopped working", textContent: lines.join("\n\n"),
+      htmlContent: `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5">${lines.map((l) => `<p>${l.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</p>`).join("")}</div>`, tags: ["drive_alert"] }) }).catch(() => {});
+}
+
 Deno.serve(async (req) => {
   const { data: settings } = await db.from("app_settings").select("cron_secret, live").eq("id", 1).single();
   if (!settings?.cron_secret || (req.headers.get("x-cron-secret") ?? "") !== settings.cron_secret) return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
@@ -291,8 +309,11 @@ Deno.serve(async (req) => {
     }
     // website quote / service requests: only once the site is live (before that they are all tests)
     const loose = body.ref || !settings?.live ? 0 : await syncLooseQuotes().catch(() => 0);
+    const failed = results.filter((r) => r.error);
+    if (failed.length && !body.ref) await alertFailure(failed.map((r) => `${r.ref}: ${r.error}`).join("; "));
     return new Response(JSON.stringify({ ok: true, cases: results.filter((r) => r.added || r.files || r.error), loose_quotes: loose }), { status: 200 });
   } catch (e) {
+    if (!body.ref) await alertFailure(String((e as Error).message ?? e)).catch(() => {});
     return new Response(JSON.stringify({ error: String((e as Error).message ?? e).slice(0, 300) }), { status: 502 });
   }
 });

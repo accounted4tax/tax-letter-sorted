@@ -16,6 +16,7 @@
 const ROOT_FOLDER_NAME = 'Tax Letter Sorted';
 const REGISTER_NAME = 'Client register';
 const FILES_FOLDER_NAME = 'Client files';
+const NOT_PROCEEDED_NAME = 'Not proceeded';   // inside Client files: people who never paid (monthly clean-up)
 const SUBFOLDERS = ['01 Onboarding', '02 Documents', '03 ID'];
 const SECTIONS = ['Case and client', 'Director', 'Service and payment', "Client's answers", 'Identity check (AML)', 'Appeal, agent and emails', 'Your notes'];
 const TABS = {
@@ -55,6 +56,7 @@ function doPost(e) {
     if (body.action === 'case') return out_(syncCase_(body));
     if (body.action === 'file') return out_(saveFile_(body));
     if (body.action === 'quote') return out_(addRows_('Quotes', [body.row]));
+    if (body.action === 'not_proceeded') return out_(notProceeded_(body.ref));
     return out_({ error: 'action' });
   } catch (err) {
     return out_({ error: String(err && err.message || err).slice(0, 300) });
@@ -106,11 +108,19 @@ function childFolder_(parent, name) {
   const it = parent.getFoldersByName(name);
   return it.hasNext() ? it.next() : parent.createFolder(name);
 }
-// The client's folder is found by its case reference, so a later name change doesn't create a second folder
+// The client's folder is found by its case reference, so a later name change doesn't create a second folder.
+// If it was moved to "Not proceeded" and something new arrives (a payment, a quote), it moves back automatically.
+function findIn_(parent, ref) {
+  const it = parent.getFolders();
+  while (it.hasNext()) { const f = it.next(); if (f.getName().indexOf(ref + ' ') === 0 || f.getName() === ref) return f; }
+  return null;
+}
 function caseFolder_(ref, name) {
   const files = childFolder_(rootFolder_(), FILES_FOLDER_NAME);
-  const it = files.getFolders();
-  while (it.hasNext()) { const f = it.next(); if (f.getName().indexOf(ref + ' ') === 0 || f.getName() === ref) return f; }
+  const found = findIn_(files, ref);
+  if (found) return found;
+  const parked = findIn_(childFolder_(files, NOT_PROCEEDED_NAME), ref);
+  if (parked) { parked.moveTo(files); setClientStatus_(ref, 'back from Not proceeded'); return parked; }
   const f = files.createFolder(name || ref);
   SUBFOLDERS.forEach(function (s) { f.createFolder(s); });
   return f;
@@ -211,6 +221,23 @@ function upsertClient_(ref, values) {
     const range = sh.getRange(i + 2, 1, 1, row.length), cur = range.getValues()[0];
     range.setValues([row.map(function (v, k) { return v === '' || v == null ? cur[k] : v; })]);
   }
+}
+
+// Monthly clean-up: never paid after 30 days → Client files/Not proceeded (Eduard reviews and deletes)
+function notProceeded_(ref) {
+  const files = childFolder_(rootFolder_(), FILES_FOLDER_NAME);
+  const f = findIn_(files, ref);
+  if (!f) return { ok: true, moved: false };
+  f.moveTo(childFolder_(files, NOT_PROCEEDED_NAME));
+  setClientStatus_(ref, 'Not proceeded');
+  return { ok: true, moved: true };
+}
+function setClientStatus_(ref, status) {
+  const sh = register_().getSheetByName('Clients');
+  if (sh.getLastRow() < 2) return;
+  const refs = sh.getRange(2, 1, sh.getLastRow() - 1, 1).getValues().map(function (x) { return String(x[0]); });
+  const i = refs.indexOf(ref);
+  if (i > -1) sh.getRange(i + 2, TABS['Clients'].indexOf('Status') + 1).setValue(status);
 }
 
 function today_() { return Utilities.formatDate(new Date(), 'Europe/London', 'dd MMM yyyy'); }

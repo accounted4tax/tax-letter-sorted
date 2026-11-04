@@ -34,3 +34,5 @@ Admin sign-in: Supabase Auth email + password; the user must be created in the d
 - 017_payment_links_amounts – applied 3 Nov 2026 (payment_links amount/target/label/sent_to/created_by; payments.payment_link_id)
 - 018_more_letters_appointment – applied 3 Nov 2026 (letter types sa-statement, cis-late-return; product appointment on cases and payments)
 - 019_strike_off – applied 4 Nov 2026 (letter type companies-house-strike-off)
+- 020_drive_sync – applied 4 Nov 2026 (drive_sync_items; pg_cron drive-sync-15min)
+- 021_drive_not_proceeded – applied 4 Nov 2026 (pg_cron drive-not-proceeded-monthly)

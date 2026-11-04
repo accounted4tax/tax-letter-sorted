@@ -198,6 +198,7 @@ async function syncCase(c: Obj) {
   const fileQueue = (files ?? []).filter((f) => isNew("file:" + f.id) && (f.kind === "letter" || f.kind === "appeal_pdf" || ID_KIND[f.kind]));
   if (!anything && !fileQueue.length) return { ref, added: 0, files: 0 };
   const title = name || ref;
+  await db.from("drive_sync_items").delete().eq("item_key", ref + ":np");
   await post({ action: "case", ref, folder_name: folderName, title, company, client_row: clientRow, sections, quotes: quoteRows, payments: payRows });
   if (newKeys.length) await db.from("drive_sync_items").upsert(newKeys.map((k) => ({ item_key: k, case_id: c.id })), { onConflict: "item_key" });
 
@@ -247,6 +248,25 @@ Deno.serve(async (req) => {
 
   try {
     if (body.action === "ping") return new Response(JSON.stringify(await post({ action: "ping" })), { status: 200 });
+    // monthly: folders of people who never paid, 30+ days after they started → Client files/Not proceeded.
+    // If they pay later, the next copy moves the folder back (Apps Script) and this marker is removed.
+    if (body.action === "cleanup") {
+      const { data: synced } = await db.from("drive_sync_items").select("item_key, case_id").like("item_key", "%:cc:Case:%");
+      const moved: string[] = [];
+      for (const s of synced ?? []) {
+        if (!s.case_id) continue;
+        const ref = String(s.item_key).split(":")[0];
+        const { data: c } = await db.from("cases").select("created_at").eq("id", s.case_id).maybeSingle();
+        if (c && new Date(String(c.created_at)).getTime() > Date.now() - 30 * 864e5) continue;
+        const { data: paid } = await db.from("payments").select("id").eq("case_id", s.case_id).eq("status", "paid").limit(1);
+        if (paid?.length) continue;
+        const { data: already } = await db.from("drive_sync_items").select("item_key").eq("item_key", ref + ":np").maybeSingle();
+        if (already) continue;
+        const r = await post({ action: "not_proceeded", ref });
+        if (r.moved) { await db.from("drive_sync_items").upsert({ item_key: ref + ":np", case_id: s.case_id }, { onConflict: "item_key" }); moved.push(ref); }
+      }
+      return new Response(JSON.stringify({ ok: true, moved }), { status: 200 });
+    }
     // Every client except the £19 self-serve product, paid or not (they may pay later) – Eduard 4 Nov 2026:
     // accountant reviews, appointments, call-backs, and any case with a quote or a payment link.
     // Automatic runs start only once the site is live (before that every case is a test); "Copy now" always works.

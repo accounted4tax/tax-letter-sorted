@@ -14,8 +14,14 @@
       "250 or more": "£400"
     },
     "estimates": "If reports are missing, HMRC may raise an estimated charge (a 'specified charge'). Only sending the missing report replaces it with the real amount.",
-    "how_to_appeal": "Online in HMRC's PAYE for employers service ('Appeal a penalty'), or by post to: National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX. Quote the unique ID of each penalty from the notice. Usually within 30 days.",
-    "pay": "Paying within 30 days of the notice avoids interest."
+    "how_to_appeal": "Online in HMRC's PAYE for employers service ('Appeal a penalty' – take a screenshot of the confirmation, it can't be printed), or by post to: National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX. Quote the unique ID of each penalty from the notice. Grounds: the penalty is not due, the amount is wrong, or a reasonable excuse.",
+    "pay": "Paying within 30 days of the notice avoids interest.",
+    "no_penalty_when": {
+      "three_day_easement": "No penalty if all payments on the late FPS were made within 3 days of the employees' payday (HMRC may still contact employers who often file late within the 3 days).",
+      "new_employer": "No penalty if the first FPS was sent within 30 days of first paying an employee.",
+      "first_failure": "No penalty for the first late report in the tax year (does not apply to annual schemes)."
+    },
+    "more_than_one_scheme": "An employer with more than one PAYE scheme can be charged for each."
   },
   "appeal_output": {
     "form": "letter",
@@ -47,5 +53,6 @@
       "paye_ref",
       "accounts_office_ref"
     ]
-  }
+  },
+  "checked": "4 Nov 2026 by Claude against GOV.UK 'What happens if you don't report payroll information on time' – amounts, exceptions and BX9 1BX address match. GOV.UK page gives no appeal time limit; the 30 days comes from the penalty notice / general appeals guidance."
 }

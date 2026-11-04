@@ -12,7 +12,7 @@
       "quarterly": "4 points",
       "monthly": "5 points"
     },
-    "removing_points": "At the threshold, points are removed only when both are met: (A) a period of compliance – all returns on time for 24 months (annual), 12 months (quarterly) or 6 months (monthly); and (B) all outstanding returns for the previous 24 months sent. Below the threshold, each point expires on its own after about 24 months.",
+    "removing_points": "At the threshold, points are removed only when both are met: (A) a period of compliance – all returns on time for 24 months (annual, 2 returns), 12 months (quarterly, 4 returns) or 6 months (monthly, 6 returns); and (B) all outstanding returns for the previous 24 months sent. Below the threshold, each point expires on its own on the last day of the month 24 months after the month of the missed deadline (25 months if the deadline was the last day of a month).",
     "how_to_challenge": "Ask HMRC for a review through the VAT online account, or write to: Solicitor's Office and Legal Services, HMRC, BX9 1ZT. A penalty can be cancelled if there was a reasonable excuse. Usually within 30 days of the penalty decision.",
     "pay": "Even while appealing, keep sending returns on time to stop more points."
   },
@@ -48,5 +48,6 @@
       "vat_registration_date",
       "vat_returns_up_to_date"
     ]
-  }
+  },
+  "checked": "4 Nov 2026 by Claude against GOV.UK (penalty points page + remove penalty points page) – thresholds 2/4/5, £200, compliance periods and BX9 1ZT match."
 }

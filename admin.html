@@ -506,6 +506,23 @@ async function openCase(ref) {
     el("button", { class: "sbtn", type: "button", text: "Copy the client's upload link", onclick: () => navigator.clipboard.writeText(r.links.id_upload).then(() => toast("Link copied")) })]));
   left.appendChild(docs);
 
+  // Google Drive copy (Client register + Client files) – runs every 15 minutes; this button does it now
+  if (!c.data_deleted_at && c.product && c.product !== "option2") {
+    const gd = el("section", { class: "card" }, [el("h2", { class: "sec", text: "Google Drive copy" }),
+      el("p", { class: "muted", text: "Copies new information to your Drive (Client register + Client files/" + c.ref + "). Runs automatically every 15 minutes; only new rows and files are added." })]);
+    const gdOut = el("p", { class: "muted" });
+    gd.appendChild(el("button", { class: "sbtn", type: "button", text: "Copy to Google Drive now", onclick: async (ev) => {
+      ev.target.disabled = true; gdOut.textContent = "Copying…";
+      try {
+        const x = await api("drive_sync", { ref: c.ref });
+        if (x.error === "not_configured") gdOut.textContent = "Google Drive isn't connected yet.";
+        else { const r1 = (x.cases || [])[0]; gdOut.textContent = r1 && r1.error ? "Problem: " + r1.error : r1 ? `Done: ${r1.added} new rows, ${r1.files} new files.` : "Already up to date."; }
+      } catch (e) { gdOut.textContent = e.message === "not_configured" ? "Google Drive isn't connected yet." : "Could not copy (" + e.message + ")."; }
+      ev.target.disabled = false;
+    } }));
+    gd.appendChild(gdOut); left.appendChild(gd);
+  }
+
   // HMRC agent authorisation: Corporation Tax / PAYE / CIS (code posted by HMRC), VAT (ASA link sent to the client)
   const AGENT = { "ct-late-filing": "Corporation Tax", "paye-employer-penalty": "PAYE", "cis-late-return": "CIS (PAYE scheme)", "vat-late-submission": "VAT" };
   if (AGENT[c.letter_type] && c.product === "option3") {

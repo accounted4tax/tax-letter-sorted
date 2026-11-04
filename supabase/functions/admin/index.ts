@@ -474,6 +474,15 @@ Deno.serve(async (req) => {
         return reply(200, { ok: true, sent, url });
       }
 
+      // copy this client's record to Google Drive now (otherwise it runs every 15 minutes)
+      case "drive_sync": {
+        const r = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/drive-sync`, { method: "POST",
+          headers: { "Content-Type": "application/json", "x-cron-secret": String(settings?.cron_secret ?? "") },
+          body: JSON.stringify(body.ref ? { ref: String(body.ref) } : body.ping ? { action: "ping" } : {}) });
+        const j = await r.json().catch(() => ({}));
+        return reply(r.ok ? 200 : 502, j);
+      }
+
       case "send_id_email": {
         const c = await caseByRef(body.ref);
         if (!c) return reply(404, { error: "not_found" });

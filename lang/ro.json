@@ -402,7 +402,13 @@
       "code.intro_employer",
       "email.code.subject_employer",
       "email.code.body_employer",
-      "email.code.meanwhile_employer"
+      "email.code.meanwhile_employer",
+      "idp.title",
+      "idp.title_director",
+      "idp.hint",
+      "idp.postcode",
+      "idp.dob",
+      "idp.err"
     ]
   },
   "common": {
@@ -1562,5 +1568,13 @@
     "submit": "Trimiteți cererea",
     "sent_text": "Vă mulțumim. Verificăm compania și vă trimitem pe email prețul și un link de plată. După plată vă cerem actele de identitate ale directorului și depunem declarația de confirmare.",
     "err_company": "Vă rugăm să introduceți numele companiei, numărul companiei și codul de autentificare Companies House. Avem nevoie de ele ca să depunem pentru companie."
+  },
+  "idp": {
+    "title": "Adresa de domiciliu și data nașterii",
+    "title_director": "Adresa de domiciliu și data nașterii directorului",
+    "hint": "Legea ne cere să le înregistrăm pentru verificarea identității. Folosiți aceeași adresă ca pe dovada de adresă.",
+    "postcode": "Cod poștal",
+    "dob": "Data nașterii",
+    "err": "Vă rugăm să completați adresa de domiciliu, codul poștal și data nașterii."
   }
 }

@@ -49,6 +49,16 @@
     <div class="success" id="paidNote" hidden data-i18n="paid.thanks"></div>
     <h1 data-i18n="id.title">Your case is with our accountant</h1>
     <p class="lead" id="intro"></p>
+    <!-- home address and date of birth (customer due diligence) -->
+    <section class="card part" id="personal">
+      <h2 id="personalTitle"></h2>
+      <p class="hint" data-i18n="idp.hint"></p>
+      <label class="field" id="pAddrRow"><span data-i18n="details.address1">Address line 1</span><input id="pAddr1" autocomplete="address-line1" maxlength="80"></label>
+      <label class="field"><span><span data-i18n="details.address2">Address line 2</span> <span class="hint" data-i18n="common.optional">(optional)</span></span><input id="pAddr2" autocomplete="address-line2" maxlength="80"></label>
+      <label class="field"><span data-i18n="details.town">Town or city</span><input id="pTown" autocomplete="address-level2" maxlength="80"></label>
+      <label class="field" id="pPcRow"><span data-i18n="idp.postcode">Postcode</span><input id="pPostcode" autocomplete="postal-code" maxlength="12" autocapitalize="characters" style="max-width:180px"></label>
+      <label class="field" id="pDobRow"><span data-i18n="idp.dob">Date of birth</span><input id="pDob" type="date" style="max-width:220px"></label>
+    </section>
     <div id="parts" class="stack"></div>
     <div id="authority"></div>
     <button class="btn" type="button" id="submit" data-i18n="id.submit">Send my documents</button>
@@ -189,21 +199,45 @@
     $("loading").hidden = true;
     if (st.completed) { finished(); return; }
     $("intro").textContent = t(st.company ? "id.intro_company" : "id.intro");
+    $("personalTitle").textContent = t(st.company ? "idp.title_director" : "idp.title");
+    if (!pFilled) {
+      pFilled = true;
+      var pa = (st.personal && st.personal.address) ? st.personal.address.split(", ") : [];
+      if (pa.length) { $("pPostcode").value = pa.pop(); $("pAddr1").value = pa[0] || ""; $("pTown").value = pa.length > 1 ? pa[pa.length - 1] : ""; $("pAddr2").value = pa.length > 2 ? pa.slice(1, -1).join(", ") : ""; }
+      if (st.personal && st.personal.dob) $("pDob").value = st.personal.dob;
+    }
     var box = $("parts"); box.innerHTML = "";
     Object.keys(st.parts).forEach(function (p) { box.appendChild(partCard(p)); });
     authorityCard();
     $("form").hidden = false;
   }
 
+  var pFilled = false;
+  function personalBody() {
+    return { action: "personal", address_lines: [$("pAddr1").value, $("pAddr2").value, $("pTown").value], postcode: $("pPostcode").value, dob: $("pDob").value };
+  }
   $("submit").addEventListener("click", function () {
+    ["pAddrRow", "pPcRow", "pDobRow"].forEach(function (id) { $(id).classList.remove("invalid"); });
+    var pb = personalBody(), bad = [];
+    if (!pb.address_lines[0].trim()) bad.push("pAddrRow");
+    if (pb.postcode.trim().length < 3) bad.push("pPcRow");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(pb.dob)) bad.push("pDobRow");
+    if (bad.length) { bad.forEach(function (id) { $(id).classList.add("invalid"); }); showErr("idp.err"); $("personal").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
     if (!st.all_received) { showErr("id.err_missing"); return; }
     if (st.company && !st.authority) { authErr = "auth.err_unsigned"; render(); showErr("auth.err_unsigned"); return; }
     showErr(null); $("submit").disabled = true;
-    api({ action: "complete" }).then(function (res) {
+    api(pb).then(function (r0) {
+      if (!r0.ok) {
+        $("submit").disabled = false;
+        (r0.j.fields || []).forEach(function (f) { var m = { address: "pAddrRow", postcode: "pPcRow", dob: "pDobRow" }[f]; if (m) $(m).classList.add("invalid"); });
+        showErr("idp.err"); return Promise.reject("handled");
+      }
+      return api({ action: "complete" });
+    }).then(function (res) {
       $("submit").disabled = false;
       if (res.ok) finished();
       else showErr(res.j.error === "authority" ? "auth.err_unsigned" : "id.err_missing");
-    }).catch(function () { $("submit").disabled = false; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
+    }).catch(function (e) { if (e === "handled") return; $("submit").disabled = false; $("error").textContent = t("id.err_server"); $("error").hidden = false; });
   });
 
   $("later").addEventListener("click", function () {

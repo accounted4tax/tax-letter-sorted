@@ -326,6 +326,8 @@ async function openCase(ref) {
     biz && ["VAT number", det.vat_number], biz && ["VAT registration date", d(det.vat_registration_date)],
     biz && det.vat_returns_up_to_date && ["VAT returns up to date", det.vat_returns_up_to_date],
     biz && ["Employer PAYE ref", det.paye_ref], biz && ["Accounts Office ref", det.accounts_office_ref],
+    det.person_address && [company ? "Director's home address" : "Home address (ID check)", det.person_address],
+    det.person_dob && ["Date of birth", d(det.person_dob)],
     ["Marketing consent", det.marketing_consent ? "yes" : "no"],
   ].filter((x) => x && (x[1] != null && x[1] !== "" && x[1] !== "–" || !biz)))]));
 

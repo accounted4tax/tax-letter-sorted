@@ -74,6 +74,8 @@ async function syncCase(c: Obj) {
     ["Business", [d.business_name ?? d.company_name, d.business_type ? (d.business_type === "company" ? "limited company" : "sole trader") : (company ? "limited company" : ""), d.company_number ? "company number " + d.company_number : ""].filter(Boolean).join(" · ")],
     ["Address", [...((d.address_lines as string[]) ?? []), d.postcode].filter(Boolean).join(", ")],
     ["Phone / email", company ? "" : [d.phone, d.email].filter(Boolean).join(" · ")],
+    ["Home address (ID check)", company ? "" : String(d.person_address ?? "")],
+    ["Date of birth", company || !d.person_dob ? "" : fmt(d.person_dob)],
     ["UTR", String(d.utr ?? c.utr ?? "")],
     ["NI number", String(d.ni_number ?? "")],
     ["VAT", [d.vat_number, d.vat_registration_date ? "registered " + fmt(d.vat_registration_date) : "", d.vat_returns_up_to_date ? "returns up to date: " + d.vat_returns_up_to_date : ""].filter(Boolean).join(" · ")],
@@ -94,8 +96,8 @@ async function syncCase(c: Obj) {
       ["Name", String(d.full_name ?? c.authority_name ?? "")],
       ["Role", String(d.role ?? "Director")],
       ["Phone / email", [d.phone, d.email].filter(Boolean).join(" · ")],
-      ["Home address", String(d.director_address ?? "")],
-      ["Date of birth", d.director_dob ? fmt(d.director_dob) : ""],
+      ["Home address", String(d.person_address ?? "")],
+      ["Date of birth", d.person_dob ? fmt(d.person_dob) : ""],
     ];
     for (const [item, val] of dir) {
       if (!val) continue;

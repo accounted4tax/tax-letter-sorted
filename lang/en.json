@@ -1157,5 +1157,13 @@
     "submit": "Send my request",
     "sent_text": "Thank you. We'll check the company and email you the price and a payment link. After you pay, we'll ask for the director's ID and file the confirmation statement.",
     "err_company": "Please enter the company name, company number and Companies House authentication code. We need them to file for the company."
+  },
+  "idp": {
+    "title": "Your home address and date of birth",
+    "title_director": "Director's home address and date of birth",
+    "hint": "The law asks us to record these for the identity check. Use the same address as on your proof of address.",
+    "postcode": "Postcode",
+    "dob": "Date of birth",
+    "err": "Please fill in your home address, postcode and date of birth."
   }
 }

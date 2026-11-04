@@ -71,6 +71,8 @@ async function statusOf(c: Obj) {
     authority: !!c.authority_to_act_at, authority_name: c.authority_name ?? null, later_requested: !!c.id_requested_at, appeal_deadline: c.appeal_deadline,
     company_name: company ? d.company_name ?? null : (d.business_name as string) ?? null, company_number: company ? d.company_number ?? null : null,
     director: company ? d.full_name ?? null : null,
+    // home address and date of birth (customer due diligence), asked before the uploads (Eduard 4 Nov 2026)
+    personal: { address: (d.person_address as string) ?? null, dob: (d.person_dob as string) ?? null },
     needs_hmrc_code: CODE_TYPES.includes(String(c.letter_type)), hmrc_code_received: !!c.hmrc_code_at,
   };
 }
@@ -161,8 +163,25 @@ Deno.serve(async (req) => {
       return reply(200, await statusOf(c));
     }
 
+    if (body.action === "personal") {
+      const lines = (Array.isArray(body.address_lines) ? body.address_lines : []).map((x: unknown) => String(x ?? "").trim().replace(/\s+/g, " ").slice(0, 80)).filter(Boolean).slice(0, 4);
+      const postcode = String(body.postcode ?? "").trim().toUpperCase().slice(0, 12);
+      const dob = String(body.dob ?? "");
+      const errors: string[] = [];
+      if (!lines.length) errors.push("address");
+      if (postcode.length < 3) errors.push("postcode");
+      const dt = new Date(dob + "T12:00:00Z"), age = (Date.now() - dt.getTime()) / (365.25 * 864e5);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dob) || isNaN(dt.getTime()) || age < 16 || age > 110) errors.push("dob");
+      if (errors.length) return reply(400, { error: "invalid", fields: errors });
+      const d = { ...((c.details ?? {}) as Obj), person_address: [...lines, postcode].join(", "), person_dob: dob };
+      await db.from("cases").update({ details: d }).eq("id", c.id);
+      await db.from("audit_log").insert({ actor: "client", action: "personal_details_saved", case_id: c.id });
+      return reply(200, await statusOf({ ...c, details: d }));
+    }
+
     if (body.action === "complete") {
       const st = await statusOf(c);
+      if (!st.personal.address || !st.personal.dob) return reply(400, { error: "personal", status: st });
       if (!st.all_received) return reply(400, { error: "missing", status: st });
       // Individuals (£39): appeal letter only, no authority to act (Eduard, 31 Oct 2026).
       // Companies (£59): we act as agent, so the director's signed authority is needed (Eduard, 1 Nov 2026).

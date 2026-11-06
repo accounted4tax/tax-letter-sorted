@@ -65,12 +65,12 @@ export async function buildQuotePdf(q: Quote): Promise<Uint8Array> {
   };
   const heading = (t: string) => { need(30); y -= 6; text(t, { size: 11.5, f: bold, color: NAVY }); y -= 1; };
   const row = (label: string, value: string, highlight = false) => {
-    const lw = CW - 60 * MM, lines = wrap(label, highlight ? bold : font, 9.5, lw - 8);
+    const lw = CW - 60 * MM, lines = wrap(label, font, 9.5, lw - 8);
     const h = Math.max(1, lines.length) * 12.5 + 6;
     need(h);
     if (highlight) page.drawRectangle({ x: L, y: y - h, width: CW, height: h, color: LIGHT });
-    lines.forEach((ln, i) => page.drawText(ln, { x: L + 4, y: y - 12 - i * 12.5 + 2, size: 9.5, font: highlight ? bold : font, color: BLACK }));
-    const vf = highlight ? bold : font;
+    lines.forEach((ln, i) => page.drawText(ln, { x: L + 4, y: y - 12 - i * 12.5 + 2, size: 9.5, font, color: BLACK }));
+    const vf = font;
     page.drawText(value, { x: R - 4 - vf.widthOfTextAtSize(value, 9.5), y: y - 12 + 2, size: 9.5, font: vf, color: BLACK });
     page.drawLine({ start: { x: L, y: y - h }, end: { x: R, y: y - h }, thickness: 0.4, color: LINE });
     y -= h;

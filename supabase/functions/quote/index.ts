@@ -81,7 +81,8 @@ async function pdfFor(q: Obj) {
 function publicView(q: Obj) {
   const t = q.totals ?? {};
   return { number: q.number, status: q.status, valid_until: q.valid_until, expired: q.valid_until < today() && !["accepted", "accepted_unpaid"].includes(q.status),
-    company_name: q.client?.company_name ?? null, name: q.client?.name ?? null, items: q.items, spread_months: q.spread_months, totals: t,
+    company_name: q.client?.company_name ?? null, name: q.client?.name ?? null, company_number: q.client?.company_number ?? null, address: q.client?.address ?? null,
+    date: String(q.created_at).slice(0, 10), notes: q.notes ?? null, items: q.items, spread_months: q.spread_months, totals: t,
     periods: { oneoff: period(q.periods?.oneoff), yearend: period(q.periods?.yearend) } };
 }
 async function checkout(q: Obj) {

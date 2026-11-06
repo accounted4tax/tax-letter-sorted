@@ -851,7 +851,7 @@ const QPRESETS = {
     ["CIS monthly returns (up to 5 subcontractors)", 30], ["CIS – each extra subcontractor over 5", 5], ["VAT returns", 30],
     ["Bookkeeping – up to 50 transactions a month", 30], ["Accounting software", 15], ["Tax advisory services – ongoing tax advice by phone and email", 15]],
 };
-const QSECTIONS = [["oneoff", "Catch-up work (one-off)"], ["yearend", "Year-end services (yearly, spread monthly)"], ["monthly", "Monthly services"]];
+const QSECTIONS = [["oneoff", "Catch-up work (one-off)"], ["yearend", "Year-end services (yearly, spread monthly)"], ["monthly", "Monthly services – ongoing"]];
 
 async function practiceQuotesSection(v) {
   const box = el("section", { class: "card", style: "margin-bottom:12px" }, [
@@ -904,6 +904,10 @@ async function quoteForm(id) {
   const f = { name: inp(c.name, "Client's full name"), company_name: inp(c.company_name, "Company or business name"), company_number: inp(c.company_number, "Company number"),
     address: inp(c.address, "Address"), email: inp(c.email, "client@example.com"), phone: inp(c.phone, "Phone (optional)") };
   const spread = el("input", { class: "sm", type: "number", min: "1", max: "36", value: String(src.spread_months || 12), style: "width:90px" });
+  // the year-end(s) the work is for (shown in the section headings)
+  const per = src.periods || {};
+  const perOneoff = el("input", { class: "sm", value: per.oneoff || "", placeholder: "e.g. 31 October 2025, or 31 Oct 2024 and 2025", style: "width:300px" });
+  const perYearend = el("input", { class: "sm", type: "date", value: /^\d{4}-\d{2}-\d{2}$/.test(per.yearend || "") ? per.yearend : "" });
   const valid = el("input", { class: "sm", type: "date", value: src.valid_until || new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10) });
   const notes = el("textarea", { class: "small", placeholder: "Key information shown on the quote (optional), e.g. first accounts made up to 31 October 2027; confirmation statement due by 31 October 2027." }); notes.value = src.notes || "";
   const cover = el("textarea", { class: "small", style: "min-height:140px", placeholder: "Cover email (optional). Leave empty to use the standard message: thank you, quote attached, accept and pay with the button." }); cover.value = src.cover_text || "";
@@ -941,7 +945,8 @@ async function quoteForm(id) {
   spread.addEventListener("input", recalc);
 
   const payload = () => ({ id: full?.id, client: Object.fromEntries(Object.entries(f).map(([k, x]) => [k, x.value])), items: items.filter((i) => i.label && i.qty > 0),
-    spread_months: Number(spread.value) || 12, valid_until: valid.value, notes: notes.value, cover_text: cover.value });
+    spread_months: Number(spread.value) || 12, valid_until: valid.value, notes: notes.value, cover_text: cover.value,
+    periods: { oneoff: perOneoff.value.trim(), yearend: perYearend.value } });
   const out = el("div", { class: "stack" });
   async function save() {
     out.innerHTML = "";
@@ -957,6 +962,8 @@ async function quoteForm(id) {
   QSECTIONS.forEach(([key, label]) => {
     secBoxes[key] = el("div", { class: "stack" });
     v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [el("h2", { class: "sec", text: label }),
+      key === "oneoff" ? el("div", { class: "row" }, [el("span", { text: "For the year ended" }), perOneoff]) : null,
+      key === "yearend" ? el("div", { class: "row" }, [el("span", { text: "For the year ending" }), perYearend]) : null,
       key === "yearend" ? el("div", { class: "row" }, [el("span", { text: "Spread over" }), spread, el("span", { text: "months (e.g. months left to the year-end)" })]) : null, secBoxes[key]]));
     drawSection(key);
   });

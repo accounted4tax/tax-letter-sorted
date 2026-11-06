@@ -5,7 +5,7 @@
 // Payment: Stripe Checkout – one-off catch-up lines + the monthly fee as a monthly subscription (card).
 // Acceptances and payments are emailed to info@accounted4tax.co.uk. Status: draft → sent → accepted_unpaid → accepted.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { buildQuotePdf, gbp, totals, type QItem } from "./quote-pdf.ts";
+import { buildQuotePdf, gbp, period, totals, type QItem } from "./quote-pdf.ts";
 
 const SITE = "https://taxletters.accounted4tax.co.uk";
 const NOTIFY = "info@accounted4tax.co.uk";
@@ -70,16 +70,19 @@ function clean(b: Obj) {
     .filter((i: QItem) => i.label && i.qty > 0);
   const spread = Math.max(1, Math.min(36, Math.round(Number(b.spread_months) || 12)));
   const valid = /^\d{4}-\d{2}-\d{2}$/.test(String(b.valid_until ?? "")) ? String(b.valid_until) : new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
-  return { client, items, spread_months: spread, totals: totals(items, spread), notes: str(b.notes, 1500) || null, cover_text: str(b.cover_text, 3000) || null, valid_until: valid };
+  const pr = (b.periods ?? {}) as Obj;
+  const periods = { oneoff: str(pr.oneoff, 80) || undefined, yearend: str(pr.yearend, 80) || undefined };
+  return { periods, client, items, spread_months: spread, totals: totals(items, spread), notes: str(b.notes, 1500) || null, cover_text: str(b.cover_text, 3000) || null, valid_until: valid };
 }
 async function pdfFor(q: Obj) {
   return await buildQuotePdf({ number: q.number, date: String(q.created_at).slice(0, 10), valid_until: q.valid_until, spread_months: q.spread_months,
-    client: q.client, items: q.items, notes: q.notes ?? "", accept_url: acceptUrl(q) });
+    client: q.client, items: q.items, notes: q.notes ?? "", accept_url: acceptUrl(q), periods: q.periods ?? {} });
 }
 function publicView(q: Obj) {
   const t = q.totals ?? {};
   return { number: q.number, status: q.status, valid_until: q.valid_until, expired: q.valid_until < today() && !["accepted", "accepted_unpaid"].includes(q.status),
-    company_name: q.client?.company_name ?? null, name: q.client?.name ?? null, items: q.items, spread_months: q.spread_months, totals: t };
+    company_name: q.client?.company_name ?? null, name: q.client?.name ?? null, items: q.items, spread_months: q.spread_months, totals: t,
+    periods: { oneoff: period(q.periods?.oneoff), yearend: period(q.periods?.yearend) } };
 }
 async function checkout(q: Obj) {
   const t = q.totals ?? {}, c = q.client ?? {};

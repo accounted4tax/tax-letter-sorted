@@ -13,7 +13,10 @@ export type Quote = {
   number: string; date: string; valid_until: string; spread_months: number;
   client: { name?: string; company_name?: string; company_number?: string; address?: string; email?: string };
   items: QItem[]; notes?: string; accept_url: string;
+  periods?: { oneoff?: string; yearend?: string };   // year-end(s) the work is for
 };
+// "2026-10-31" → "31 October 2026"; free text (e.g. "31 Oct 2024 and 2025") is shown as typed
+export const period = (v?: string) => !v ? "" : /^\d{4}-\d{2}-\d{2}$/.test(v) ? new Date(v + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : v;
 export const gbp = (n: number) => "£" + n.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export function totals(items: QItem[], months: number) {
   const sum = (s: string) => Math.round(items.filter((i) => i.section === s).reduce((a, i) => a + i.qty * i.price, 0) * 100) / 100;
@@ -98,18 +101,18 @@ export async function buildQuotePdf(q: Quote): Promise<Uint8Array> {
   const by = (s: string) => q.items.filter((i) => i.section === s && i.label);
   let n = 1;
   if (by("oneoff").length) {
-    heading(`${n++}. Catch-up work (one-off)`);
+    heading(`${n++}. Catch-up work (one-off)` + (q.periods?.oneoff ? ` – for the year ended ${period(q.periods.oneoff)}` : ""));
     by("oneoff").forEach((i) => row(lineLabel(i), gbp(i.qty * i.price)));
     row("Total catch-up work (paid once)", gbp(t.oneoff), true);
   }
   if (by("yearend").length) {
-    heading(`${n++}. Year-end services`);
+    heading(`${n++}. Year-end services` + (q.periods?.yearend ? ` – for the year ending ${period(q.periods.yearend)}` : ""));
     by("yearend").forEach((i) => row(lineLabel(i), gbp(i.qty * i.price)));
     row("Total year-end services", gbp(t.yearend), true);
     row(`Spread over ${t.months} month${t.months === 1 ? "" : "s"}`, gbp(t.yearend_monthly) + " a month", true);
   }
   if (by("monthly").length) {
-    heading(`${n++}. Monthly services`);
+    heading(`${n++}. Monthly services – ongoing`);
     by("monthly").forEach((i) => row(lineLabel(i), gbp(i.qty * i.price) + " a month"));
     row("Total monthly services", gbp(t.monthly_services) + " a month", true);
   }

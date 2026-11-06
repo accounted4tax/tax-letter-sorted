@@ -78,11 +78,11 @@
     $("sub").textContent = (d.company_name || d.name || "") + " · valid until " + fdate(d.valid_until);
     var box = $("items"); box.innerHTML = "";
     var by = function (s) { return (d.items || []).filter(function (i) { return i.section === s; }); };
-    if (by("oneoff").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Catch-up work (one-off)" }),
+    if (by("oneoff").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Catch-up work (one-off)" + (d.periods && d.periods.oneoff ? " – for the year ended " + d.periods.oneoff : "") }),
       table(by("oneoff").map(function (i) { return [label(i), money(i.qty * i.price)]; }).concat([["Total catch-up work", money(t.oneoff), 1]]))]));
-    if (by("yearend").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Year-end services" }),
+    if (by("yearend").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Year-end services" + (d.periods && d.periods.yearend ? " – for the year ending " + d.periods.yearend : "") }),
       table(by("yearend").map(function (i) { return [label(i), money(i.qty * i.price)]; }).concat([["Total year-end services", money(t.yearend), 1], ["Spread over " + t.months + " months", money(t.yearend_monthly) + " a month", 1]]))]));
-    if (by("monthly").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Monthly services" }),
+    if (by("monthly").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Monthly services – ongoing" }),
       table(by("monthly").map(function (i) { return [label(i), money(i.qty * i.price) + " a month"]; }).concat([["Total monthly services", money(t.monthly_services) + " a month", 1]]))]));
     if (t.monthly_total > 0) box.appendChild(el("div", { class: "bigfee" }, [el("span", { text: "Total monthly fee" }), el("b", { text: money(t.monthly_total) + " a month" })]));
     if (t.oneoff > 0) box.appendChild(el("div", { class: "bigfee" }, [el("span", { text: "One-off catch-up fee" }), el("b", { text: money(t.oneoff) })]));

@@ -36,3 +36,4 @@ Admin sign-in: Supabase Auth email + password; the user must be created in the d
 - 019_strike_off – applied 4 Nov 2026 (letter type companies-house-strike-off)
 - 020_drive_sync – applied 4 Nov 2026 (drive_sync_items; pg_cron drive-sync-15min)
 - 021_drive_not_proceeded – applied 4 Nov 2026 (pg_cron drive-not-proceeded-monthly)
+- 022_practice_quotes – applied 6 Nov 2026 (practice_quotes, practice_quote_seq; pg_cron practice-quote-reminders hourly)

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your quote – Accounted4Tax</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/config.js"></script>
+<style>
+  .qt{width:100%;border-collapse:collapse;font-size:15px}
+  .qt td{padding:9px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+  .qt td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+  .qt tr.tot td{font-weight:700;background:#F2F4F7}
+  .bigfee{display:flex;justify-content:space-between;align-items:center;background:var(--teal);color:#fff;border-radius:10px;padding:14px 16px;font-weight:700}
+  .bigfee b{font-size:22px}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap"><a class="brand" href="https://www.accounted4tax.co.uk"><b>Accounted4Tax</b><span>Accountants for sole traders, contractors and limited companies</span></a></div>
+</header>
+
+<main class="wrap">
+  <section id="loading" class="stack" style="text-align:center;padding:40px 0"><div class="spinner" aria-hidden="true"></div></section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <section id="page" class="stack" hidden>
+    <h1 id="title">Your quote</h1>
+    <p class="lead" id="sub"></p>
+    <div id="state"></div>
+    <div id="items" class="stack"></div>
+
+    <section class="card" id="acceptBox" hidden>
+      <h2 style="font-size:20px">Accept this quote</h2>
+      <label class="field" id="nameRow"><span>Your full name</span><input id="name" autocomplete="name" maxlength="120"></label>
+      <label class="check" id="agreeRow"><input type="checkbox" id="agree"><span>I accept this quote on behalf of <b id="who"></b>. I understand Accounted4Tax will send an engagement letter setting out the work and our terms.</span></label>
+      <button class="btn" type="button" id="accept">Accept and pay</button>
+      <p class="note" id="payNote"></p>
+    </section>
+    <button class="btn" type="button" id="payAgain" hidden>Complete payment</button>
+    <p class="note">Questions? Reply to our email, write to <a href="mailto:info@accounted4tax.co.uk">info@accounted4tax.co.uk</a> or call 07563 811938.</p>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>Accounted4Tax Ltd · Registered in England and Wales, company number 16438537 · 128 City Road, London, EC1V 2NX · Not VAT registered</p></div></footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var qs = new URLSearchParams(location.search), token = qs.get("q") || "", session = qs.get("session"), cancelled = qs.get("cancelled");
+  var data = null;
+  function money(n) { return "£" + Number(n || 0).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function fdate(iso) { return iso ? new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""; }
+  function call(action, extra) {
+    var body = Object.assign({ action: action, q: token }, extra || {});
+    return fetch(window.TLS_CONFIG.functionsUrl + "/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); });
+  }
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === "text") n.textContent = attrs[k]; else if (k === "html") n.innerHTML = attrs[k]; else n.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function err(t) { $("error").textContent = t; $("error").hidden = false; }
+  function table(rows) {
+    return el("table", { class: "qt" }, rows.map(function (r) { return el("tr", r[2] ? { class: "tot" } : {}, [el("td", { text: r[0] }), el("td", { text: r[1] })]); }));
+  }
+  function label(i) { return i.qty !== 1 ? i.label + " (" + i.qty + " × " + money(i.price) + ")" : i.label; }
+
+  function render() {
+    var d = data, t = d.totals || {};
+    $("loading").hidden = true; $("page").hidden = false;
+    $("title").textContent = "Quote " + d.number;
+    $("sub").textContent = (d.company_name || d.name || "") + " · valid until " + fdate(d.valid_until);
+    var box = $("items"); box.innerHTML = "";
+    var by = function (s) { return (d.items || []).filter(function (i) { return i.section === s; }); };
+    if (by("oneoff").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Catch-up work (one-off)" }),
+      table(by("oneoff").map(function (i) { return [label(i), money(i.qty * i.price)]; }).concat([["Total catch-up work", money(t.oneoff), 1]]))]));
+    if (by("yearend").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Year-end services" }),
+      table(by("yearend").map(function (i) { return [label(i), money(i.qty * i.price)]; }).concat([["Total year-end services", money(t.yearend), 1], ["Spread over " + t.months + " months", money(t.yearend_monthly) + " a month", 1]]))]));
+    if (by("monthly").length) box.appendChild(el("section", { class: "card" }, [el("h2", { style: "font-size:18px", text: "Monthly services" }),
+      table(by("monthly").map(function (i) { return [label(i), money(i.qty * i.price) + " a month"]; }).concat([["Total monthly services", money(t.monthly_services) + " a month", 1]]))]));
+    if (t.monthly_total > 0) box.appendChild(el("div", { class: "bigfee" }, [el("span", { text: "Total monthly fee" }), el("b", { text: money(t.monthly_total) + " a month" })]));
+    if (t.oneoff > 0) box.appendChild(el("div", { class: "bigfee" }, [el("span", { text: "One-off catch-up fee" }), el("b", { text: money(t.oneoff) })]));
+    $("payNote").textContent = "You'll pay securely with Stripe" + (t.monthly_total > 0 ? ": " + (t.oneoff > 0 ? "the one-off fee and the first month now, then " : "") + money(t.monthly_total) + " each month by card." : ".") + " Accounted4Tax Ltd is not VAT registered.";
+    $("who").textContent = d.company_name || d.name || "the business";
+
+    var st = $("state"); st.innerHTML = "";
+    $("acceptBox").hidden = true; $("payAgain").hidden = true;
+    if (d.status === "accepted") st.appendChild(el("div", { class: "success", html: "<b>Thank you – your quote is accepted and paid.</b><br>We'll send you our engagement letter shortly." }));
+    else if (d.status === "declined") st.appendChild(el("p", { class: "callout", text: "This quote is no longer available. Please contact us for an updated quote." }));
+    else if (d.status === "accepted_unpaid") {
+      st.appendChild(el("p", { class: "callout", text: cancelled ? "The payment was not completed. You can try again below – it only takes a minute." : "You've accepted this quote. Please complete the payment so we can start the work." }));
+      $("payAgain").hidden = false;
+    } else if (d.expired) st.appendChild(el("p", { class: "callout", text: "This quote expired on " + fdate(d.valid_until) + ". Please contact us for an updated quote." }));
+    else $("acceptBox").hidden = false;
+  }
+  function go(action, extra, btn) {
+    btn.disabled = true; $("error").hidden = true;
+    call(action, extra).then(function (r) {
+      if (r.ok && r.j.url) { location.href = r.j.url; return; }
+      btn.disabled = false;
+      if (r.ok && r.j.paid) { load(); return; }
+      err(r.j.error === "expired" ? "This quote has expired. Please contact us for an updated quote." : r.j.error === "agree" ? "Please type your full name and tick the box." : "Something went wrong. Please try again, or contact us.");
+    }).catch(function () { btn.disabled = false; err("Something went wrong. Please try again, or contact us."); });
+  }
+  $("accept").addEventListener("click", function () {
+    var name = $("name").value.trim(), agree = $("agree").checked;
+    $("nameRow").classList.toggle("invalid", name.length < 2); $("agreeRow").classList.toggle("invalid", !agree);
+    if (name.length < 2 || !agree) { err("Please type your full name and tick the box."); return; }
+    go("accept", { name: name, agree: true }, $("accept"));
+  });
+  $("payAgain").addEventListener("click", function () { go("pay", {}, $("payAgain")); });
+
+  function load() {
+    var first = session ? call("confirm", { session: session }) : Promise.resolve(null);
+    first.then(function () { return call("view"); }).then(function (r) {
+      if (!r.ok) { $("loading").hidden = true; err(r.j.error === "not_found" || r.j.error === "bad_request" ? "We couldn't find this quote. Please check the link in your email." : "Something went wrong. Please try again later."); return; }
+      data = r.j; render();
+      if (session) history.replaceState(null, "", "quote.html?q=" + token);
+    }).catch(function () { $("loading").hidden = true; err("Something went wrong. Please try again later."); });
+  }
+  load();
+})();
+</script>
+</body>
+</html>

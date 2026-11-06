@@ -802,6 +802,8 @@ async function showQuotes() {
     const { help } = await api("requests");
     const quotes = help.filter((x) => x.tax_year === "package");
     const v = $("view"); v.innerHTML = "";
+    await practiceQuotesSection(v);
+    v.appendChild(el("h2", { class: "sec", style: "margin-top:18px", text: "Quote requests from the website" }));
     v.appendChild(el("p", { class: "muted", text: "Quote requests from the 'Free appeal with your annual accounts and Corporation Tax return' form, with the client's instant estimate." }));
     if (!quotes.length) { v.appendChild(el("p", { class: "muted", text: "No quote requests yet." })); return; }
     quotes.forEach((x) => {
@@ -825,6 +827,153 @@ async function showQuotes() {
         el("div", { class: "row" }, [el("span", { text: "Status:" }), s]), n]));
     });
   } catch (e) { fail(e); }
+}
+
+// ---------- Practice quotes ("New quote", 6 Nov 2026): PDF + email + client accepts and pays online ----------
+async function qapi(action, payload = {}) {
+  const r = await fetch(`${CFG.functionsUrl}/quote`, { method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + (load("tls_admin_at") || "") }, body: JSON.stringify({ action, ...payload }) });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { try { await auth("refresh_token", { refresh_token: load("tls_admin_rt") }); return qapi(action, payload); } catch (e) { showSignin(); throw new Error("signin"); } }
+  if (!r.ok) throw new Error(j.error || "server");
+  return j;
+}
+const QSTATUS = { draft: ["Draft", ""], sent: ["Sent", "amber"], accepted_unpaid: ["Accepted – not paid", "red"], accepted: ["Accepted – paid", "green"], declined: ["Declined", ""], expired: ["Expired", ""] };
+const gbp2 = (n) => "£" + Number(n || 0).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const QPRESETS = {
+  oneoff: [["Annual accounts and Corporation Tax return – overdue year (trading)", 349], ["Annual accounts and Corporation Tax return – overdue year (dormant)", 149],
+    ["Bookkeeping catch-up – per batch of up to 50 transactions", 30], ["Payroll catch-up – per month not submitted", 30], ["CIS returns catch-up – per month not submitted", 30],
+    ["VAT returns catch-up – per month not submitted", 30], ["Confirmation statement, including the Companies House fee", 99], ["Director's Self Assessment return – per tax year", 150],
+    ["Accounting software (catch-up year)", 120]],
+  yearend: [["Annual accounts and Corporation Tax return (CT600), including filing with Companies House and HMRC", 349], ["Annual accounts and Corporation Tax return – dormant company", 149],
+    ["Confirmation statement, including the Companies House fee", 99], ["Director's Self Assessment return", 150]],
+  monthly: [["Payroll – monthly payslips and RTI submissions to HMRC (up to 5 employees)", 30], ["Payroll – each extra employee over 5", 5],
+    ["CIS monthly returns (up to 5 subcontractors)", 30], ["CIS – each extra subcontractor over 5", 5], ["VAT returns", 30],
+    ["Bookkeeping – up to 50 transactions a month", 30], ["Accounting software", 15], ["Tax advisory services – ongoing tax advice by phone and email", 15]],
+};
+const QSECTIONS = [["oneoff", "Catch-up work (one-off)"], ["yearend", "Year-end services (yearly, spread monthly)"], ["monthly", "Monthly services"]];
+
+async function practiceQuotesSection(v) {
+  const box = el("section", { class: "card", style: "margin-bottom:12px" }, [
+    el("div", { class: "row" }, [el("h2", { class: "sec", style: "flex:1", text: "Practice quotes" }),
+      el("button", { class: "sbtn primary", type: "button", text: "+ New quote", onclick: () => quoteForm(null) })]),
+    el("p", { class: "muted", text: "Quotes you make for any client. The client gets a PDF and a link to accept and pay online (one-off by card, monthly fee as a monthly card payment). If they accept but don't pay, reminders go out after 1 hour, 24 hours, 72 hours and 7 days. Acceptances and payments are emailed to info@accounted4tax.co.uk." })]);
+  v.appendChild(box);
+  let quotes = [];
+  try { quotes = (await qapi("list")).quotes; } catch (e) { box.appendChild(el("p", { class: "error", text: "Could not load practice quotes (" + e.message + ")." })); return; }
+  if (!quotes.length) { box.appendChild(el("p", { class: "muted", text: "No practice quotes yet." })); return; }
+  const tb = el("tbody");
+  quotes.forEach((q) => {
+    const c = q.client || {}, t = q.totals || {}, st = QSTATUS[q.status] || [q.status, ""];
+    tb.appendChild(el("tr", {}, [
+      el("td", {}, [el("b", { text: q.number }), el("div", { class: "muted", text: d(q.created_at) })]),
+      el("td", { text: [c.company_name, c.name].filter(Boolean).join(" – ") || "–" }),
+      el("td", { text: t.monthly_total ? gbp2(t.monthly_total) + " /month" : "–" }),
+      el("td", { text: t.oneoff ? gbp2(t.oneoff) : "–" }),
+      el("td", {}, [pill(st[0], st[1]), q.status === "accepted_unpaid" ? el("div", { class: "muted", text: `${q.reminders_sent} reminder${q.reminders_sent === 1 ? "" : "s"} sent` }) : null,
+        q.paid_at ? el("div", { class: "muted", text: "Paid " + dt(q.paid_at) }) : q.accepted_at ? el("div", { class: "muted", text: "Accepted " + dt(q.accepted_at) }) : q.sent_at ? el("div", { class: "muted", text: "Sent " + dt(q.sent_at) }) : null]),
+      el("td", {}, [el("div", { class: "row", style: "gap:6px;flex-wrap:wrap" }, [
+        !["accepted", "accepted_unpaid"].includes(q.status) ? el("button", { class: "sbtn", type: "button", text: "Open", onclick: async () => quoteForm(q.id) }) : null,
+        el("button", { class: "sbtn", type: "button", text: "PDF", onclick: () => downloadQuote(q.id) }),
+        q.status !== "draft" ? el("button", { class: "sbtn", type: "button", text: "Copy client link", onclick: async () => { const x = await qapi("set_status", { id: q.id, status: q.status }); navigator.clipboard.writeText(x.link).then(() => toast("Link copied")); } }) : null,
+        ["sent", "draft", "accepted_unpaid"].includes(q.status) ? el("button", { class: "sbtn", type: "button", text: "Mark declined", onclick: async () => { if (!confirm("Mark " + q.number + " as declined? Reminders stop.")) return; await qapi("set_status", { id: q.id, status: "declined" }); showQuotes(); } }) : null,
+      ])]),
+    ]));
+  });
+  box.appendChild(el("div", { style: "overflow-x:auto" }, [el("table", {}, [el("thead", {}, [el("tr", {}, ["Quote", "Client", "Monthly", "One-off", "Status", ""].map((h) => el("th", { text: h })))]), tb])]));
+}
+
+async function downloadQuote(id) {
+  try {
+    const x = await qapi("pdf", { id });
+    const bytes = Uint8Array.from(atob(x.pdf), (ch) => ch.charCodeAt(0));
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    const a = el("a", { href: url, download: x.name }); document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } catch (e) { toast("Could not make the PDF (" + e.message + ")"); }
+}
+
+async function quoteForm(id) {
+  busy();
+  let full = null;
+  if (id) { try { full = (await qapi("get", { id })).quote; } catch (e) { return fail(e); } }
+  const v = $("view"); v.innerHTML = "";
+  const src = full || {};
+  const c = src.client || {};
+  const inp = (val, ph, w) => el("input", { class: "sm", value: val || "", placeholder: ph || "", style: "width:" + (w || "100%") });
+  const f = { name: inp(c.name, "Client's full name"), company_name: inp(c.company_name, "Company or business name"), company_number: inp(c.company_number, "Company number"),
+    address: inp(c.address, "Address"), email: inp(c.email, "client@example.com"), phone: inp(c.phone, "Phone (optional)") };
+  const spread = el("input", { class: "sm", type: "number", min: "1", max: "36", value: String(src.spread_months || 12), style: "width:90px" });
+  const valid = el("input", { class: "sm", type: "date", value: src.valid_until || new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10) });
+  const notes = el("textarea", { class: "small", placeholder: "Key information shown on the quote (optional), e.g. first accounts made up to 31 October 2027; confirmation statement due by 31 October 2027." }); notes.value = src.notes || "";
+  const cover = el("textarea", { class: "small", style: "min-height:140px", placeholder: "Cover email (optional). Leave empty to use the standard message: thank you, quote attached, accept and pay with the button." }); cover.value = src.cover_text || "";
+  let items = (src.items || []).map((i) => ({ ...i }));
+  const secBoxes = {};
+  const totalsBox = el("div", { class: "stack" });
+
+  function recalc() {
+    const sum = (s) => Math.round(items.filter((i) => i.section === s).reduce((a, i) => a + (Number(i.qty) || 0) * (Number(i.price) || 0), 0) * 100) / 100;
+    const m = Math.max(1, Number(spread.value) || 12), oneoff = sum("oneoff"), ye = sum("yearend"), mon = sum("monthly"), yem = Math.round(ye / m * 100) / 100;
+    totalsBox.innerHTML = "";
+    totalsBox.appendChild(el("dl", { class: "kv" }, [
+      el("dt", { text: "Year-end services" }), el("dd", { text: gbp2(ye) + (ye ? ` ÷ ${m} months = ${gbp2(yem)} a month` : "") }),
+      el("dt", { text: "Monthly services" }), el("dd", { text: gbp2(mon) + " a month" })]));
+    totalsBox.appendChild(el("div", { class: "kpi", style: "background:#0E6E6B;color:#fff;border-color:#0E6E6B" }, [el("b", { text: gbp2(yem + mon) + " a month" }), el("span", { style: "color:#fff", text: "Total monthly fee" })]));
+    if (oneoff) totalsBox.appendChild(el("div", { class: "kpi" }, [el("b", { text: gbp2(oneoff) }), el("span", { text: "One-off catch-up fee" })]));
+  }
+  function drawSection(key) {
+    const box = secBoxes[key]; box.innerHTML = "";
+    items.filter((i) => i.section === key).forEach((i) => {
+      const lab = el("input", { class: "sm", value: i.label, style: "flex:1;min-width:220px" }); lab.addEventListener("input", () => { i.label = lab.value; });
+      const qty = el("input", { class: "sm", type: "number", min: "0", step: "1", value: String(i.qty), style: "width:70px", title: "Quantity" });
+      const pr = el("input", { class: "sm", type: "number", min: "0", step: "0.01", value: String(i.price), style: "width:100px", title: "Price £" });
+      const amt = el("span", { class: "muted", style: "width:110px;text-align:right", text: gbp2(i.qty * i.price) });
+      const upd = () => { i.qty = Number(qty.value) || 0; i.price = Number(pr.value) || 0; amt.textContent = gbp2(i.qty * i.price); recalc(); };
+      qty.addEventListener("input", upd); pr.addEventListener("input", upd);
+      box.appendChild(el("div", { class: "row", style: "gap:6px;flex-wrap:wrap;align-items:center" }, [lab, el("span", { text: "×" }), qty, el("span", { text: "£" }), pr, amt,
+        el("button", { class: "sbtn", type: "button", text: "✕", title: "Remove", onclick: () => { items = items.filter((x) => x !== i); drawSection(key); recalc(); } })]));
+    });
+    const sel = el("select", { class: "sm" }, [el("option", { value: "", text: "+ Add from price list…" })].concat(QPRESETS[key].map(([l, p], k) => el("option", { value: String(k), text: `${l} – £${p}` }))));
+    sel.addEventListener("change", () => { if (sel.value === "") return; const [l, p] = QPRESETS[key][Number(sel.value)]; items.push({ section: key, label: l, qty: 1, price: p }); drawSection(key); recalc(); });
+    box.appendChild(el("div", { class: "row", style: "gap:6px;flex-wrap:wrap" }, [sel,
+      el("button", { class: "sbtn", type: "button", text: "+ Custom line", onclick: () => { items.push({ section: key, label: "", qty: 1, price: 0 }); drawSection(key); recalc(); } })]));
+  }
+  spread.addEventListener("input", recalc);
+
+  const payload = () => ({ id: full?.id, client: Object.fromEntries(Object.entries(f).map(([k, x]) => [k, x.value])), items: items.filter((i) => i.label && i.qty > 0),
+    spread_months: Number(spread.value) || 12, valid_until: valid.value, notes: notes.value, cover_text: cover.value });
+  const out = el("div", { class: "stack" });
+  async function save() {
+    out.innerHTML = "";
+    if (!payload().items.length) { out.appendChild(el("p", { class: "error", text: "Add at least one line." })); return null; }
+    const x = await qapi("save", payload()); full = x.quote; toast("Saved " + full.number); title.textContent = "Quote " + full.number; return full;
+  }
+  const title = el("h1", { style: "margin:0", text: full ? "Quote " + full.number : "New quote" });
+  v.appendChild(el("div", { class: "row", style: "margin-bottom:12px" }, [el("button", { class: "sbtn", type: "button", text: "← Back to quotes", onclick: showQuotes }), title]));
+  v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [el("h2", { class: "sec", text: "Client" }),
+    el("div", { class: "grid2" }, [el("label", { class: "field" }, [el("span", { text: "Client name (director)" }), f.name]), el("label", { class: "field" }, [el("span", { text: "Email" }), f.email]),
+      el("label", { class: "field" }, [el("span", { text: "Company / business name" }), f.company_name]), el("label", { class: "field" }, [el("span", { text: "Company number" }), f.company_number]),
+      el("label", { class: "field" }, [el("span", { text: "Address" }), f.address]), el("label", { class: "field" }, [el("span", { text: "Phone" }), f.phone])])]));
+  QSECTIONS.forEach(([key, label]) => {
+    secBoxes[key] = el("div", { class: "stack" });
+    v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [el("h2", { class: "sec", text: label }),
+      key === "yearend" ? el("div", { class: "row" }, [el("span", { text: "Spread over" }), spread, el("span", { text: "months (e.g. months left to the year-end)" })]) : null, secBoxes[key]]));
+    drawSection(key);
+  });
+  v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [el("h2", { class: "sec", text: "Totals" }), totalsBox,
+    el("div", { class: "row" }, [el("span", { text: "Valid until" }), valid])]));
+  v.appendChild(el("section", { class: "card", style: "margin-bottom:12px" }, [el("h2", { class: "sec", text: "Key information and email" }), notes, cover]));
+  v.appendChild(el("section", { class: "card" }, [el("div", { class: "row", style: "gap:8px;flex-wrap:wrap" }, [
+    el("button", { class: "sbtn", type: "button", text: "Save", onclick: async (ev) => { ev.target.disabled = true; try { await save(); } catch (e) { toast("Not saved (" + e.message + ")"); } ev.target.disabled = false; } }),
+    el("button", { class: "sbtn", type: "button", text: "Save and download PDF", onclick: async (ev) => { ev.target.disabled = true; try { const q2 = await save(); if (q2) await downloadQuote(q2.id); } catch (e) { toast("Not saved (" + e.message + ")"); } ev.target.disabled = false; } }),
+    el("button", { class: "sbtn primary", type: "button", text: "Save and email to client", onclick: async (ev) => {
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())) { out.innerHTML = ""; out.appendChild(el("p", { class: "error", text: "Enter the client's email address." })); return; }
+      if (!confirm("Email the quote to " + f.email.value.trim() + "?")) return;
+      ev.target.disabled = true;
+      try { const q2 = await save(); if (q2) { const x = await qapi("send", { id: q2.id }); out.innerHTML = ""; out.appendChild(el("p", { class: "success", text: "Quote emailed. Client link: " + x.link })); } }
+      catch (e) { out.innerHTML = ""; out.appendChild(el("p", { class: "error", text: "Not sent (" + e.message + ")." })); }
+      ev.target.disabled = false; } })]), out]));
+  recalc();
 }
 
 // ---------- Emails ----------

@@ -5,7 +5,7 @@ window.TLS_CONFIG = {
   openingNote: { en: "Opening January 2027", ro: "Se deschide în ianuarie 2027" },
   contactEmail: "letters@accounted4tax.co.uk",
   phone: "07563 811938",
-  aatLicence: "[licence number]",   // fill in once Accounted4Tax Ltd is on the AAT licence
+  aatLicence: "",   // not shown: AAT licence is held in Eduard's name – "details on request" (Eduard 9 Nov 2026)
   functionsUrl: "https://pmngappuatunbhodqipn.supabase.co/functions/v1",
   languages: ["en", "ro"],
   defaultLanguage: "en",

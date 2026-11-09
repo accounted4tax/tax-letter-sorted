@@ -53,6 +53,6 @@
   },
   "id_verification": {
     "per_director": 50,
-    "note": "Companies House identity verification for a director who hasn't verified yet – processed by TACS (Eduard 9 Nov 2026). Directors already verified give their Companies House personal code."
+    "note": "Directors must have verified their identity with Companies House before the confirmation statement or annual accounts are filed. Verified: give the personal code. Not verified: £50 per director, processed by TACS (Eduard 9 Nov 2026)."
   }
 }

@@ -202,18 +202,25 @@ async function buildPdf(c: Obj) {
   const to = ch
     ? ["Companies House", "Late Filing Penalties", "Submitted through the Companies House online appeal service"]
     : String(out.post_to ?? "Corporation Tax Services, HM Revenue and Customs, BX9 1AX").split(", ");
+  const longDate = (v: unknown) => /^\d{4}-\d{2}-\d{2}$/.test(String(v ?? "")) ? new Date(String(v) + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : String(v ?? "");
   const refs = [`Company: ${d.company_name} (company number ${d.company_number})`];
   if (d.penalty_reference) refs.push(`Penalty reference: ${d.penalty_reference}`);
   if (!ch && d.utr) refs.push(`Corporation Tax reference (UTR): ${d.utr}`);
-  if (ext.period) refs.push(`${ch ? "Accounts made up to" : "Accounting period"}: ${ext.period}`);
-  if (c.notice_date) refs.push(`Penalty notice dated: ${new Date(String(c.notice_date) + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}`);
+  // Corporation Tax: the details HMRC's own appeal form asks for (GOV.UK "Late filing penalty appeal form", checked 9 Nov 2026)
+  if (!ch) refs.push(`Contact: ${d.full_name} (${String(d.role ?? "Director")})`);
+  if (!ch && (a.dormant === "yes" || a.dormant === "no")) refs.push(`Company dormant: ${a.dormant === "yes" ? "Yes" : "No"}`);
+  const apEnd = ext.accounts_period_end ? longDate(ext.accounts_period_end) : ext.period ? String(ext.period) : "";
+  if (apEnd) refs.push(`${ch ? "Accounts made up to" : "Accounting period ending"}: ${apEnd}`);
+  if (!ch) refs.push(`Company Tax Return for this period filed: Yes${a.filed_date ? ", on " + longDate(a.filed_date) : ""}`);
+  if (c.notice_date) refs.push(`Date of issue on the penalty notice: ${longDate(c.notice_date)}`);
   if (c.penalty_amount) refs.push(`Penalty amount: £${Number(c.penalty_amount).toFixed(2)}`);
   const bytes = await buildLetter(PDFLib, {
     from_lines: [String(d.company_name), ...(d.address_lines as string[]), String(d.postcode)],
     contact: [d.phone, d.email].filter(Boolean).join(" · "),
     date: new Date().toISOString().slice(0, 10), to_lines: to,
-    subject: "Appeal against late filing penalty", ref_lines: refs, body: text,
+    subject: ch ? "Appeal against late filing penalty" : "Appeal against Corporation Tax late filing penalty", ref_lines: refs, body: text,
     signer: String(d.full_name), signer_role: String(d.role ?? "Director"),
+    ...(ch ? {} : { declaration: "I declare that the information provided in this appeal is true and complete to the best of my knowledge and belief.", date_signed_line: true }),
   });
   return { bytes: new Uint8Array(bytes), kind: "letter",
     // Companies House lists only its online appeal service (GOV.UK, checked 1 Nov 2026) – no email or post route

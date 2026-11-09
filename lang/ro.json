@@ -12,7 +12,13 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": []
+    "to_review": [
+      "ct.q_dormant",
+      "ct.not_filed_note",
+      "ct.file_first",
+      "ct.file_yourself",
+      "confirm.dormant"
+    ]
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -520,7 +526,8 @@
     "mismatch_title": "Explicația dvs. nu pare să corespundă motivului ales",
     "mismatch_text": "Ați ales: „{reason}”. Vă rugăm să verificați că ce ați scris descrie acest motiv. Dacă nu, modificați răspunsurile.",
     "mismatch_ok": "Am verificat: motivul și explicația mea sunt corecte.",
-    "err_mismatch": "Vă rugăm să verificați motivul și explicația sau să modificați răspunsurile."
+    "err_mismatch": "Vă rugăm să verificați motivul și explicația sau să modificați răspunsurile.",
+    "dormant": "Companie inactivă"
   },
   "details": {
     "title": "Datele dvs. pentru contestație",
@@ -861,7 +868,11 @@
       "director": "Director (administrator)",
       "secretary": "Secretarul firmei",
       "other": "Altceva"
-    }
+    },
+    "q_dormant": "Compania este inactivă (fără activitate comercială și fără alte venituri în această perioadă)?",
+    "not_filed_note": "HMRC analizează o contestație împotriva acestei penalități doar după ce declarația fiscală a companiei (Company Tax Return) a fost depusă. Depunerea oprește și alte penalități. Putem pregăti și depune declarația pentru dvs., iar contestația este apoi inclusă gratuit.",
+    "file_first": "Cereți o ofertă pentru depunerea declarației",
+    "file_yourself": "Sau depuneți-o singur pe GOV.UK"
   },
   "ch": {
     "pay_online": "Plătește amenda online",

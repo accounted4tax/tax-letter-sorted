@@ -514,7 +514,8 @@
     "mismatch_title": "Your explanation doesn't seem to match the reason you chose",
     "mismatch_text": "You chose: \"{reason}\". Please check that what you wrote describes this. If not, change your answers.",
     "mismatch_ok": "I've checked: my reason and my explanation are both correct.",
-    "err_mismatch": "Please check your reason and explanation, or change your answers."
+    "err_mismatch": "Please check your reason and explanation, or change your answers.",
+    "dormant": "Company dormant"
   },
   "details": {
     "title": "Your details for the appeal",
@@ -847,7 +848,11 @@
       "director": "Director",
       "secretary": "Company secretary",
       "other": "Something else"
-    }
+    },
+    "q_dormant": "Is the company dormant (no trading and no other income in this period)?",
+    "not_filed_note": "HMRC will only consider an appeal against this penalty once the Company Tax Return has been filed. Filing it also stops further penalties. We can prepare and file the return for you, and the appeal is then included free.",
+    "file_first": "Get a quote to file the return",
+    "file_yourself": "Or file it yourself on GOV.UK"
   },
   "ch": {
     "pay_online": "Pay the penalty online",

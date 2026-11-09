@@ -1,7 +1,7 @@
 {
   "id": "ct-late-filing",
   "version": "0.1",
-  "status": "draft 29 Oct 2026 – for Eduard's review",
+  "status": "checked by Eduard 9 Nov 2026",
   "title_key": "letters.ct_late_filing.title",
   "tax": "corporation_tax",
   "kind": "penalty_appeal",
@@ -42,34 +42,33 @@
         "id": "late_3m",
         "amount": 400,
         "previous": 200,
-        "text": "Return more than 3 months late (total)"
+        "text": "Return 3 months late: another £200 (£400 in total)"
       },
       {
         "id": "third_late",
         "amount": 1000,
         "previous": 500,
-        "text": "Third return in a row late"
+        "text": "Late 3 times in a row: the £200 penalties become £1,000 each"
       },
       {
         "id": "third_late_3m",
         "amount": 2000,
         "previous": 1000,
-        "text": "Third return in a row more than 3 months late"
+        "text": "Late 3 times in a row and 3 months late: another £1,000 (£2,000 in total)"
       }
     ],
     "tax_geared": [
       {
-        "id": "18m",
-        "text": "Return 18 to 24 months after the end of the accounting period: 10% of the unpaid tax",
-        "check": "Confirm with Eduard; not on the 2026 GOV.UK page"
+        "id": "6m",
+        "text": "6 months after the filing deadline (18 months after the end of the accounting period): HMRC estimates the Corporation Tax bill (tax determination) and adds 10% of the unpaid tax"
       },
       {
-        "id": "24m",
-        "text": "More than 24 months: 20% of the unpaid tax",
-        "check": "Confirm with Eduard"
+        "id": "12m",
+        "text": "12 months after the filing deadline (24 months after the end of the accounting period): another 10% of any unpaid tax"
       }
     ],
-    "older_returns": "Returns with a filing date before 1 April 2026 keep the old amounts (£100, £200, £500, £1,000)."
+    "older_returns": "Returns with a filing date before 1 April 2026 keep the old amounts (£100, £200, £500, £1,000).",
+    "tax_determination": "If the return is 6 months late, HMRC writes with the Corporation Tax it thinks is due (a 'tax determination'). It cannot be appealed: the company must file the return and pay the tax due, and HMRC then recalculates interest and penalties."
   },
   "checks": [
     {
@@ -125,8 +124,22 @@
     "template": "ct_appeal_letter",
     "signed_by": "director",
     "post_to": "Corporation Tax Services, HM Revenue and Customs, BX9 1AX",
-    "post_to_check": "Confirm the address from the penalty notice; use the address printed on the letter when present",
-    "online_alternative": "Company can appeal through HMRC online services for Corporation Tax"
+    "post_to_check": "Confirmed on GOV.UK appeal form 9 Nov 2026",
+    "online_alternative": "Company can appeal through HMRC online services for Corporation Tax",
+    "must_include": [
+      "Company name",
+      "Corporation Tax UTR",
+      "Contact name and relationship to the company",
+      "Whether the company is dormant",
+      "End date of the accounting period",
+      "That the return has been filed (and when)",
+      "Why the return was filed late",
+      "Penalty amount",
+      "Date of issue on the penalty notice",
+      "Why the appeal is late (if more than 30 days)",
+      "Declaration: true and complete to the best of my knowledge and belief",
+      "Signature and date signed"
+    ]
   },
   "pricing": {
     "option_2": 19,
@@ -142,9 +155,24 @@
       "title": "GOV.UK: Corporation Tax penalty determinations (CT211 notes)",
       "url": "https://www.gov.uk/government/publications/corporation-tax-penalty-determinations-ct211-notes/corporation-tax-penalty-determinations-ct211-notes",
       "checked": "listed, not read"
+    },
+    {
+      "title": "GOV.UK: Appeal a late filing penalty for Corporation Tax (save or print appeal form)",
+      "url": "https://www.tax.service.gov.uk/guidance/appeal-a-late-filing-penalty-for-corporation-tax/save-or-print/penalty-appeal-form",
+      "checked": "2026-11-09"
+    },
+    {
+      "title": "GOV.UK: Company Tax Returns – penalties for late filing",
+      "url": "https://www.gov.uk/company-tax-returns/penalties-for-late-filing",
+      "checked": "2026-11-09"
     }
   ],
   "exclude_reasons": [
     "never_needed_to_file"
-  ]
+  ],
+  "appeal_requires_return_filed": {
+    "rule": "HMRC will not consider an appeal until the Company Tax Return for the period has been filed",
+    "flow": "questions.html stops the appeal and offers the filing package (contact.html?kind=package) or filing on GOV.UK; case-flow refuses 'ct_not_filed'",
+    "source": "Eduard, 9 Nov 2026"
+  }
 }

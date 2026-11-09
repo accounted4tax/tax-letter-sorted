@@ -301,6 +301,8 @@ async function submitAnswers(c: Obj, body: Obj) {
 
   if (reason?.health_consent && !yes(a.health_consent)) return { status: 400, body: { error: "health_consent" } };
   if (FILING_TYPES.includes(letterType) && no(a.filed) && !yes(a.continue_not_filed)) return { status: 400, body: { error: "not_filed" } };
+  // HMRC only considers a Corporation Tax late filing appeal once the return has been filed
+  if (letterType === "ct-late-filing" && !yes(a.filed)) return { status: 400, body: { error: "ct_not_filed" } };
 
   const ext = (c.extracted ?? {}) as Obj;
   const penalties = ((ext.penalties ?? []) as Obj[]);
@@ -372,7 +374,8 @@ async function submitAnswers(c: Obj, body: Obj) {
     route, route_note: routeNote, reason: reasonId,
     reason_label_key: String((reason ?? notAcc)!.label_key ?? ""),
     original: texts, english,
-    facts: { filed_date: a.filed_date ?? null, date_from: a.date_from ?? null, date_to: a.date_to ?? null, evidence: a.evidence ?? [] },
+    facts: { filed_date: a.filed_date ?? null, date_from: a.date_from ?? null, date_to: a.date_to ?? null, evidence: a.evidence ?? [],
+      ...(letterType === "ct-late-filing" ? { dormant: yes(a.dormant) ? "yes" : no(a.dormant) ? "no" : null } : {}) },
     late_appeal: lateAppeal, reason_mismatch: reasonMismatch,
   } };
 }

@@ -72,6 +72,7 @@ export async function buildLetter(PDFLib, data) {
   for (const s of data.ref_lines ?? []) line(s, { size: 10.5, lead: 14.5 });
   gap(8);
   for (const para of String(data.body ?? "").split(/\n\s*\n/)) { line(para); gap(6); }
+  if (data.declaration) { gap(2); line(data.declaration, { bold: true }); gap(6); }
   gap(4);
   line("Yours faithfully,");
   need(70);
@@ -79,6 +80,7 @@ export async function buildLetter(PDFLib, data) {
   page.drawLine({ start: { x: L, y: y + 14 }, end: { x: L + 200, y: y + 14 }, thickness: 0.6, color: rgb(0.6, 0.62, 0.68) });
   line(data.signer ?? "", { bold: true });
   if (data.signer_role) line(data.signer_role);
+  if (data.date_signed_line) { gap(10); line("Date signed: ____________________"); }
   footer();
   return await doc.save();
 }

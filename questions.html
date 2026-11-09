@@ -125,8 +125,10 @@
     if (a.filed === "yes" && !isPay) p.filed_date = true;
     var blocked = false;
     if (isFiling && a.filed === "no") { p.continue_not_filed = true; blocked = a.continue_not_filed !== "yes"; }
+    // Corporation Tax: HMRC only considers an appeal once the Company Tax Return has been filed (Eduard, 9 Nov 2026)
+    if (isCT && a.filed === "no") { p.ct_not_filed = true; return p; }
     if (blocked) return p;
-    if (isCT) { p.role = true; p.other_directors = true; }
+    if (isCT) { p.role = true; p.other_directors = true; p.dormant = true; }
     p.reason = true;
     var cr = currentReason();
     if (!cr) return p;
@@ -152,6 +154,8 @@
     need("continue_not_filed", a.continue_not_filed === "yes");
     need("role", a.role);
     need("other_directors", a.other_directors);
+    need("dormant", a.dormant);
+    if (p.ct_not_filed) m.push("ct_not_filed");
     need("reason", currentReason());
     need("nnf", a.nnf);
     need("nnf_other_text", (a.nnf_other_text || "").trim());
@@ -191,8 +195,16 @@
               onclick: function () { a.continue_not_filed = "yes"; save(); render(); var r = $("q_reason"); if (r) r.scrollIntoView({ behavior: "smooth", block: "start" }); } })
       ]));
     }
+    if (p.ct_not_filed) {
+      f.appendChild(el("div", { class: "card", id: "q_ct_not_filed" }, [
+        el("p", { text: t("ct.not_filed_note") }),
+        el("a", { class: "btn", href: "contact.html?kind=package" + (F.demo ? "&demo=1" : ""), text: t("ct.file_first") }),
+        el("a", { class: "btn secondary", href: "https://www.gov.uk/file-your-company-accounts-and-tax-return", target: "_blank", rel: "noopener", text: t("ct.file_yourself") })
+      ]));
+    }
     if (p.role) f.appendChild(q("role", "ct.q_role", [radio("role", "director", t("ct.role_opt.director")), radio("role", "secretary", t("ct.role_opt.secretary")), radio("role", "other", t("ct.role_opt.other"))]));
     if (p.other_directors) f.appendChild(yn("other_directors", "ct.q_other_directors"));
+    if (p.dormant) f.appendChild(yn("dormant", "ct.q_dormant"));
 
     if (p.reason) {
       var acc = reasons.filter(function (r) { return r.gov_uk_listed || (isCH && r.route === "appeal"); });
@@ -230,7 +242,7 @@
     if (p.more_than_one_year) f.appendChild(yn("more_than_one_year", "q.more_than_one_year"));
     if (p.had_payment_plan) f.appendChild(yn("had_payment_plan", "q.had_payment_plan"));
 
-    if (!p.continue_not_filed || a.continue_not_filed === "yes") {
+    if (!p.ct_not_filed && (!p.continue_not_filed || a.continue_not_filed === "yes")) {
       f.appendChild(el("button", { class: "btn", type: "submit", text: t("common.continue") }));
     }
 

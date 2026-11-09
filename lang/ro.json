@@ -4,7 +4,7 @@
     "name": "Română",
     "direction": "ltr",
     "version": "0.5",
-    "status": "reviewed by Eduard 9 Nov 2026 (all 396 lines)",
+    "status": "reviewed by Eduard 9 Nov 2026 (all lines, incl. 20 added 9 Nov)",
     "note": "English is authoritative. Appeal forms and letters are always generated in English.",
     "style_notes": [
       "'Până la' is used for dates; for a person use 'Către' or 'Pentru'.",
@@ -12,28 +12,7 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": [
-      "ct.q_dormant",
-      "ct.not_filed_note",
-      "ct.file_first",
-      "ct.file_yourself",
-      "confirm.dormant",
-      "pkg.cs_changes",
-      "pkg.cs_changes_hint",
-      "pkg.idv",
-      "pkg.idv_code",
-      "pkg.idv_code_hint",
-      "pkg.idv_count",
-      "pkg.idv_note",
-      "pkg.l_cs",
-      "pkg.l_cs_changes",
-      "pkg.l_idv",
-      "pkg.err_idv",
-      "pkg.err_idv_code",
-      "pkg.idv_opt.yes",
-      "pkg.idv_opt.no",
-      "pkg.idv_opt.unsure"
-    ]
+    "to_review": []
   },
   "common": {
     "brand": "Tax Letter Sorted",

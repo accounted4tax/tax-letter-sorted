@@ -165,7 +165,7 @@
     "btn_service_cis": "Would you like us to deal with your CIS returns?",
     "btn_service_vat": "Would you like us to file your VAT returns?",
     "btn_stop_strike_off": "Stop the strike-off – get a quote",
-    "btn_service_ct": "Help with Corporation Tax – get a quote"
+    "btn_service_ct": "Help with the Corporation Tax return"
   },
   "letters": {
     "sa_late_filing_100": {

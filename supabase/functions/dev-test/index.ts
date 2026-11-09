@@ -12,6 +12,24 @@ Deno.serve(async (req) => {
   if (!settings?.cron_secret || req.headers.get("x-cron-secret") !== settings.cron_secret) return json(403, { error: "forbidden" });
   let b: Record<string, unknown>;
   try { b = await req.json(); } catch { return json(400, { error: "bad_request" }); }
+  // email deliverability check: the domain's mail records, and a test email to Eduard's own addresses only
+  if (b.action === "dns") {
+    const q = async (n: string, t: "TXT" | "MX" | "CNAME") => { try { return await Deno.resolveDns(n, t as any); } catch (e) { return String((e as Error).message ?? e); } };
+    const d = "accounted4tax.co.uk";
+    return json(200, { spf: await q(d, "TXT"), dmarc: await q("_dmarc." + d, "TXT"), mx: await q(d, "MX"),
+      brevo1: await q("brevo1._domainkey." + d, "CNAME"), brevo2: await q("brevo2._domainkey." + d, "CNAME"), mail: await q("mail._domainkey." + d, "TXT") });
+  }
+  if (b.action === "email") {
+    const ALLOWED = ["ehiosif@outlook.com", "ehiosif@gmail.com", "info@accounted4tax.co.uk"];
+    const to = String(b.to ?? "").toLowerCase();
+    if (!ALLOWED.includes(to)) return json(400, { error: "recipient_not_allowed" });
+    const key = Deno.env.get("BREVO_API_KEY");
+    const html = `<!doctype html><html><body style="margin:0;background:#F5F6F8;font-family:Arial,Helvetica,sans-serif;color:#14213D"><div style="max-width:560px;margin:0 auto;padding:24px"><div style="background:#14213D;color:#fff;padding:14px 18px;border-radius:10px 10px 0 0;font-size:18px;font-weight:bold">Tax Letter Sorted</div><div style="background:#fff;padding:22px 18px;border-radius:0 0 10px 10px;font-size:15px;line-height:1.55"><p>Hello Eduard,</p><p>This is a test email from Tax Letter Sorted, to check that our emails reach the inbox and not the spam folder.</p><p>If you found this in Spam or Junk, please tell Claude.</p></div><p style="font-size:12px;color:#4A5568;text-align:center">Tax Letter Sorted by Accounted4Tax Ltd · 128 City Road, London, EC1V 2NX</p></div></body></html>`;
+    const r = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": String(key), "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({ sender: { name: "Tax Letter Sorted", email: "letters@accounted4tax.co.uk" }, replyTo: { email: "info@accounted4tax.co.uk" }, to: [{ email: to }],
+        subject: "Test – Tax Letter Sorted email check", htmlContent: html, textContent: "Hello Eduard,\n\nThis is a test email from Tax Letter Sorted, to check that our emails reach the inbox and not the spam folder.", tags: ["deliverability-test"] }) });
+    return json(r.status, await r.json().catch(() => ({})));
+  }
   // the latest appeal PDF of a test case (small letters only), to check what was built
   if (b.action === "pdf") {
     const { data: c } = await db.from("cases").select("id, admin_notes").eq("ref", String(b.ref ?? "")).single();

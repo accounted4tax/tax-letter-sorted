@@ -12,7 +12,15 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": []
+    "to_review": [
+      "review.email_soon",
+      "done.emailed",
+      "o3.case_link_sent",
+      "id.later_sent",
+      "help.sent_text",
+      "contact.package_sent_text",
+      "strike.sent_text"
+    ]
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -489,7 +497,7 @@
     "consent": "Sunt de acord ca Accounted4Tax să mă contacteze în legătură cu această solicitare.",
     "submit": "Trimite solicitarea",
     "sent_title": "Solicitare trimisă",
-    "sent_text": "Un contabil calificat de la Accounted4Tax vă va suna sau vă va scrie, de obicei într-o zi lucrătoare.",
+    "sent_text": "Un contabil calificat de la Accounted4Tax vă va suna sau vă va scrie, de obicei într-o zi lucrătoare. Emailurile noastre vin de la letters@accounted4tax.co.uk – dacă nu le vedeți, verificați folderul Junk sau Spam.",
     "wait_title": "Până atunci",
     "wait_text": "Pregătiți scrisoarea HMRC, codul UTR și documentele privind veniturile. Dacă amenda are un termen, acesta rămâne valabil."
   },
@@ -606,7 +614,7 @@
     "err_server": "A apărut o eroare. Vă rugăm să încercați din nou.",
     "approved_title": "Contestația dvs. este gata",
     "download": "Descarcă contestația (PDF)",
-    "email_soon": "V-am trimis-o și pe email, ca să aveți o copie.",
+    "email_soon": "V-am trimis-o și pe email, ca să aveți o copie. Dacă nu o vedeți în 5 minute, verificați folderul Junk sau Spam – o puteți descărca oricând cu butonul de mai sus.",
     "next_title": "Ce aveți de făcut acum",
     "post_1": "Tipăriți formularul.",
     "post_2": "Semnați și datați de mână pe pagina 2, cu pix negru sau albastru.",
@@ -623,7 +631,7 @@
   },
   "done": {
     "title": "Contestația dvs. este gata",
-    "emailed": "V-am trimis-o la {email}. Dacă nu ajunge în 5 minute, verificați folderul de spam.",
+    "emailed": "V-am trimis-o la {email}. Dacă nu ajunge în 5 minute, verificați folderul Junk sau Spam.",
     "what_now": "Pașii următori",
     "print_sign": "Descărcați și printați formularul din email, apoi semnați-l și datați-l.",
     "evidence_copies": "Adăugați copii ale dovezilor pe care le aveți. Dovezile ajută HMRC să decidă. Nu trimiteți niciodată originale. Nu aveți dovezi? Trimiteți doar formularul.",
@@ -662,7 +670,7 @@
     "next_3": "Semnați online",
     "next_3_text": "Primiți un email de la iLovePDF cu un link pentru semnare. Nu aveți nevoie de cont.",
     "next_4": "Contestația este trimisă prin poștă la HMRC",
-    "case_link_sent": "V-am trimis pe email un link privat pentru a urmări dosarul.",
+    "case_link_sent": "V-am trimis pe email un link privat pentru a urmări dosarul. Dacă nu îl vedeți în 5 minute, verificați folderul Junk sau Spam.",
     "view_case": "Vezi dosarul meu",
     "ready_to_sign": "Pregătit pentru semnătură",
     "sign_within": "Vă rugăm să semnați în 2 zile ca să o putem trimite la timp.",
@@ -889,7 +897,7 @@
     "package_intro": "Vedeți imediat prețul pentru aducerea companiei la zi: bilanțul financiar anual, declarația fiscală anuală și orice altceva este restant. Contestația penalității este inclusă gratuit. Apoi trimiteți-ne datele dvs. și vă contactăm.",
     "package_submit": "Solicitați această ofertă",
     "package_sent_title": "Solicitare trimisă",
-    "package_sent_text": "Un contabil calificat de la Accounted4Tax vă va contacta cu o ofertă, de obicei într-o zi lucrătoare. Termenul pentru contestație rămâne valabil.",
+    "package_sent_text": "Un contabil calificat de la Accounted4Tax vă va contacta cu o ofertă, de obicei într-o zi lucrătoare. Termenul pentru contestație rămâne valabil. Emailurile noastre vin de la letters@accounted4tax.co.uk – dacă nu le vedeți, verificați folderul Junk sau Spam.",
     "company_name": "Denumirea firmei",
     "ch_auth_code": "Codul de autentificare Companies House",
     "ch_auth_code_hint": "6 caractere. Avem nevoie de el pentru a depune bilanțul financiar anual și declarația de confirmare. Dacă nu îl aveți, Companies House îl poate trimite prin poștă la sediul social."
@@ -955,7 +963,7 @@
     "submit": "Trimite documentele",
     "err_missing": "Vă rugăm să încărcați toate documentele.",
     "later": "Le încarc mai târziu",
-    "later_sent": "V-am trimis pe email un link pentru încărcarea documentelor. Vă vom aminti dacă încă lipsesc.",
+    "later_sent": "V-am trimis pe email un link pentru încărcarea documentelor. Vă vom aminti dacă încă lipsesc. Dacă nu îl vedeți în 5 minute, verificați folderul Junk sau Spam.",
     "later_failed": "Nu am putut trimite emailul acum. Puteți reveni la această pagină folosind același link.",
     "done_title": "Vă mulțumim, avem tot ce ne trebuie",
     "done_text": "Un contabil calificat de la Accounted4Tax vă va contacta, va discuta situația cu dvs. și vă va pregăti contestația în 48 de ore. V-o trimitem pe email, gata de tipărit, semnat și expediat prin poștă.",
@@ -1191,7 +1199,7 @@
     "title": "Opriți radierea companiei",
     "intro": "Companies House intenționează să șteargă (închidă) compania din registru, de obicei pentru că declarația de confirmare (confirmation statement) sau conturile anuale sunt întârziate. Depunerea lor oprește de regulă ștergerea. Vedeți prețul mai jos; după ce îl acceptați, verificăm identitatea directorului și depunem declarația de confirmare (confirmation statement) pentru companie.",
     "submit": "Trimiteți cererea",
-    "sent_text": "Vă mulțumim. Verificăm compania și vă trimitem pe email prețul și un link de plată. După plată vă vom cere actele de identitate ale directorului și depunem declarația de confirmare.",
+    "sent_text": "Vă mulțumim. Verificăm compania și vă trimitem pe email prețul și un link de plată. După plată vă vom cere actele de identitate ale directorului și depunem declarația de confirmare. Emailurile noastre vin de la letters@accounted4tax.co.uk – dacă nu le vedeți, verificați folderul Junk sau Spam.",
     "err_company": "Vă rugăm să introduceți numele companiei, numărul companiei și codul de autentificare Companies House. Avem nevoie de ele ca să depunem pentru companie."
   },
   "idp": {

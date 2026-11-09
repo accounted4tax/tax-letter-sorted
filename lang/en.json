@@ -483,7 +483,7 @@
     "consent": "I agree Accounted4Tax can contact me about this request.",
     "submit": "Send my request",
     "sent_title": "Request sent",
-    "sent_text": "A qualified accountant at Accounted4Tax will call or email you, usually within one working day.",
+    "sent_text": "A qualified accountant at Accounted4Tax will call or email you, usually within one working day. Our emails come from letters@accounted4tax.co.uk – if you don't see them, check your Junk or Spam folder.",
     "wait_title": "While you wait",
     "wait_text": "Have your HMRC letter, your UTR and any income records to hand. If your penalty has a deadline, it still applies."
   },
@@ -600,7 +600,7 @@
     "err_server": "Something went wrong. Please try again.",
     "approved_title": "Your appeal is ready",
     "download": "Download my appeal (PDF)",
-    "email_soon": "We've also emailed it to you, so you have a copy.",
+    "email_soon": "We've also emailed it to you, so you have a copy. If you can't see it within 5 minutes, check your Junk or Spam folder – you can always download it with the button above.",
     "next_title": "What to do now",
     "post_1": "Print the form.",
     "post_2": "Sign and date it by hand on page 2, in black or blue ink.",
@@ -617,7 +617,7 @@
   },
   "done": {
     "title": "Your appeal is ready",
-    "emailed": "We've emailed it to {email}. If it isn't there in 5 minutes, check your spam folder.",
+    "emailed": "We've emailed it to {email}. If it isn't there in 5 minutes, check your Junk or Spam folder.",
     "what_now": "What to do now",
     "print_sign": "Download and print the form from the email, then sign and date it.",
     "evidence_copies": "Add copies of any evidence you have. Evidence helps HMRC decide. Never send originals. No evidence? Just send the form.",
@@ -656,7 +656,7 @@
     "next_3": "You sign online",
     "next_3_text": "You get an email from iLovePDF with a link to sign. No account needed.",
     "next_4": "Your appeal is posted to HMRC",
-    "case_link_sent": "We've emailed you a private link to follow your case.",
+    "case_link_sent": "We've emailed you a private link to follow your case. If you can't see it within 5 minutes, check your Junk or Spam folder.",
     "view_case": "View my case",
     "ready_to_sign": "Ready for you to sign",
     "sign_within": "Please sign within 2 days so we can post it in time.",
@@ -875,7 +875,7 @@
     "package_intro": "See your price straight away for bringing the company up to date: annual accounts, Corporation Tax return and anything else that's behind. Your penalty appeal is included free. Then send us your details and we'll be in touch.",
     "package_submit": "Request this quote",
     "package_sent_title": "Request sent",
-    "package_sent_text": "A qualified accountant at Accounted4Tax will contact you with a quote, usually within one working day. Your appeal deadline still applies.",
+    "package_sent_text": "A qualified accountant at Accounted4Tax will contact you with a quote, usually within one working day. Your appeal deadline still applies. Our emails come from letters@accounted4tax.co.uk – if you don't see them, check your Junk or Spam folder.",
     "company_name": "Company name",
     "ch_auth_code": "Companies House authentication code",
     "ch_auth_code_hint": "6 characters. We need it to file the accounts and confirmation statement. If you don't have it, Companies House can post it to the registered office."
@@ -941,7 +941,7 @@
     "submit": "Send my documents",
     "err_missing": "Please upload every document.",
     "later": "I will upload later",
-    "later_sent": "We've emailed you a link to upload your documents. We'll remind you if they're still missing.",
+    "later_sent": "We've emailed you a link to upload your documents. We'll remind you if they're still missing. If you can't see it within 5 minutes, check your Junk or Spam folder.",
     "later_failed": "We couldn't send the email just now. You can come back to this page using the same link.",
     "done_title": "Thank you, we have everything",
     "done_text": "A qualified accountant at Accounted4Tax will contact you, talk it through and prepare your appeal within 48 hours. We'll email it to you, ready to print, sign and post.",
@@ -1177,7 +1177,7 @@
     "title": "Stop the strike-off",
     "intro": "Companies House plans to remove the company from the register, usually because the confirmation statement (or the accounts) is overdue. Filing it normally stops the strike-off. Get your price below; once you accept it, we check the director's ID and file it for the company.",
     "submit": "Send my request",
-    "sent_text": "Thank you. We'll check the company and email you the price and a payment link. After you pay, we'll ask for the director's ID and file the confirmation statement.",
+    "sent_text": "Thank you. We'll check the company and email you the price and a payment link. After you pay, we'll ask for the director's ID and file the confirmation statement. Our emails come from letters@accounted4tax.co.uk – if you don't see them, check your Junk or Spam folder.",
     "err_company": "Please enter the company name, company number and Companies House authentication code. We need them to file for the company."
   },
   "idp": {

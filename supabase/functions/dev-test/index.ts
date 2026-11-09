@@ -19,6 +19,12 @@ Deno.serve(async (req) => {
     return json(200, { spf: await q(d, "TXT"), dmarc: await q("_dmarc." + d, "TXT"), mx: await q(d, "MX"),
       brevo1: await q("brevo1._domainkey." + d, "CNAME"), brevo2: await q("brevo2._domainkey." + d, "CNAME"), mail: await q("mail._domainkey." + d, "TXT") });
   }
+  if (b.action === "events") {
+    const to = String(b.to ?? "").toLowerCase();
+    if (!["ehiosif@outlook.com", "ehiosif@gmail.com", "info@accounted4tax.co.uk"].includes(to)) return json(400, { error: "recipient_not_allowed" });
+    const r = await fetch(`https://api.brevo.com/v3/smtp/statistics/events?email=${encodeURIComponent(to)}&limit=20&days=2`, { headers: { "api-key": String(Deno.env.get("BREVO_API_KEY")), accept: "application/json" } });
+    return json(r.status, await r.json().catch(() => ({})));
+  }
   if (b.action === "email") {
     const ALLOWED = ["ehiosif@outlook.com", "ehiosif@gmail.com", "info@accounted4tax.co.uk"];
     const to = String(b.to ?? "").toLowerCase();

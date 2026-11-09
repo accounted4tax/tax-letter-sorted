@@ -33,20 +33,21 @@ function sentence(s) {
 }
 
 // What follows "because" for each reason the client chose (restates their own choice, adds no facts).
+// Only what the client chose – never add facts they did not confirm (dates, "no one else could", etc.). Eduard 9 Nov 2026 test run.
 const BECAUSE = {
-  bereavement: "of a bereavement: my partner or a close relative died shortly before the deadline",
+  bereavement: "of the death of my partner or a close relative",
   hospital: "of an unexpected stay in hospital",
   serious_illness: "of a serious illness",
   disability_mental_illness: "of a disability or mental illness that I have",
-  computer_failure: "of a computer or software failure while I was dealing with my tax online",
+  computer_failure: "of a computer or software failure",
   hmrc_online_issues: "of problems with HMRC's online services",
   fire_flood_disaster: "of a fire, flood or other disaster",
   theft_crime: "of a theft or other crime",
-  postal_delay: "of postal delays that I could not have predicted",
+  postal_delay: "of postal delays",
   unaware_obligation: "I did not know about, or misunderstood, what I had to do",
   relied_on_someone: "I relied on someone else to deal with it, and they did not do so",
-  ch_unforeseen_event: "of an unforeseen event at a critical time",
-  ch_director_illness_death: "of the serious illness or death of a director at a critical time, when no one else could file",
+  ch_unforeseen_event: "of an unforeseen event",
+  ch_director_illness_death: "of the serious illness or death of a director",
   ch_system_failure: "Companies House's online filing service failed",
 };
 

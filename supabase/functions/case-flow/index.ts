@@ -118,6 +118,8 @@ function actionsFor(t: string, ext: Obj) {
   if (APPEAL_TYPES.includes(t)) {
     const a: Obj[] = [{ id: "check_appeal" }];
     if (FILING_TYPES.includes(t)) a.push({ id: "help_return" });
+    // Corporation Tax: offer to do the company's accounts and Corporation Tax return – quote (Eduard 9 Nov 2026)
+    if (t === "ct-late-filing") a.push({ id: "service_ct" });
     // service offers (Eduard 3 Nov 2026): run the payroll / CIS returns, or file the VAT returns
     if (t === "cis-late-return") a.push({ id: "service_cis" });
     if (t === "vat-late-submission") a.push({ id: "service_vat" });

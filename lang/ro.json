@@ -12,7 +12,9 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": []
+    "to_review": [
+      "explain.btn_service_ct"
+    ]
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -170,7 +172,8 @@
     "btn_service_payroll": "Doriți ca un contabil să se ocupe de salarizare (payroll)?",
     "btn_service_cis": "Doriți să ne ocupăm de declarațiile CIS?",
     "btn_service_vat": "Doriți să depunem noi declarațiile de TVA (VAT returns)?",
-    "btn_stop_strike_off": "Opriți închiderea companiei – cereți o ofertă"
+    "btn_stop_strike_off": "Opriți închiderea companiei – cereți o ofertă",
+    "btn_service_ct": "Ajutor cu impozitul pe profit (Corporation Tax) – cereți o ofertă"
   },
   "letters": {
     "sa_late_filing_100": {

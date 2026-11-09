@@ -30,7 +30,8 @@
   },
   "confirmation_statement": {
     "price": 99,
-    "note": "Companies House fee included"
+    "price_with_changes": 150,
+    "note": "Companies House fee included. £99 if nothing has changed; £150 with changes (officers, shareholders, share capital, registered office, SIC code, PSCs) – Eduard 9 Nov 2026"
   },
   "limits": {
     "years": 6,
@@ -49,5 +50,9 @@
   "monthly": {
     "min_months": 3,
     "note": "(year-end + confirmation statement + software if needed + £150 per director) ÷ months to the company's next year-end (at least 3), plus payroll / CIS / VAT per month"
+  },
+  "id_verification": {
+    "per_director": 50,
+    "note": "Companies House identity verification for a director who hasn't verified yet – processed by TACS (Eduard 9 Nov 2026). Directors already verified give their Companies House personal code."
   }
 }

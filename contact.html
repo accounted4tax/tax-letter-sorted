@@ -85,6 +85,23 @@
       <fieldset class="q"><legend data-i18n="pkg.cs">Is the confirmation statement due as well?</legend>
         <div class="yn"><label class="opt"><input type="radio" name="cs" value="yes"><span data-i18n="common.yes">Yes</span></label>
         <label class="opt"><input type="radio" name="cs" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
+      <!-- Confirmation statement: £99 no changes / £150 with changes; directors' Companies House identity (Eduard, 9 Nov 2026) -->
+      <div id="csQs" class="stack" hidden>
+        <fieldset class="q"><legend data-i18n="pkg.cs_changes">Has anything changed since the last confirmation statement?</legend>
+          <p class="hint" data-i18n="pkg.cs_changes_hint"></p>
+          <div class="yn"><label class="opt"><input type="radio" name="cs_changes" value="yes"><span data-i18n="common.yes">Yes</span></label>
+          <label class="opt"><input type="radio" name="cs_changes" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
+        <fieldset class="q" id="idvRow"><legend data-i18n="pkg.idv">Have the directors verified their identity with Companies House?</legend>
+          <label class="opt"><input type="radio" name="idv" value="yes"><span data-i18n="pkg.idv_opt.yes">Yes – they have a Companies House personal code</span></label>
+          <label class="opt"><input type="radio" name="idv" value="no"><span data-i18n="pkg.idv_opt.no">No, or not yet</span></label>
+          <label class="opt"><input type="radio" name="idv" value="unsure"><span data-i18n="pkg.idv_opt.unsure">I'm not sure</span></label></fieldset>
+        <label class="field" id="idvCodeRow" hidden><span data-i18n="pkg.idv_code">Companies House personal code (for each director)</span>
+          <span class="hint" data-i18n="pkg.idv_code_hint"></span>
+          <input id="idv_code" maxlength="120" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
+        <label class="field" id="idvCountRow" hidden><span data-i18n="pkg.idv_count">How many directors need to verify their identity?</span>
+          <span class="hint" data-i18n="pkg.idv_note"></span>
+          <input id="idv_n" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
+      </div>
       <div class="deadline" id="estBox" aria-live="polite">
         <b id="estTotal"></b>
         <span id="estLines" style="white-space:pre-line"></span>
@@ -219,6 +236,7 @@
   var P = null;
   if (isPackage) fetch("rules/package-prices.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (j) { P = j; estimate(); }).catch(function () {});
   function radio(name) { var r = document.querySelector('input[name=' + name + ']:checked'); return r ? r.value : "no"; }
+  function picked(name) { var r = document.querySelector('input[name=' + name + ']:checked'); return r ? r.value : ""; }
   function num(id, min, max) { var v = Math.floor(Number($(id).value)); if (!isFinite(v) || v < min) v = min; return Math.min(v, max); }
   function gbp(n) { return "£" + n.toLocaleString("en-GB"); }
   var est = null;
@@ -272,7 +290,19 @@
       }
       if (radio("vat") === "yes") { vatM = num("pkVatM", 0, L.months); vatRate = P.vat.per_month; a.vat = { months: vatM }; add("pkg.l_vat", { n: vatM }, vatM * vatRate); }
     }
-    if (radio("cs") === "yes") { a.confirmation_statement = true; add("pkg.l_cs", {}, P.confirmation_statement.price); }
+    $("csQs").hidden = radio("cs") !== "yes";
+    if (radio("cs") === "yes") {
+      var csCh = radio("cs_changes") === "yes", idv = picked("idv");
+      a.confirmation_statement = csCh ? "with changes" : "no changes";
+      add(csCh ? "pkg.l_cs_changes" : "pkg.l_cs", {}, csCh ? P.confirmation_statement.price_with_changes : P.confirmation_statement.price);
+      $("idvCodeRow").hidden = idv !== "yes";
+      $("idvCountRow").hidden = !(idv === "no" || idv === "unsure");
+      if (idv) a.director_id_verified = idv;
+      if (idv === "no" || idv === "unsure") {
+        var idn = num("idv_n", 1, L.people); a.id_verification_directors = idn;
+        add("pkg.l_idv", { n: idn, each: gbp(P.id_verification.per_director) }, idn * P.id_verification.per_director);
+      }
+    }
     if (!isStrike) lines.push(t("pkg.l_appeal"));
     $("estTotal").textContent = t("pkg.total", { amount: gbp(total) });
     $("estLines").textContent = lines.join("\n");
@@ -355,6 +385,8 @@
     var body = { action: "contact", kind: kind, full_name: name, phone: phone, email: email, consent: true, note: $("note").value.trim() };
     if (isHelp && !isPackage && !svc) body.tax_year = $("tax_year").value;
     if (isStrike && (!$("company_name").value.trim() || !$("company_number").value.trim() || !$("ch_auth_code").value.trim())) { $("submit").disabled = false; render(); return err("strike.err_company"); }
+    if (isPackage && radio("cs") === "yes" && !picked("idv")) { $("submit").disabled = false; render(); return err("pkg.err_idv"); }
+    if (isPackage && radio("cs") === "yes" && picked("idv") === "yes" && !$("idv_code").value.trim()) { $("submit").disabled = false; render(); return err("pkg.err_idv_code"); }
     if (svc) {
       if (!$("svc_business").value.trim()) { $("submit").disabled = false; render(); return err("svc.err_business"); }
       body.tax_year = "package";
@@ -375,6 +407,8 @@
         "Company: " + ($("company_name").value.trim() || "-"),
         "Company number: " + ($("company_number").value.trim().toUpperCase() || "-"),
         $("ch_auth_code").value.trim() ? "Companies House authentication code: " + $("ch_auth_code").value.trim().toUpperCase() : "",
+        radio("cs") === "yes" && picked("idv") === "yes" ? "Directors' Companies House personal code(s): " + $("idv_code").value.trim().toUpperCase() : "",
+        radio("cs") === "yes" && (picked("idv") === "no" || picked("idv") === "unsure") ? "[ID VERIFICATION NEEDED – " + (picked("idv") === "unsure" ? "client not sure – check; " : "") + $("idv_n").value + " director(s), via TACS]" : "",
         est ? "CATCH-UP ESTIMATE £" + est.total + " – " + JSON.stringify(est.answers) : "",
         est && est.monthly ? "MONTHLY FROM NOW £" + est.monthly.amount + " x " + est.monthly.months + " months – " + JSON.stringify(est.monthly) : "",
         ctx.ref ? "Case: " + ctx.ref : "", body.note].filter(Boolean).join(" · ");

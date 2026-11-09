@@ -1087,7 +1087,7 @@
     "l_payroll": "Payroll, {n} months ({people} employees): {amount}",
     "l_cis": "CIS returns, {n} months ({people} subcontractors): {amount}",
     "l_vat": "VAT, {n} months: {amount}",
-    "l_cs": "Confirmation statement (Companies House fee included): {amount}",
+    "l_cs": "Confirmation statement, no changes (Companies House fee included): {amount}",
     "l_appeal": "Penalty appeal: included free",
     "disclaimer": "This is an estimate based on your answers. We confirm the final price once we've seen your records.",
     "future": "Would you like us to look after the company from now on?",
@@ -1100,7 +1100,23 @@
     "m_payroll": "Payroll: {amount} a month",
     "m_cis": "CIS returns: {amount} a month",
     "m_vat": "VAT: {amount} a month",
-    "m_until": "Until the next year-end on {date}. We'll then agree the following year with you."
+    "m_until": "Until the next year-end on {date}. We'll then agree the following year with you.",
+    "cs_changes": "Has anything changed since the last confirmation statement?",
+    "cs_changes_hint": "For example directors, shareholders or shares, the registered office address, the business activity (SIC code) or people with significant control.",
+    "idv": "Have the directors verified their identity with Companies House?",
+    "idv_code": "Companies House personal code (for each director)",
+    "idv_code_hint": "An 11-character code each director receives after verifying their identity. For more than one director, separate the codes with commas.",
+    "idv_count": "How many directors need to verify their identity?",
+    "idv_note": "Directors now have to verify their identity with Companies House. We can do it for you.",
+    "l_cs_changes": "Confirmation statement with changes (Companies House fee included): {amount}",
+    "l_idv": "Identity verification with Companies House: {n} × {each} = {amount}",
+    "err_idv": "Please tell us whether the directors have verified their identity with Companies House.",
+    "err_idv_code": "Please enter the directors' Companies House personal code.",
+    "idv_opt": {
+      "yes": "Yes – they have a Companies House personal code",
+      "no": "No, or not yet",
+      "unsure": "I'm not sure"
+    }
   },
   "paylink": {
     "title": "Your payment",

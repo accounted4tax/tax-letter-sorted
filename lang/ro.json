@@ -17,7 +17,22 @@
       "ct.not_filed_note",
       "ct.file_first",
       "ct.file_yourself",
-      "confirm.dormant"
+      "confirm.dormant",
+      "pkg.cs_changes",
+      "pkg.cs_changes_hint",
+      "pkg.idv",
+      "pkg.idv_code",
+      "pkg.idv_code_hint",
+      "pkg.idv_count",
+      "pkg.idv_note",
+      "pkg.l_cs",
+      "pkg.l_cs_changes",
+      "pkg.l_idv",
+      "pkg.err_idv",
+      "pkg.err_idv_code",
+      "pkg.idv_opt.yes",
+      "pkg.idv_opt.no",
+      "pkg.idv_opt.unsure"
     ]
   },
   "common": {
@@ -1107,7 +1122,7 @@
     "l_payroll": "Servicii de payroll, {n} luni ({people} angajați): {amount}",
     "l_cis": "Declarații CIS, {n} luni ({people} subcontractori): {amount}",
     "l_vat": "TVA, {n} luni: {amount}",
-    "l_cs": "Declarația de confirmare (taxa Companies House inclusă): {amount}",
+    "l_cs": "Declarație de confirmare fără modificări (taxa Companies House inclusă): {amount}",
     "l_appeal": "Contestația penalității: inclusă gratuit",
     "disclaimer": "Aceasta este o estimare pe baza răspunsurilor dvs. Confirmăm prețul final după ce vedem documentele.",
     "future": "Doriți să ne ocupăm de companie de acum înainte?",
@@ -1120,7 +1135,23 @@
     "m_payroll": "Servicii de payroll: {amount} pe lună",
     "m_cis": "Declarații CIS: {amount} pe lună",
     "m_vat": "TVA: {amount} pe lună",
-    "m_until": "Până la următorul sfârșit de an financiar, pe {date}. Apoi stabilim împreună anul următor."
+    "m_until": "Până la următorul sfârșit de an financiar, pe {date}. Apoi stabilim împreună anul următor.",
+    "cs_changes": "S-a schimbat ceva de la ultima declarație de confirmare (confirmation statement)?",
+    "cs_changes_hint": "De exemplu directorii, acționarii sau acțiunile, adresa sediului social, activitatea firmei (codul SIC) sau persoanele cu control semnificativ (PSC).",
+    "idv": "Directorii și-au verificat identitatea la Companies House?",
+    "idv_code": "Codul personal Companies House (pentru fiecare director)",
+    "idv_code_hint": "Un cod de 11 caractere pe care fiecare director îl primește după verificarea identității. Dacă sunt mai mulți directori, separați codurile prin virgulă.",
+    "idv_count": "Câți directori trebuie să-și verifice identitatea?",
+    "idv_note": "Directorii trebuie acum să-și verifice identitatea la Companies House. Ne putem ocupa noi de asta.",
+    "l_cs_changes": "Declarație de confirmare cu modificări (taxa Companies House inclusă): {amount}",
+    "l_idv": "Verificarea identității la Companies House: {n} × {each} = {amount}",
+    "err_idv": "Vă rugăm să ne spuneți dacă directorii și-au verificat identitatea la Companies House.",
+    "err_idv_code": "Vă rugăm să introduceți codul personal Companies House al directorilor.",
+    "idv_opt": {
+      "yes": "Da – au un cod personal Companies House",
+      "no": "Nu sau încă nu",
+      "unsure": "Nu sunt sigur(ă)"
+    }
   },
   "paylink": {
     "title": "Plata dvs.",

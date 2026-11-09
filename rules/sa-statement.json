@@ -1,7 +1,7 @@
 {
   "id": "sa-statement",
   "version": "0.1",
-  "status": "Draft 3 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "status": "checked by Eduard 9 Nov 2026",
   "title_key": "lt.sa_statement",
   "tax": "Self Assessment",
   "kind": "explain_only",

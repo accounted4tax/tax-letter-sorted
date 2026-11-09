@@ -1,7 +1,7 @@
 {
   "id": "companies-house-strike-off",
   "version": "0.1",
-  "status": "Draft 4 Nov 2026 by Claude from GOV.UK – Eduard to check before launch",
+  "status": "checked by Eduard 9 Nov 2026",
   "title_key": "letters.companies_house_strike_off.title",
   "tax": "Companies House",
   "kind": "compulsory_strike_off",
@@ -19,9 +19,10 @@
       "company_name",
       "company_number",
       "ch_auth_code",
-      "director ID (photo ID, selfie with photo ID, proof of address, certificate of incorporation)"
+      "director ID (photo ID, selfie with photo ID, proof of address, certificate of incorporation)",
+      "each director's Companies House personal code if they have verified their identity; otherwise identity verification £50 per director, processed by TACS"
     ],
-    "price": "as per quote (confirmation statement £99 including the Companies House fee; overdue accounts per package prices)"
+    "price": "as per quote: confirmation statement £99 (no changes) or £150 (with changes), Companies House fee included; identity verification £50 per director not yet verified (via TACS); overdue accounts per package prices"
   },
   "sources": [
     "https://www.gov.uk/government/publications/strike-off-dissolution-and-restoration/strike-off-dissolution-and-restoration",

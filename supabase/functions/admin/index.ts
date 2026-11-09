@@ -93,8 +93,15 @@ async function priceQuote(a: Q, lang: string) {
     if (a.cis) { const sc = num(a.cis.subcontractors, 1, L.people), m = num(a.cis.months, 0, L.months); cisRate = P.cis.per_month + Math.max(0, sc - P.cis.included) * P.cis.extra_each; add("pkg.l_cis", { n: m, people: sc }, m * cisRate); }
     if (a.vat) { const m = num(a.vat.months, 0, L.months); vatRate = P.vat.per_month; add("pkg.l_vat", { n: m }, m * vatRate); }
   }
-  if (a.confirmation_statement) add("pkg.l_cs", {}, P.confirmation_statement.price);
-  lines.push(t("pkg.l_appeal"));
+  if (a.confirmation_statement) {
+    const ch = a.confirmation_statement === "with changes";
+    add(ch ? "pkg.l_cs_changes" : "pkg.l_cs", {}, ch ? (P.confirmation_statement.price_with_changes ?? 150) : P.confirmation_statement.price);
+  }
+  if (a.id_verification_directors) {
+    const n = num(a.id_verification_directors, 1, L.people), each = P.id_verification?.per_director ?? 50;
+    add("pkg.l_idv", { n, each: gbp(each) }, n * each);
+  }
+  if (!a.strike_off) lines.push(t("pkg.l_appeal"));
   let monthly: Q | null = null;
   const fy = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(a.future?.year_end ?? ""));
   if (a.future && fy) {

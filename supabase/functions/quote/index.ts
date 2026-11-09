@@ -22,7 +22,8 @@ async function sha256(b: Uint8Array) { const h = await crypto.subtle.digest("SHA
 const acceptUrl = (q: Obj) => `${SITE}/quote.html?q=${q.token}`;
 
 async function stripe(path: string, params?: Record<string, string>) {
-  const key = Deno.env.get("STRIPE_SECRET_KEY");
+  // practice quotes are paid to the Accounted4Tax Ltd Stripe account (Eduard 9 Nov 2026); falls back to the website's key
+  const key = stripeKey();
   if (!key) throw new Error("not_configured");
   const r = await fetch(`https://api.stripe.com/v1/${path}`, { method: params ? "POST" : "GET",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded" }, body: params ? new URLSearchParams(params) : undefined });
@@ -30,7 +31,8 @@ async function stripe(path: string, params?: Record<string, string>) {
   if (!r.ok) throw new Error("stripe:" + (j?.error?.message ?? r.status));
   return j as Obj;
 }
-const stripeMode = () => (String(Deno.env.get("STRIPE_SECRET_KEY") ?? "").startsWith("sk_live_") ? "live" : "test");
+function stripeKey() { return Deno.env.get("STRIPE_SECRET_KEY_A4T") || Deno.env.get("STRIPE_SECRET_KEY") || ""; }
+const stripeMode = () => (stripeKey().startsWith("sk_live_") ? "live" : "test");
 
 async function brevo(to: string, name: string, subject: string, paras: string[], opts: { button?: [string, string]; attach?: { name: string; content: string }; tag: string; replyTo?: string }) {
   const key = Deno.env.get("BREVO_API_KEY");

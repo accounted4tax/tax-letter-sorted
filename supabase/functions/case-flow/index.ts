@@ -296,6 +296,8 @@ async function submitAnswers(c: Obj, body: Obj) {
   const set = await reasonsFor(letterType);
   if (!set) return { status: 500, body: { error: "rules" } };
 
+  // HMRC only considers a Corporation Tax late filing appeal once the return has been filed
+  if (letterType === "ct-late-filing" && !yes(a.filed)) return { status: 400, body: { error: "ct_not_filed" } };
   const reasonId = str(a.reason, 60);
   const reason = set.reasons.find((x) => x.id === reasonId);
   const notAcc = set.notAccepted.find((x) => x.id === reasonId);
@@ -303,8 +305,6 @@ async function submitAnswers(c: Obj, body: Obj) {
 
   if (reason?.health_consent && !yes(a.health_consent)) return { status: 400, body: { error: "health_consent" } };
   if (FILING_TYPES.includes(letterType) && no(a.filed) && !yes(a.continue_not_filed)) return { status: 400, body: { error: "not_filed" } };
-  // HMRC only considers a Corporation Tax late filing appeal once the return has been filed
-  if (letterType === "ct-late-filing" && !yes(a.filed)) return { status: 400, body: { error: "ct_not_filed" } };
 
   const ext = (c.extracted ?? {}) as Obj;
   const penalties = ((ext.penalties ?? []) as Obj[]);

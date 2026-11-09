@@ -10,7 +10,7 @@ const EN_DEFAULT: Record<string, string> = {
   "email.appeal.hello": "Hello {name},",
   "email.appeal.intro": "Your appeal is attached as a PDF. Please check it once more before you send it.",
   "email.appeal.intro_copy": "Attached is a copy of the appeal we have prepared for the company. Please keep it with the company's records. We'll let you know when it has been submitted and when there is a reply.",
-  "email.appeal.post": "Print it, sign it and post it to: {address}. Get a free certificate of posting from the Post Office.",
+  "email.appeal.post": "Print it, sign it and post it to: {address}. Send it by a tracked service (for example Royal Mail Signed For) and keep the tracking number.",
   "email.appeal.online_ch": "Submit it through Companies House's online appeal service: {address}",
   "email.appeal.deadline": "Your appeal deadline is {date}.",
   "email.appeal.evidence": "If you have evidence (for example a hospital letter), send copies, never originals.",

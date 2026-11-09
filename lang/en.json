@@ -604,7 +604,7 @@
     "post_2": "Sign and date it by hand on page 2, in black or blue ink.",
     "post_2_letter": "Sign it by hand above your name.",
     "post_3": "Post it to: {address}",
-    "post_4": "Keep a copy, and get free proof of postage from the Post Office.",
+    "post_4": "Keep a copy, and send it by a tracked service (for example Royal Mail Signed For) so you have a tracking number.",
     "email_1": "Sign the letter by hand, then scan or photograph it.",
     "email_2": "Email it to {address}, with your penalty reference and company number in the subject.",
     "deadline": "Send it by {date}.",
@@ -969,7 +969,7 @@
       "hello": "Hello {name},",
       "intro": "Your appeal is attached as a PDF. Please check it once more before you send it.",
       "intro_copy": "Attached is a copy of the appeal we have prepared for the company. Please keep it with the company's records. We'll let you know when it has been submitted and when there is a reply.",
-      "post": "Print it, sign it and post it to: {address}. Get a free certificate of posting from the Post Office.",
+      "post": "Print it, sign it and post it to: {address}. Send it by a tracked service (for example Royal Mail Signed For) and keep the tracking number.",
       "online_ch": "Submit it through Companies House's online appeal service: {address}",
       "deadline": "Your appeal deadline is {date}.",
       "evidence": "If you have evidence (for example a hospital letter), send copies, never originals.",
@@ -1084,7 +1084,7 @@
     "l_vat": "VAT, {n} months: {amount}",
     "l_cs": "Confirmation statement (Companies House fee included): {amount}",
     "l_appeal": "Penalty appeal: included free",
-    "disclaimer": "This is an estimate based on your answers. We confirm the final price once we've seen your records. No VAT is added.",
+    "disclaimer": "This is an estimate based on your answers. We confirm the final price once we've seen your records.",
     "future": "Would you like us to look after the company from now on?",
     "year_end": "The company's year-end (end of the accounting period)",
     "year_end_hint": "It's on the penalty letter or on Companies House. Any past year-end date is fine.",
@@ -1128,7 +1128,7 @@
     "err_phone": "Please enter a valid phone number.",
     "err_terms": "Please accept the Terms and Privacy Policy to continue.",
     "err_server": "Something went wrong. Please try again in a minute.",
-    "start_now": "I have read the Terms and Privacy Policy. Please start straight away – I understand that I can't cancel for a refund less than 1 hour before the appointment, or once it has taken place."
+    "start_now": "I have read the Terms and Privacy Policy. Please start straight away – I understand that I can't cancel and get a refund within 1 hour before the appointment, or once it has taken place."
   },
   "svc": {
     "title_payroll": "Payroll – ask for our help",

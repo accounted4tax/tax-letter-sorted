@@ -12,6 +12,19 @@ Deno.serve(async (req) => {
   if (!settings?.cron_secret || req.headers.get("x-cron-secret") !== settings.cron_secret) return json(403, { error: "forbidden" });
   let b: Record<string, unknown>;
   try { b = await req.json(); } catch { return json(400, { error: "bad_request" }); }
+  // the latest appeal PDF of a test case (small letters only), to check what was built
+  if (b.action === "pdf") {
+    const { data: c } = await db.from("cases").select("id, admin_notes").eq("ref", String(b.ref ?? "")).single();
+    if (!c || !String(c.admin_notes ?? "").startsWith("TEST")) return json(404, { error: "not_test_case" });
+    const { data: f } = await db.from("case_files").select("storage_path").eq("case_id", c.id).eq("kind", "appeal_pdf").order("created_at", { ascending: false }).limit(1).single();
+    if (!f) return json(404, { error: "no_pdf" });
+    const dl = await db.storage.from("appeals").download(f.storage_path.replace(/^appeals\//, ""));
+    if (dl.error || !dl.data) return json(500, { error: "download" });
+    const bytes = new Uint8Array(await dl.data.arrayBuffer());
+    if (bytes.length > 60000) return json(413, { error: "too_big", bytes: bytes.length });
+    let bin = ""; for (const x of bytes) bin += String.fromCharCode(x);
+    return json(200, { base64: btoa(bin) });
+  }
   const name = String(b.file ?? "");
   if (!/^photo-\d{2}\.jpg$/.test(name)) return json(400, { error: "file" });
   const img = await fetch(`${SITE}/dev/test-letters/${name}`);

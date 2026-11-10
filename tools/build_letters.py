@@ -5,6 +5,7 @@ import json, sys, html, os, re
 
 ROOT = sys.argv[1]
 BASE = "https://taxletters.accounted4tax.co.uk"
+CSS_V = "20261110b"  # bump when css/app.css changes, so browsers load the new styles
 CHECKED = "10 November 2026"
 
 PAGES = []
@@ -815,7 +816,7 @@ def head(ui, title, desc, url, ld, alts, other_href):
 <link rel="icon" href="{ui['up']}images/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="{ui['up']}css/app.css">
+<link rel="stylesheet" href="{ui['up']}css/app.css?v={CSS_V}">
 <script type="application/ld+json">
 {json.dumps(ld, ensure_ascii=False, indent=1)}
 </script>

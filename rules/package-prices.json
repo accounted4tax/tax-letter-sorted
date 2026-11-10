@@ -56,10 +56,6 @@
     "note": "Directors must have verified their identity with Companies House before the confirmation statement or annual accounts are filed. Verified: give the personal code. Not verified: £50 per director, processed by TACS (Eduard 9 Nov 2026)."
   },
   "mtd": {
-    "registration": 49,
-    "missed_quarter": 79,
-    "final_declaration": 99,
-    "full_setup": 399,
     "plans": {
       "essential": 19,
       "compliance": 40,
@@ -67,6 +63,12 @@
     },
     "guide_plan": "compliance",
     "extra_income_source": 20,
-    "note": "Eduard 10 Nov 2026: catch-up = registration £49 (if not signed up) + £79 per missed quarterly update; going forward the guide price is the Compliance plan £40/month (+£20/month per extra business or rental property), paid by Direct Debit. Essential £19/month and Full MTD with VAT £79/month shown as alternatives."
+    "note": "Eduard 10 Nov 2026: guide plan Compliance £40/month (+£20 per extra business/property), Full MTD with VAT £79 if VAT registered, Essential £19 as alternative; catch-up as above; no one-off set-up or per-quarter prices shown.",
+    "catch_up": {
+      "discount_up_to_months": 3,
+      "discount_small": 0.1,
+      "discount_large": 0.15,
+      "note": "months since the MTD start date not yet covered (before the current month) × the monthly plan; 10% off up to 3 months, 15% off more than 3 months; the current month is the first Direct Debit (Eduard 10 Nov 2026)"
+    }
   }
 }

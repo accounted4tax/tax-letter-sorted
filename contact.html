@@ -151,8 +151,8 @@
             <option value="2028-04-06" data-i18n="mtd.start_2028">6 April 2028</option>
             <option value="unsure" data-i18n="mtd.unsure">I'm not sure</option>
           </select></label>
-        <label class="field"><span data-i18n="mtd.q_missed">How many quarterly updates have not been sent?</span>
-          <span class="hint" data-i18n="mtd.q_missed_hint"></span>
+        <label class="field"><span data-i18n="mtd.q_sent">How many quarterly updates have already been sent to HMRC?</span>
+          <span class="hint" data-i18n="mtd.q_sent_hint"></span>
           <input id="mtd_q" type="number" inputmode="numeric" min="0" value="0" style="max-width:120px"></label>
         <label class="field"><span data-i18n="mtd.q_sources">How many businesses and rental properties do you have?</span>
           <span class="hint" data-i18n="mtd.q_sources_hint"></span>
@@ -381,18 +381,31 @@
     $("svcPeopleLabel").textContent = t(svc === "cis" ? "pkg.subs" : "pkg.employees");
     var lines = [], total;
     if (svc === "mtd") {
-      var M = P.mtd, reg = radio("mtd_reg"), q = num("mtd_q", 0, 40), src = num("mtd_src", 1, 50), vatReg = radio("mtd_vat") === "yes";
-      var catchUp = (reg === "yes" ? 0 : M.registration) + q * M.missed_quarter;
+      // Eduard 10 Nov 2026: catch-up = every month since the MTD start date not yet covered (before this month) x the monthly plan,
+      // less 10% (up to 3 months) or 15% (more than 3 months); the current month is the first Direct Debit. No one-off set-up prices shown.
+      var M = P.mtd, reg = radio("mtd_reg"), sent = num("mtd_q", 0, 12), src = num("mtd_src", 1, 50), vatReg = radio("mtd_vat") === "yes";
       var planKey = vatReg ? "full_vat" : M.guide_plan, monthly = M.plans[planKey] + Math.max(0, src - 1) * M.extra_income_source;
-      if (reg !== "yes") lines.push(t("mtd.l_register", { amount: gbp(M.registration) }));
-      if (q > 0) lines.push(t("mtd.l_missed", { n: q, each: gbp(M.missed_quarter), amount: gbp(q * M.missed_quarter) }));
-      lines.push(t("mtd.l_plan_" + planKey, { amount: gbp(M.plans[planKey]) }));
-      if (src > 1) lines.push(t("mtd.l_extra", { n: src - 1, each: gbp(M.extra_income_source), amount: gbp((src - 1) * M.extra_income_source) }));
-      lines.push(t("mtd.l_dd"));
-      lines.push(t(vatReg ? "mtd.l_other_vat" : "mtd.l_other", { essential: gbp(M.plans.essential), full: gbp(M.plans.full_vat), compliance: gbp(M.plans.compliance) }));
-      $("svcTotal").textContent = catchUp > 0 ? t("mtd.total", { catchup: gbp(catchUp), monthly: gbp(monthly) }) : t("mtd.total_monthly", { monthly: gbp(monthly) });
+      var start = $("mtd_start").value, now = new Date(), months = 0, fromLbl = "", toLbl = "";
+      var loc = F.lang() === "ro" ? "ro-RO" : "en-GB", mname = function (d) { return d.toLocaleDateString(loc, { month: "long", year: "numeric" }); };
+      if (/^\d{4}-04-06$/.test(start)) {
+        var s0 = new Date(Number(start.slice(0, 4)), 3, 1);
+        months = Math.max(0, (now.getFullYear() - s0.getFullYear()) * 12 + (now.getMonth() - s0.getMonth()) - sent * 3);
+        if (months > 0) { fromLbl = mname(new Date(s0.getFullYear(), s0.getMonth() + sent * 3, 1)); toLbl = mname(new Date(now.getFullYear(), now.getMonth() - 1, 1)); }
+      }
+      var gross = months * monthly, pct = months === 0 ? 0 : months <= M.catch_up.discount_up_to_months ? M.catch_up.discount_small : M.catch_up.discount_large;
+      var disc = Math.round(gross * pct * 100) / 100, catchUp = Math.round((gross - disc) * 100) / 100;
+      lines.push(t("mtd.l_plan_" + planKey, { amount: gbpp(M.plans[planKey]) }));
+      if (src > 1) lines.push(t("mtd.l_extra", { n: src - 1, each: gbpp(M.extra_income_source), amount: gbpp((src - 1) * M.extra_income_source) }));
+      if (months > 0) {
+        lines.push(t("mtd.l_catchup", { n: months, from: fromLbl, to: toLbl, each: gbpp(monthly), amount: gbpp(gross) }));
+        lines.push(t("mtd.l_discount", { pct: Math.round(pct * 100), amount: gbpp(disc) }));
+      } else if (start === "unsure") lines.push(t("mtd.l_unsure"));
+      lines.push(t("mtd.l_dd_from", { monthly: gbpp(monthly), month: mname(now) }));
+      lines.push(t(vatReg ? "mtd.l_other_vat" : "mtd.l_other", { essential: gbpp(M.plans.essential), full: gbpp(M.plans.full_vat), compliance: gbpp(M.plans.compliance) }));
+      $("svcTotal").textContent = catchUp > 0 ? t("mtd.total", { catchup: gbpp(catchUp), monthly: gbpp(monthly) }) : t("mtd.total_monthly", { monthly: gbpp(monthly) });
       $("svcLines").textContent = lines.join("\n");
-      svcEst = { catch_up: catchUp, monthly: monthly, plan: planKey, registered: reg, missed_quarters: q, income_sources: src, vat: vatReg, start: $("mtd_start").value };
+      svcEst = { catch_up: catchUp, catch_up_months: months, catch_up_before_discount: gross, discount_pct: Math.round(pct * 100), monthly: monthly, plan: planKey,
+        registered: reg, updates_sent: sent, income_sources: src, vat: vatReg, start: start };
       return;
     }
     if (svc === "vat") {
@@ -445,8 +458,8 @@
       body.note = [SV[svc], "Business: " + $("svc_business").value.trim(),
         svc === "vat" ? "VAT number: " + ($("svc_vat").value.trim() || "-") + " · VAT returns not submitted: " + $("svc_vat_n").value : "",
         svc === "cis" || svc === "mtd" ? "UTR: " + ($("svc_utr").value.trim() || "-") : "",
-        svc === "mtd" && svcEst ? "Signed up: " + svcEst.registered + " · Start date: " + svcEst.start + " · Quarterly updates not sent: " + svcEst.missed_quarters + " · Businesses/properties: " + svcEst.income_sources + " · VAT registered: " + (svcEst.vat ? "yes" : "no") : "",
-        svc === "mtd" && svcEst ? "ESTIMATE catch-up £" + svcEst.catch_up + " + " + (svcEst.plan === "full_vat" ? "Full MTD (with VAT)" : "Compliance") + " plan £" + svcEst.monthly + " per month by Direct Debit" : "",
+        svc === "mtd" && svcEst ? "Signed up: " + svcEst.registered + " · Start date: " + svcEst.start + " · Quarterly updates already sent: " + svcEst.updates_sent + " · Businesses/properties: " + svcEst.income_sources + " · VAT registered: " + (svcEst.vat ? "yes" : "no") : "",
+        svc === "mtd" && svcEst ? "ESTIMATE catch-up £" + svcEst.catch_up + " (" + svcEst.catch_up_months + " months, " + svcEst.discount_pct + "% off £" + svcEst.catch_up_before_discount + ") + " + (svcEst.plan === "full_vat" ? "Full MTD (with VAT)" : "Compliance") + " plan £" + svcEst.monthly + " per month by Direct Debit" : "",
         svc !== "vat" && svc !== "mtd" ? "PAYE ref: " + ($("svc_paye").value.trim().toUpperCase() || "-") + " · Accounts Office ref: " + ($("svc_ao").value.trim().toUpperCase() || "-") : "",
         svc !== "vat" && svc !== "mtd" ? (svc === "cis" ? "Subcontractors: " : "Employees: ") + $("svc_people").value : "",
         svcEst != null && svc !== "mtd" ? (svc === "vat" ? "ESTIMATE £" + svcEst + " (catch-up)" : "ESTIMATE £" + svcEst + " per month") : "",

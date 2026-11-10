@@ -1203,20 +1203,21 @@
     "start_2026": "6 April 2026",
     "start_2027": "6 April 2027",
     "start_2028": "6 April 2028",
-    "q_missed": "How many quarterly updates have not been sent?",
-    "q_missed_hint": "Put 0 if none are due yet.",
     "q_sources": "How many businesses and rental properties do you have?",
     "q_sources_hint": "Count each self-employed business and each rental property. One is included in the plan.",
     "q_vat": "Are you registered for VAT?",
-    "l_register": "Sign you up for MTD: {amount}",
-    "l_missed": "Missed quarterly updates: {n} × {each} = {amount}",
     "l_plan_compliance": "From now on – Compliance plan: {amount} a month. Includes software, set-up and reminders, bookkeeping up to 50 transactions a month (then £0.50 each), your 4 quarterly updates, the final declaration, a quarterly tax estimate and phone/WhatsApp support.",
     "l_plan_full_vat": "From now on – Full MTD plan (with VAT): {amount} a month. Includes everything in Compliance plus your VAT returns, bookkeeping up to 100 transactions a month (then £0.50 each) and priority support.",
     "l_extra": "Extra businesses or properties: {n} × {each} = {amount} a month",
-    "l_dd": "The monthly fee is paid by Direct Debit.",
     "l_other": "Other plans: Essential {essential} a month (software, set-up, MTD registration, reminders and email support – you send the updates) or Full MTD with VAT {full} a month.",
     "l_other_vat": "Other plans: Compliance {compliance} a month (without VAT returns) or Essential {essential} a month.",
     "total": "Estimate: {catchup} to catch up, then {monthly} a month",
-    "total_monthly": "Estimate: {monthly} a month"
+    "total_monthly": "Estimate: {monthly} a month",
+    "q_sent": "How many quarterly updates have already been sent to HMRC?",
+    "q_sent_hint": "Put 0 if none have been sent.",
+    "l_catchup": "Catch-up: {n} months ({from} to {to}) × {each} = {amount}",
+    "l_discount": "Catch-up discount {pct}%: −{amount}",
+    "l_dd_from": "Then {monthly} a month by Direct Debit, starting {month}.",
+    "l_unsure": "We'll confirm your start date and any catch-up when we contact you."
   }
 }

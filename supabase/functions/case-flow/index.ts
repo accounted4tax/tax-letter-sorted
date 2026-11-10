@@ -11,7 +11,7 @@ const SITE = "https://taxletters.accounted4tax.co.uk";
 const LANGS = ["en", "ro", "pl", "bg", "lt", "ar", "ur"];
 const RULES: Record<string, string> = {
   "sa-late-filing-100": "sa-late-filing-100", "sa-late-filing-later": "sa-late-filing-later",
-  "sa-late-payment": "sa-late-payment", "sa-notice-to-file": "sa-notice-to-file", "nudge-letters": "nudge-letters",
+  "sa-late-payment": "sa-late-payment", "sa-notice-to-file": "sa-notice-to-file", "nudge-letters": "nudge-letters", "mtd-income-tax": "mtd-income-tax",
   "p800": "p800", "simple-assessment": "simple-assessment", "ct-late-filing": "ct-late-filing",
   "companies-house-late-filing": "companies-house-late-filing",
   "vat-late-submission": "vat-late-submission", "paye-employer-penalty": "paye-employer-penalty",
@@ -136,6 +136,8 @@ function actionsFor(t: string, ext: Obj) {
     case "sa-notice-to-file":
       return [{ id: "help_return" }, { id: "file_yourself", url: "https://www.gov.uk/log-in-file-self-assessment-tax-return" },
         { id: "dont_need_to_file", url: "https://www.gov.uk/check-if-you-need-tax-return" }];
+    case "mtd-income-tax":   // explain, then a quote for MTD catch-up + monthly plan (Eduard 10 Nov 2026)
+      return [{ id: "service_mtd" }, { id: "talk_accountant" }];
     case "nudge-letters":
       return [{ id: "talk_accountant" }, { id: "help_return" }];
     case "p800": {
@@ -228,6 +230,7 @@ async function explain(c: Obj, lang: string, body: Obj) {
     pay_by_date: ext.pay_by_date ?? null, penalty_amount: c.penalty_amount ?? ext.penalty_total ?? null,
     tax_year: c.tax_year ?? ext.tax_year ?? null, issuer: ext.issuer ?? null,
     accounts_period_end: ext.accounts_period_end ?? null,
+    mtd_start_date: ext.mtd_start_date ?? null,
     company_name: ((ext.confirmed ?? {}) as Obj).company_name ?? ext.company_name ?? null, company_number: ext.company_number ?? null,
     ids: { vat_number: ext.vat_number ?? null, paye_ref: ext.employer_paye_ref ?? null, accounts_office_ref: ext.accounts_office_ref ?? null, utr: c.utr ?? ext.utr ?? null },
     actions: actionsFor(letterType, ext), can_appeal_here: APPEAL_TYPES.includes(letterType),

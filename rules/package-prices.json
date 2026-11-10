@@ -54,5 +54,19 @@
   "id_verification": {
     "per_director": 50,
     "note": "Directors must have verified their identity with Companies House before the confirmation statement or annual accounts are filed. Verified: give the personal code. Not verified: £50 per director, processed by TACS (Eduard 9 Nov 2026)."
+  },
+  "mtd": {
+    "registration": 49,
+    "missed_quarter": 79,
+    "final_declaration": 99,
+    "full_setup": 399,
+    "plans": {
+      "essential": 19,
+      "compliance": 40,
+      "full_vat": 79
+    },
+    "guide_plan": "compliance",
+    "extra_income_source": 20,
+    "note": "Eduard 10 Nov 2026: catch-up = registration £49 (if not signed up) + £79 per missed quarterly update; going forward the guide price is the Compliance plan £40/month (+£20/month per extra business or rental property), paid by Direct Debit. Essential £19/month and Full MTD with VAT £79/month shown as alternatives."
   }
 }

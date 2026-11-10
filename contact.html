@@ -123,7 +123,7 @@
     </div>
     <!-- Service request from a VAT / PAYE / CIS penalty letter (Eduard, 3 Nov 2026) -->
     <div class="card" id="svcCard" hidden>
-      <label class="field" id="svcBizRow"><span data-i18n="svc.business_name">Business or company name</span>
+      <label class="field" id="svcBizRow"><span id="svcBizLabel" data-i18n="svc.business_name">Business or company name</span>
         <input id="svc_business" autocomplete="organization" maxlength="160"></label>
       <label class="field" id="svcVatRow" hidden><span data-i18n="svc.vat_number">VAT registration number</span>
         <input id="svc_vat" inputmode="numeric" maxlength="14"></label>
@@ -137,6 +137,30 @@
       <label class="field" id="svcAoRow" hidden><span data-i18n="svc.ao_ref">Accounts Office reference</span>
         <span class="hint" data-i18n="svc.ao_ref_hint"></span>
         <input id="svc_ao" maxlength="16" autocapitalize="characters"></label>
+      <!-- Making Tax Digital for Income Tax (Eduard 10 Nov 2026): catch-up + monthly plan -->
+      <div id="mtdQs" class="stack" hidden>
+        <fieldset class="q"><legend data-i18n="mtd.q_registered">Are you already signed up for Making Tax Digital for Income Tax?</legend>
+          <label class="opt"><input type="radio" name="mtd_reg" value="yes"><span data-i18n="common.yes">Yes</span></label>
+          <label class="opt"><input type="radio" name="mtd_reg" value="no" checked><span data-i18n="common.no">No</span></label>
+          <label class="opt"><input type="radio" name="mtd_reg" value="unsure"><span data-i18n="mtd.unsure">I'm not sure</span></label></fieldset>
+        <label class="field"><span data-i18n="mtd.q_start">When were you supposed to start using MTD?</span>
+          <span class="hint" data-i18n="mtd.q_start_hint"></span>
+          <select id="mtd_start" style="max-width:260px">
+            <option value="2026-04-06" data-i18n="mtd.start_2026">6 April 2026</option>
+            <option value="2027-04-06" data-i18n="mtd.start_2027">6 April 2027</option>
+            <option value="2028-04-06" data-i18n="mtd.start_2028">6 April 2028</option>
+            <option value="unsure" data-i18n="mtd.unsure">I'm not sure</option>
+          </select></label>
+        <label class="field"><span data-i18n="mtd.q_missed">How many quarterly updates have not been sent?</span>
+          <span class="hint" data-i18n="mtd.q_missed_hint"></span>
+          <input id="mtd_q" type="number" inputmode="numeric" min="0" value="0" style="max-width:120px"></label>
+        <label class="field"><span data-i18n="mtd.q_sources">How many businesses and rental properties do you have?</span>
+          <span class="hint" data-i18n="mtd.q_sources_hint"></span>
+          <input id="mtd_src" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
+        <fieldset class="q"><legend data-i18n="mtd.q_vat">Are you registered for VAT?</legend>
+          <div class="yn"><label class="opt"><input type="radio" name="mtd_vat" value="yes"><span data-i18n="common.yes">Yes</span></label>
+          <label class="opt"><input type="radio" name="mtd_vat" value="no" checked><span data-i18n="common.no">No</span></label></div></fieldset>
+      </div>
       <label class="field" id="svcPeopleRow" hidden><span id="svcPeopleLabel"></span>
         <input id="svc_people" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
       <div class="deadline" id="svcBox" aria-live="polite"><b id="svcTotal"></b><span id="svcLines" style="white-space:pre-line"></span></div>
@@ -191,8 +215,9 @@
   // strike-off: stop it by filing the confirmation statement (and any overdue accounts); fee as per quote (Eduard 4 Nov 2026)
   var isStrike = isPackage && qp.get("strike") === "1";
   // service request from a VAT / PAYE / CIS penalty: run the payroll / CIS returns, or file the VAT returns
-  var svc = kindParam === "service" ? (["payroll", "cis", "vat"].indexOf(qp.get("svc")) > -1 ? qp.get("svc") : "payroll") : null;
+  var svc = kindParam === "service" ? (["payroll", "cis", "vat", "mtd"].indexOf(qp.get("svc")) > -1 ? qp.get("svc") : "payroll") : null;
   var kind = (kindParam === "help" || isPackage || svc) ? "help" : "callback";
+  if (svc === "mtd") document.getElementById("svcBizLabel").setAttribute("data-i18n", "svc.business_name_mtd");
   var ctx = F.getJSON("tls_explain") || {};
   var isHelp = kind === "help";
 
@@ -349,11 +374,27 @@
   function service() {
     if (!P) return;
     $("svcVatRow").hidden = $("svcVatMRow").hidden = svc !== "vat";
-    $("svcPayeRow").hidden = $("svcAoRow").hidden = svc === "vat";
-    $("svcUtrRow").hidden = svc !== "cis";
-    $("svcPeopleRow").hidden = svc === "vat";
+    $("svcPayeRow").hidden = $("svcAoRow").hidden = svc === "vat" || svc === "mtd";
+    $("svcUtrRow").hidden = svc !== "cis" && svc !== "mtd";
+    $("svcPeopleRow").hidden = svc === "vat" || svc === "mtd";
+    $("mtdQs").hidden = svc !== "mtd";
     $("svcPeopleLabel").textContent = t(svc === "cis" ? "pkg.subs" : "pkg.employees");
     var lines = [], total;
+    if (svc === "mtd") {
+      var M = P.mtd, reg = radio("mtd_reg"), q = num("mtd_q", 0, 40), src = num("mtd_src", 1, 50), vatReg = radio("mtd_vat") === "yes";
+      var catchUp = (reg === "yes" ? 0 : M.registration) + q * M.missed_quarter;
+      var planKey = vatReg ? "full_vat" : M.guide_plan, monthly = M.plans[planKey] + Math.max(0, src - 1) * M.extra_income_source;
+      if (reg !== "yes") lines.push(t("mtd.l_register", { amount: gbp(M.registration) }));
+      if (q > 0) lines.push(t("mtd.l_missed", { n: q, each: gbp(M.missed_quarter), amount: gbp(q * M.missed_quarter) }));
+      lines.push(t("mtd.l_plan_" + planKey, { amount: gbp(M.plans[planKey]) }));
+      if (src > 1) lines.push(t("mtd.l_extra", { n: src - 1, each: gbp(M.extra_income_source), amount: gbp((src - 1) * M.extra_income_source) }));
+      lines.push(t("mtd.l_dd"));
+      lines.push(t(vatReg ? "mtd.l_other_vat" : "mtd.l_other", { essential: gbp(M.plans.essential), full: gbp(M.plans.full_vat), compliance: gbp(M.plans.compliance) }));
+      $("svcTotal").textContent = catchUp > 0 ? t("mtd.total", { catchup: gbp(catchUp), monthly: gbp(monthly) }) : t("mtd.total_monthly", { monthly: gbp(monthly) });
+      $("svcLines").textContent = lines.join("\n");
+      svcEst = { catch_up: catchUp, monthly: monthly, plan: planKey, registered: reg, missed_quarters: q, income_sources: src, vat: vatReg, start: $("mtd_start").value };
+      return;
+    }
     if (svc === "vat") {
       var n = num("svc_vat_n", 0, P.limits.months * 3);
       total = n * P.vat.per_month;   // per month not submitted (a quarterly return covers 3 months)
@@ -371,7 +412,8 @@
   var svcEst = null;
   if (svc) {
     fetch("rules/package-prices.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (j) { P = j; service(); }).catch(function () {});
-    document.querySelectorAll("#svcCard input").forEach(function (i) { i.addEventListener("input", service); });
+    document.querySelectorAll("#svcCard input, #svcCard select").forEach(function (i) { i.addEventListener(i.type === "radio" || i.tagName === "SELECT" ? "change" : "input", service); });
+    if (svc === "mtd" && /^(2026|2027|2028)-04-06$/.test((F.getJSON("tls_explain") || {}).mtd_start_date || "")) $("mtd_start").value = F.getJSON("tls_explain").mtd_start_date;
     var cx = F.getJSON("tls_explain") || {}, d0 = cx.ids || {};
     if (d0.vat_number) $("svc_vat").value = d0.vat_number;
     if (d0.paye_ref) $("svc_paye").value = d0.paye_ref;
@@ -399,13 +441,15 @@
     if (svc) {
       if (!$("svc_business").value.trim()) { $("submit").disabled = false; render(); return err("svc.err_business"); }
       body.tax_year = "package";
-      var SV = { payroll: "[Service: run the payroll]", cis: "[Service: CIS monthly returns]", vat: "[Service: file the VAT returns]" };
+      var SV = { payroll: "[Service: run the payroll]", cis: "[Service: CIS monthly returns]", vat: "[Service: file the VAT returns]", mtd: "[Service: Making Tax Digital for Income Tax]" };
       body.note = [SV[svc], "Business: " + $("svc_business").value.trim(),
         svc === "vat" ? "VAT number: " + ($("svc_vat").value.trim() || "-") + " · VAT returns not submitted: " + $("svc_vat_n").value : "",
-        svc === "cis" ? "UTR: " + ($("svc_utr").value.trim() || "-") : "",
-        svc !== "vat" ? "PAYE ref: " + ($("svc_paye").value.trim().toUpperCase() || "-") + " · Accounts Office ref: " + ($("svc_ao").value.trim().toUpperCase() || "-") : "",
-        svc !== "vat" ? (svc === "cis" ? "Subcontractors: " : "Employees: ") + $("svc_people").value : "",
-        svcEst != null ? (svc === "vat" ? "ESTIMATE £" + svcEst + " (catch-up)" : "ESTIMATE £" + svcEst + " per month") : "",
+        svc === "cis" || svc === "mtd" ? "UTR: " + ($("svc_utr").value.trim() || "-") : "",
+        svc === "mtd" && svcEst ? "Signed up: " + svcEst.registered + " · Start date: " + svcEst.start + " · Quarterly updates not sent: " + svcEst.missed_quarters + " · Businesses/properties: " + svcEst.income_sources + " · VAT registered: " + (svcEst.vat ? "yes" : "no") : "",
+        svc === "mtd" && svcEst ? "ESTIMATE catch-up £" + svcEst.catch_up + " + " + (svcEst.plan === "full_vat" ? "Full MTD (with VAT)" : "Compliance") + " plan £" + svcEst.monthly + " per month by Direct Debit" : "",
+        svc !== "vat" && svc !== "mtd" ? "PAYE ref: " + ($("svc_paye").value.trim().toUpperCase() || "-") + " · Accounts Office ref: " + ($("svc_ao").value.trim().toUpperCase() || "-") : "",
+        svc !== "vat" && svc !== "mtd" ? (svc === "cis" ? "Subcontractors: " : "Employees: ") + $("svc_people").value : "",
+        svcEst != null && svc !== "mtd" ? (svc === "vat" ? "ESTIMATE £" + svcEst + " (catch-up)" : "ESTIMATE £" + svcEst + " per month") : "",
         ctx.ref ? "Case: " + ctx.ref : "", body.note].filter(Boolean).join(" · ");
     }
     if (isPackage) {

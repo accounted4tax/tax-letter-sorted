@@ -1,0 +1,23 @@
+{
+  "id": "mtd-income-tax",
+  "version": "0.1",
+  "status": "Eduard 10 Nov 2026 – prices from Eduard's MTD price list; facts from GOV.UK (checked 10 Nov 2026)",
+  "title_key": "letters.mtd_income_tax.title",
+  "tax": "Income Tax (Making Tax Digital)",
+  "kind": "explain_and_service",
+  "recognition": "HMRC letter about Making Tax Digital for Income Tax: telling a sole trader or landlord they need to use MTD (customer awareness letter), or about paying under MTD (payment awareness letter), or reminders about quarterly updates.",
+  "facts_for_explanation": {
+    "what_it_is": "Making Tax Digital (MTD) for Income Tax means sole traders and landlords keep digital records in MTD-compatible software and send HMRC quarterly updates, then a final declaration after the tax year, instead of only one Self Assessment return.",
+    "who_and_when": "Qualifying income (self-employment plus property income) over £50,000 in 2024-25: from 6 April 2026 (sign-up is still open). Over £30,000 in 2025-26: from 6 April 2027. Over £20,000 in 2026-27: from 6 April 2028. HMRC writes to people who must start.",
+    "sign_up": "You must be registered for Self Assessment and have filed a return in the last two years. Some people are exempt, for example if they are digitally excluded – they must still file a Self Assessment return.",
+    "payment_letter": "A payment awareness letter is about paying the tax: the amounts are still paid by the Self Assessment payment dates (31 January and 31 July)."
+  },
+  "service": {
+    "product": "quote",
+    "offer_key": "explain.btn_service_mtd"
+  },
+  "sources": [
+    "https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax",
+    "https://www.gov.uk/guidance/check-if-a-qr-code-on-a-letter-youve-received-from-hmrc-is-genuine"
+  ]
+}

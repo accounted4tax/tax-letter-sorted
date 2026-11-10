@@ -9,7 +9,7 @@ const MODEL = "claude-haiku-5-5";
 const MAX_READS = 3;
 const LETTER_TYPES = [
   "sa-late-filing-100", "sa-late-filing-later", "sa-late-payment", "sa-notice-to-file", "sa-statement", "sa-other",
-  "nudge-letters", "p800", "simple-assessment",
+  "nudge-letters", "mtd-income-tax", "p800", "simple-assessment",
   "vat-late-submission", "vat-late-payment", "vat-other",
   "paye-employer-penalty", "paye-other", "cis-late-return",
   "ct-late-filing", "ct-other",
@@ -40,6 +40,7 @@ Self Assessment (individuals):
 - sa-statement: SA300 Self Assessment statement of account, or a Debt Management letter chasing unpaid Self Assessment tax (reminder, final demand, notice of enforcement).
 - sa-other: any other Self Assessment letter (SA302 tax calculation, return corrections AAS1, notice withdrawn SA832, SA251 update, repayment).
 - nudge-letters: HMRC asking the person to check their tax because it has information (online selling platforms, other income), including ITSA6 "Check if you need to send us a Self Assessment tax return". Not a penalty.
+- mtd-income-tax: HMRC letter about Making Tax Digital for Income Tax (quarterly updates for sole traders and landlords): telling the person they need to start using MTD, an MTD payment awareness letter, or a reminder about missed MTD quarterly updates.
 - p800: P800 tax calculation (PAYE overpaid or underpaid).
 - simple-assessment: PA302 Simple Assessment tax bill.
 VAT (businesses):
@@ -112,6 +113,7 @@ const TOOL = {
       vat_registration_date: { type: ["string", "null"], description: "VAT registration date as YYYY-MM-DD, if printed" },
       period: { type: ["string", "null"], description: "VAT or PAYE period the letter is about, as printed" },
       penalty_reference: { type: ["string", "null"], description: "penalty reference, charge reference or unique penalty ID printed on a penalty notice (not the UTR)" },
+      mtd_start_date: { type: ["string", "null"], description: "Making Tax Digital letters: the date the person must start using MTD for Income Tax, as YYYY-MM-DD" },
       accounts_period_end: { type: ["string", "null"], description: "Corporation Tax or Companies House letters: the end date of the company's accounting period / 'accounts made up to' date, as YYYY-MM-DD" },
       hmrc_phone: { type: ["string", "null"] },
       return_address: { type: ["string", "null"], description: "The full address to write to for appeals or replies, every line (for example \"Corporation Tax Services, HM Revenue and Customs, BX9 1AX\"). If the letter says to write to \"the address above\", use the sender address printed at the top. null if no address is printed" },

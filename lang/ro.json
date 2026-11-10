@@ -19,7 +19,34 @@
       "id.later_sent",
       "help.sent_text",
       "contact.package_sent_text",
-      "strike.sent_text"
+      "strike.sent_text",
+      "letters.mtd_income_tax.title",
+      "explain.btn_service_mtd",
+      "svc.title_mtd",
+      "svc.intro_mtd",
+      "svc.business_name_mtd",
+      "mtd.q_registered",
+      "mtd.unsure",
+      "mtd.q_start",
+      "mtd.q_start_hint",
+      "mtd.start_2026",
+      "mtd.start_2027",
+      "mtd.start_2028",
+      "mtd.q_missed",
+      "mtd.q_missed_hint",
+      "mtd.q_sources",
+      "mtd.q_sources_hint",
+      "mtd.q_vat",
+      "mtd.l_register",
+      "mtd.l_missed",
+      "mtd.l_plan_compliance",
+      "mtd.l_plan_full_vat",
+      "mtd.l_extra",
+      "mtd.l_dd",
+      "mtd.l_other",
+      "mtd.l_other_vat",
+      "mtd.total",
+      "mtd.total_monthly"
     ]
   },
   "common": {
@@ -179,7 +206,8 @@
     "btn_service_cis": "Doriți să ne ocupăm de declarațiile CIS?",
     "btn_service_vat": "Doriți să depunem noi declarațiile de TVA (VAT returns)?",
     "btn_stop_strike_off": "Opriți închiderea companiei – cereți o ofertă",
-    "btn_service_ct": "Ajutor cu declarația fiscală (Corporation Tax Return)"
+    "btn_service_ct": "Ajutor cu declarația fiscală (Corporation Tax Return)",
+    "btn_service_mtd": "Ajutor cu Making Tax Digital"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -259,6 +287,9 @@
     },
     "companies_house_strike_off": {
       "title": "Notificare Companies House de închidere a companiei (strike-off)"
+    },
+    "mtd_income_tax": {
+      "title": "Scrisoare despre Making Tax Digital pentru impozitul pe venit"
     }
   },
   "q": {
@@ -1193,7 +1224,10 @@
     "vat_line": "{each} pentru fiecare lună de declarații de TVA nedepuse",
     "vat_total": "Estimare: {amount} pentru recuperarea a {n} luni",
     "submit": "Trimiteți cererea",
-    "err_business": "Vă rugăm să introduceți numele afacerii sau al companiei."
+    "err_business": "Vă rugăm să introduceți numele afacerii sau al companiei.",
+    "title_mtd": "Making Tax Digital – cereți ajutorul nostru",
+    "intro_mtd": "Vă înregistrăm, configurăm programul și trimitem la HMRC raportările trimestriale (quarterly updates) și declarația finală (final declaration). Răspundeți la câteva întrebări ca să vedeți prețul.",
+    "business_name_mtd": "Numele dvs. sau numele afacerii"
   },
   "strike": {
     "title": "Opriți radierea companiei",
@@ -1209,5 +1243,29 @@
     "postcode": "Cod poștal",
     "dob": "Data nașterii",
     "err": "Vă rugăm să completați adresa de domiciliu, codul poștal și data nașterii."
+  },
+  "mtd": {
+    "q_registered": "Sunteți deja înregistrat(ă) pentru Making Tax Digital for Income Tax?",
+    "unsure": "Nu sunt sigur(ă)",
+    "q_start": "Când trebuia să începeți să folosiți MTD?",
+    "q_start_hint": "Apare pe scrisoarea HMRC. Venituri peste £50.000 în 2024-25: de la 6 aprilie 2026; peste £30.000 în 2025-26: de la 6 aprilie 2027; peste £20.000 în 2026-27: de la 6 aprilie 2028.",
+    "start_2026": "6 aprilie 2026",
+    "start_2027": "6 aprilie 2027",
+    "start_2028": "6 aprilie 2028",
+    "q_missed": "Câte raportări trimestriale (quarterly updates) nu au fost trimise?",
+    "q_missed_hint": "Puneți 0 dacă încă nu este niciuna scadentă.",
+    "q_sources": "Câte afaceri și proprietăți închiriate aveți?",
+    "q_sources_hint": "Numărați fiecare activitate pe cont propriu și fiecare proprietate închiriată. Una este inclusă în pachet.",
+    "q_vat": "Sunteți înregistrat(ă) pentru TVA (VAT)?",
+    "l_register": "Înregistrare pentru MTD: {amount}",
+    "l_missed": "Raportări trimestriale netrimise: {n} × {each} = {amount}",
+    "l_plan_compliance": "De acum înainte – pachetul Compliance: {amount} pe lună. Include programul, configurarea și memento-urile, contabilitatea primară până la 50 de tranzacții pe lună (apoi £0,50 fiecare), cele 4 raportări trimestriale, declarația finală, o estimare trimestrială a impozitului și suport prin telefon/WhatsApp.",
+    "l_plan_full_vat": "De acum înainte – pachetul Full MTD (cu TVA): {amount} pe lună. Include tot din Compliance, plus declarațiile de TVA, contabilitatea primară până la 100 de tranzacții pe lună (apoi £0,50 fiecare) și suport prioritar.",
+    "l_extra": "Afaceri sau proprietăți în plus: {n} × {each} = {amount} pe lună",
+    "l_dd": "Taxa lunară se plătește prin Direct Debit.",
+    "l_other": "Alte pachete: Essential {essential} pe lună (program, configurare, înregistrare MTD, memento-uri și suport pe email – trimiteți dvs. raportările) sau Full MTD cu TVA {full} pe lună.",
+    "l_other_vat": "Alte pachete: Compliance {compliance} pe lună (fără declarațiile de TVA) sau Essential {essential} pe lună.",
+    "total": "Estimare: {catchup} pentru recuperare, apoi {monthly} pe lună",
+    "total_monthly": "Estimare: {monthly} pe lună"
   }
 }

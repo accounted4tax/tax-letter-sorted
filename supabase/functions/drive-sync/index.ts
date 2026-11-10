@@ -14,7 +14,7 @@ const TYPE: Record<string, string> = {
   "sa-late-payment": "SA late payment penalty", "ct-late-filing": "Corporation Tax late filing penalty",
   "companies-house-late-filing": "Companies House late filing penalty", "companies-house-strike-off": "Companies House strike-off",
   "vat-late-submission": "VAT late submission penalty", "paye-employer-penalty": "PAYE late filing penalty",
-  "cis-late-return": "CIS late return penalty", "sa-statement": "SA statement / Debt Management",
+  "cis-late-return": "CIS late return penalty", "sa-statement": "SA statement / Debt Management", "mtd-income-tax": "Making Tax Digital for Income Tax",
 };
 const PRODUCT: Record<string, string> = {
   option2: "£19 self-serve", option3: "Accountant review", option3_topup: "Top-up to accountant review", appointment: "£59 appointment", call: "Call",

@@ -165,7 +165,8 @@
     "btn_service_cis": "Would you like us to deal with your CIS returns?",
     "btn_service_vat": "Would you like us to file your VAT returns?",
     "btn_stop_strike_off": "Stop the strike-off – get a quote",
-    "btn_service_ct": "Help with the Corporation Tax return"
+    "btn_service_ct": "Help with the Corporation Tax return",
+    "btn_service_mtd": "Help with Making Tax Digital"
   },
   "letters": {
     "sa_late_filing_100": {
@@ -245,6 +246,9 @@
     },
     "companies_house_strike_off": {
       "title": "Companies House strike-off notice"
+    },
+    "mtd_income_tax": {
+      "title": "Making Tax Digital for Income Tax letter"
     }
   },
   "q": {
@@ -1171,7 +1175,10 @@
     "vat_line": "{each} for each month of VAT returns not submitted",
     "vat_total": "Estimate: {amount} to catch up {n} months",
     "submit": "Send my request",
-    "err_business": "Please enter the business or company name."
+    "err_business": "Please enter the business or company name.",
+    "title_mtd": "Making Tax Digital – ask for our help",
+    "intro_mtd": "We sign you up, set up the software and send your quarterly updates and final declaration to HMRC. Answer a few questions to see your price.",
+    "business_name_mtd": "Your name or business name"
   },
   "strike": {
     "title": "Stop the strike-off",
@@ -1187,5 +1194,29 @@
     "postcode": "Postcode",
     "dob": "Date of birth",
     "err": "Please fill in your home address, postcode and date of birth."
+  },
+  "mtd": {
+    "q_registered": "Are you already signed up for Making Tax Digital for Income Tax?",
+    "unsure": "I'm not sure",
+    "q_start": "When were you supposed to start using MTD?",
+    "q_start_hint": "It's on HMRC's letter. Income over £50,000 in 2024-25: from 6 April 2026; over £30,000 in 2025-26: from 6 April 2027; over £20,000 in 2026-27: from 6 April 2028.",
+    "start_2026": "6 April 2026",
+    "start_2027": "6 April 2027",
+    "start_2028": "6 April 2028",
+    "q_missed": "How many quarterly updates have not been sent?",
+    "q_missed_hint": "Put 0 if none are due yet.",
+    "q_sources": "How many businesses and rental properties do you have?",
+    "q_sources_hint": "Count each self-employed business and each rental property. One is included in the plan.",
+    "q_vat": "Are you registered for VAT?",
+    "l_register": "Sign you up for MTD: {amount}",
+    "l_missed": "Missed quarterly updates: {n} × {each} = {amount}",
+    "l_plan_compliance": "From now on – Compliance plan: {amount} a month. Includes software, set-up and reminders, bookkeeping up to 50 transactions a month (then £0.50 each), your 4 quarterly updates, the final declaration, a quarterly tax estimate and phone/WhatsApp support.",
+    "l_plan_full_vat": "From now on – Full MTD plan (with VAT): {amount} a month. Includes everything in Compliance plus your VAT returns, bookkeeping up to 100 transactions a month (then £0.50 each) and priority support.",
+    "l_extra": "Extra businesses or properties: {n} × {each} = {amount} a month",
+    "l_dd": "The monthly fee is paid by Direct Debit.",
+    "l_other": "Other plans: Essential {essential} a month (software, set-up, MTD registration, reminders and email support – you send the updates) or Full MTD with VAT {full} a month.",
+    "l_other_vat": "Other plans: Compliance {compliance} a month (without VAT returns) or Essential {essential} a month.",
+    "total": "Estimate: {catchup} to catch up, then {monthly} a month",
+    "total_monthly": "Estimate: {monthly} a month"
   }
 }

@@ -140,3 +140,6 @@ footer a{color:#fff;min-height:44px;display:flex;align-items:center}
 .midcta{background:var(--card);border:2px solid var(--teal);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;margin:8px 0}
 .midcta h2{margin:0!important;font-size:18px!important}
 .midcta p{font-size:15px;line-height:1.5}
+.topnav{display:flex;align-items:center;gap:8px}
+.langlink{color:#fff;font-weight:600;font-size:14px;min-height:44px;display:flex;align-items:center;padding:0 8px}
+.langlink:hover{color:#C9D2E3}

@@ -321,26 +321,56 @@ DIFF = {
  "co": "This page explains the general rules. Upload yours and we'll read your actual letter, check the amount against how late the filing was, tell you your exact deadline and – if your reason may be accepted – prepare the appeal wording in English, even if you answer in Romanian.",
  "nudge": "This page explains the general rules. Upload yours and we'll read your actual letter, tell you what HMRC is asking for and by when, and explain your options in plain English or Romanian.",
 }
-MID = """<section class="midcta">
-    <h2>Check my dates and deadlines</h2>
-    <p>Not sure which penalty you have, whether the amount is right, or exactly when your deadline is? Upload your letter and we'll check it for you – free.</p>
-    <a class="btn secondary" href="../upload.html">Check my letter – free</a>
-  </section>"""
 
-def with_mid(body, kind="sa"):
-    parts = re.split(r'(?=<h2>)', body.strip())
-    # parts[0] is '' ; insert the box before the 3rd heading
-    if len(parts) > 3:
-        m = MID if kind != "nudge" else MID.replace("Not sure which penalty you have, whether the amount is right, or exactly when your deadline is?", "Not sure what HMRC is asking for, or exactly when you need to reply?")
-        parts.insert(3, m + "\n")
-    return "".join(parts)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from letters_ro import PAGES_RO, DIFF_RO, UI_RO, CHECKED_RO
+assert len(PAGES_RO) == len(PAGES)
 
-# ------------------------------------------------------------------ templates
+UI_EN = {
+ "lang": "en", "html_lang": "en", "og_locale": "en_GB", "in_language": "en-GB",
+ "dir": "letters", "up": "../", "q": "",
+ "upload_short": "Upload a letter",
+ "cta": "Upload my letter – free explanation",
+ "note": "Free explanation in English or Romanian · No account needed",
+ "key_facts": "Key facts",
+ "different": "Every letter is different.",
+ "mid_title": "Check my dates and deadlines",
+ "mid_text": "Not sure which penalty you have, whether the amount is right, or exactly when your deadline is? Upload your letter and we'll check it for you – free.",
+ "mid_text_nudge": "Not sure what HMRC is asking for, or exactly when you need to reply?",
+ "mid_btn": "Check my letter – free",
+ "helps": "How Tax Letter Sorted helps",
+ "questions": "Questions",
+ "checked": "Checked against GOV.UK on {d}:",
+ "disclaimer": "<strong>We are not HMRC or Companies House.</strong> This page is general guidance, not personal tax advice. Complex cases are referred to a qualified accountant.",
+ "translation": None,
+ "other": "Other letters we explain",
+ "all": "All letters",
+ "home": "Home",
+ "hub_name": "Letters we explain",
+ "privacy": "Privacy Policy", "terms": "Terms", "contact": "Contact",
+ "footer": "Tax Letter Sorted is a trading name of Accounted4Tax Ltd, registered in England and Wales, company number 16438537. Registered office: 128 City Road, London, EC1V 2NX.",
+ "by": "by Accounted4Tax",
+ "other_lang": "Română",
+ "hub_title": "HMRC and Companies House letters explained – penalties and appeals | Tax Letter Sorted",
+ "hub_desc": "Plain-English guides to the most common HMRC and Companies House letters: late filing and late payment penalties, Corporation Tax penalties, nudge letters and more – and how to appeal.",
+ "hub_h1": "HMRC and Companies House letters explained",
+ "hub_lead": "Plain-English guides to the letters people ask us about most: what they mean, the deadlines, and when you can appeal. Or upload your own letter for a free explanation in English or Romanian.",
+ "guides": "Guides",
+ "also": "We also explain",
+ "also_list": ["Notice to file a tax return", "P800 tax calculation", "Simple Assessment (PA302)", "Self Assessment statement",
+              "VAT penalty", "PAYE penalty", "CIS penalty", "Making Tax Digital letters", "Companies House strike-off notice"],
+ "unsure": "Not sure what your letter is? Upload it – we'll tell you.",
+}
+
 E = html.escape
 
-def head(title, desc, url, ld):
+def url_of(ui, slug=None):
+    return f"{BASE}/{ui['dir']}/" + (f"{slug}.html" if slug else "")
+
+def head(ui, title, desc, url, ld, alts, other_href):
+    alt_tags = "\n".join(f'<link rel="alternate" hreflang="{h}" href="{u}">' for h, u in alts)
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{ui['html_lang']}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -348,6 +378,7 @@ def head(title, desc, url, ld):
 <title>{E(title)}</title>
 <meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{url}">
+{alt_tags}
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Tax Letter Sorted">
 <meta property="og:title" content="{E(title)}">
@@ -355,12 +386,12 @@ def head(title, desc, url, ld):
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{BASE}/images/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:locale" content="en_GB">
+<meta property="og:locale" content="{ui['og_locale']}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../images/favicon.png" type="image/png">
+<link rel="icon" href="{ui['up']}images/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="../css/app.css">
+<link rel="stylesheet" href="{ui['up']}css/app.css">
 <script type="application/ld+json">
 {json.dumps(ld, ensure_ascii=False, indent=1)}
 </script>
@@ -368,21 +399,25 @@ def head(title, desc, url, ld):
 <body>
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="../"><b>Tax Letter Sorted</b><span>by Accounted4Tax</span></a>
-    <a class="topcta" href="../upload.html">Upload a letter</a>
+    <a class="brand" href="{ui['up']}{ui['q']}"><b>Tax Letter Sorted</b><span>{ui['by']}</span></a>
+    <div class="topnav">
+      <a class="langlink" href="{other_href}" hreflang="{'ro' if ui['lang']=='en' else 'en'}">{ui['other_lang']}</a>
+      <a class="topcta" href="{ui['up']}upload.html{ui['q']}">{ui['upload_short']}</a>
+    </div>
   </div>
 </header>
 """
 
-FOOT = """<footer>
+def foot(ui):
+    return f"""<footer>
   <div class="wrap">
-    <p>Tax Letter Sorted is a trading name of Accounted4Tax Ltd, registered in England and Wales, company number 16438537. Registered office: 128 City Road, London, EC1V 2NX.</p>
+    <p>{ui['footer']}</p>
     <nav aria-label="Footer">
-      <a href="../">Home</a>
-      <a href="./">Letters we explain</a>
-      <a href="../privacy.html">Privacy Policy</a>
-      <a href="../terms.html">Terms</a>
-      <a href="mailto:letters@accounted4tax.co.uk">Contact</a>
+      <a href="{ui['up']}{ui['q']}">{ui['home']}</a>
+      <a href="./">{ui['hub_name']}</a>
+      <a href="{ui['up']}privacy.html">{ui['privacy']}</a>
+      <a href="{ui['up']}terms.html">{ui['terms']}</a>
+      <a href="mailto:letters@accounted4tax.co.uk">{ui['contact']}</a>
     </nav>
   </div>
 </footer>
@@ -390,126 +425,147 @@ FOOT = """<footer>
 </html>
 """
 
-CTA = """<a class="btn" href="../upload.html">
+def cta(ui):
+    return f"""<a class="btn" href="{ui['up']}upload.html{ui['q']}">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>
-      <span>Upload my letter – free explanation</span>
+      <span>{E(ui['cta'])}</span>
     </a>"""
 
-DISCLAIMER = """<p class="callout"><strong>We are not HMRC or Companies House.</strong> This page is general guidance, not personal tax advice. Complex cases are referred to a qualified accountant.</p>"""
+def mid(ui, kind):
+    text = ui["mid_text"] if kind != "nudge" else ui["mid_text_nudge"] + " " + ui["mid_text"].split("? ", 1)[1]
+    return f"""<section class="midcta">
+    <h2>{E(ui['mid_title'])}</h2>
+    <p>{E(text)}</p>
+    <a class="btn secondary" href="{ui['up']}upload.html{ui['q']}">{E(ui['mid_btn'])}</a>
+  </section>"""
+
+def with_mid(ui, body, kind):
+    parts = re.split(r'(?=<h2>)', body.strip())
+    if len(parts) > 3:
+        parts.insert(3, mid(ui, kind) + "\n")
+    return "".join(parts)
 
 def crumbs_ld(items):
     return {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]}
 
-out = os.path.join(ROOT, "letters")
-os.makedirs(out, exist_ok=True)
+def note_translation(ui):
+    return f'\n  <p class="callout">{E(ui["translation"])}</p>\n' if ui["translation"] else ""
 
-for p in PAGES:
-    url = f"{BASE}/letters/{p['slug']}.html"
-    faq_ld = {"@type": "FAQPage", "mainEntity": [
-        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}
-    ld = {"@context": "https://schema.org", "@graph": [
-        {"@type": "Article", "headline": p["title"], "description": p["desc"], "url": url,
-         "inLanguage": "en-GB", "dateModified": "2026-11-10",
-         "image": f"{BASE}/images/og.png",
-         "author": {"@type": "Organization", "name": "Accounted4Tax Ltd", "url": "https://www.accounted4tax.co.uk"},
-         "publisher": {"@id": f"{BASE}/#service"}},
-        faq_ld,
-        crumbs_ld([("Home", f"{BASE}/"), ("Letters we explain", f"{BASE}/letters/"), (p["chip"], url)])]}
-    facts = "\n".join(f"<dt>{E(k)}</dt><dd>{E(v)}</dd>" for k, v in p["facts"])
-    faqs = "\n".join(f'<details class="faq"><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q, a in p["faq"])
-    srcs = " · ".join(f'<a href="{u}" rel="nofollow">{E(t)}</a>' for t, u in p["sources"])
-    others = "\n".join(f'<a href="{o["slug"]}.html">{E(o["chip"])}</a>' for o in PAGES if o is not p)
-    doc = head(p["meta_title"], p["desc"], url, ld) + f"""
+def build(ui, pages, other_ui, other_pages, diff, checked):
+    out = os.path.join(ROOT, ui["dir"])
+    os.makedirs(out, exist_ok=True)
+    home = f"{BASE}/"
+    for idx, p in enumerate(pages):
+        url = url_of(ui, p["slug"])
+        o_url = url_of(other_ui, other_pages[idx]["slug"])
+        en_url, ro_url = (url, o_url) if ui["lang"] == "en" else (o_url, url)
+        alts = [("en-GB", en_url), ("ro", ro_url), ("x-default", en_url)]
+        faq_ld = {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}
+        ld = {"@context": "https://schema.org", "@graph": [
+            {"@type": "Article", "headline": p["title"], "description": p["desc"], "url": url,
+             "inLanguage": ui["in_language"], "dateModified": "2026-11-10", "image": f"{BASE}/images/og.png",
+             "author": {"@type": "Organization", "name": "Accounted4Tax Ltd", "url": "https://www.accounted4tax.co.uk"},
+             "publisher": {"@id": f"{BASE}/#service"}},
+            faq_ld,
+            crumbs_ld([(ui["home"], home), (ui["hub_name"], url_of(ui)), (p["chip"], url)])]}
+        facts = "\n".join(f"<dt>{E(k)}</dt><dd>{E(v)}</dd>" for k, v in p["facts"])
+        faqs = "\n".join(f'<details class="faq"><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q, a in p["faq"])
+        srcs = " · ".join(f'<a href="{u}" rel="nofollow">{E(t)}</a>' for t, u in p["sources"])
+        others = "\n".join(f'<a href="{o["slug"]}.html">{E(o["chip"])}</a>' for o in pages if o is not p)
+        other_href = f"{other_ui['up']}{other_ui['dir']}/{other_pages[idx]['slug']}.html".replace(other_ui['up'], ui['up'])
+        kind = p.get("kind", "sa")
+        doc = head(ui, p["meta_title"], p["desc"], url, ld, alts, other_href) + f"""
 <main class="wrap article">
-  <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › <a href="./">Letters we explain</a> › <span>{E(p['chip'])}</span></nav>
-
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{ui['up']}{ui['q']}">{ui['home']}</a> › <a href="./">{ui['hub_name']}</a> › <span>{E(p['chip'])}</span></nav>
+{note_translation(ui)}
   <section class="stack">
     <h1>{E(p['title'])}</h1>
     <p class="lead">{E(p['lead'])}</p>
-    {CTA}
-    <p class="note">Free explanation in English or Romanian · No account needed</p>
+    {cta(ui)}
+    <p class="note">{E(ui['note'])}</p>
   </section>
 
   <section class="stack">
-    <h2>Key facts</h2>
+    <h2>{E(ui['key_facts'])}</h2>
     <dl class="facts keyfacts">
 {facts}
     </dl>
-    <div class="different"><b>Every letter is different.</b> {E(DIFF[p.get('kind','sa')])}</div>
+    <div class="different"><b>{E(ui['different'])}</b> {E(diff[kind])}</div>
   </section>
 
   <section class="prose">
-{with_mid(p['body'], p.get('kind','sa'))}
+{with_mid(ui, p['body'], kind)}
   </section>
 
   <section class="offer featured">
-    <h2>How Tax Letter Sorted helps</h2>
+    <h2>{E(ui['helps'])}</h2>
     {p['help'].strip()}
-    {CTA}
+    {cta(ui)}
   </section>
 
   <section class="stack">
-    <h2>Questions</h2>
+    <h2>{E(ui['questions'])}</h2>
 {faqs}
   </section>
 
-  <p class="small">Checked against GOV.UK on {CHECKED}: {srcs}</p>
+  <p class="small">{E(ui['checked'].format(d=checked))} {srcs}</p>
 
-  {DISCLAIMER}
+  <p class="callout">{ui['disclaimer']}</p>
 
   <section class="stack">
-    <h2>Other letters we explain</h2>
+    <h2>{E(ui['other'])}</h2>
     <div class="chips">
 {others}
-<a href="./">All letters</a>
+<a href="./">{E(ui['all'])}</a>
     </div>
   </section>
 </main>
 
-""" + FOOT
-    with open(os.path.join(out, p["slug"] + ".html"), "w") as f:
-        f.write(doc)
+""" + foot(ui)
+        with open(os.path.join(out, p["slug"] + ".html"), "w") as f:
+            f.write(doc)
 
-# ---------------------------------------------------------------- hub page
-hub_url = f"{BASE}/letters/"
-cards = "\n".join(f"""    <a class="lcard" href="{p['slug']}.html"><b>{E(p['chip'])}</b><span>{E(p['lead'])}</span></a>""" for p in PAGES)
-other = ["Notice to file a tax return", "P800 tax calculation", "Simple Assessment (PA302)", "Self Assessment statement",
-         "VAT penalty", "PAYE penalty", "CIS penalty", "Making Tax Digital letters", "Companies House strike-off notice"]
-hub_ld = {"@context": "https://schema.org", "@graph": [
-    {"@type": "CollectionPage", "name": "HMRC and Companies House letters explained", "url": hub_url, "inLanguage": "en-GB",
-     "hasPart": [{"@type": "Article", "headline": p["title"], "url": f"{BASE}/letters/{p['slug']}.html"} for p in PAGES]},
-    crumbs_ld([("Home", f"{BASE}/"), ("Letters we explain", hub_url)])]}
-hub = head("HMRC and Companies House letters explained – penalties and appeals | Tax Letter Sorted",
-           "Plain-English guides to the most common HMRC and Companies House letters: late filing and late payment penalties, Corporation Tax penalties, nudge letters and more – and how to appeal.",
-           hub_url, hub_ld) + f"""
+    # hub
+    hub_url = url_of(ui)
+    en_hub, ro_hub = (hub_url, url_of(other_ui)) if ui["lang"] == "en" else (url_of(other_ui), hub_url)
+    alts = [("en-GB", en_hub), ("ro", ro_hub), ("x-default", en_hub)]
+    cards = "\n".join(f"""    <a class="lcard" href="{p['slug']}.html"><b>{E(p['chip'])}</b><span>{E(p['lead'])}</span></a>""" for p in pages)
+    hub_ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "name": ui["hub_h1"], "url": hub_url, "inLanguage": ui["in_language"],
+         "hasPart": [{"@type": "Article", "headline": p["title"], "url": url_of(ui, p["slug"])} for p in pages]},
+        crumbs_ld([(ui["home"], home), (ui["hub_name"], hub_url)])]}
+    other_hub_href = f"{ui['up']}{other_ui['dir']}/"
+    hub = head(ui, ui["hub_title"], ui["hub_desc"], hub_url, hub_ld, alts, other_hub_href) + f"""
 <main class="wrap article">
-  <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › <span>Letters we explain</span></nav>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{ui['up']}{ui['q']}">{ui['home']}</a> › <span>{ui['hub_name']}</span></nav>
+{note_translation(ui)}
   <section class="stack">
-    <h1>HMRC and Companies House letters explained</h1>
-    <p class="lead">Plain-English guides to the letters people ask us about most: what they mean, the deadlines, and when you can appeal. Or upload your own letter for a free explanation in English or Romanian.</p>
-    {CTA}
+    <h1>{E(ui['hub_h1'])}</h1>
+    <p class="lead">{E(ui['hub_lead'])}</p>
+    {cta(ui)}
   </section>
   <section class="stack">
-    <h2>Guides</h2>
+    <h2>{E(ui['guides'])}</h2>
     <div class="lcards">
 {cards}
     </div>
   </section>
   <section class="stack">
-    <h2>We also explain</h2>
+    <h2>{E(ui['also'])}</h2>
     <div class="chips">
-{chr(10).join(f'<span>{E(o)}</span>' for o in other)}
+{chr(10).join(f'<span>{E(o)}</span>' for o in ui['also_list'])}
     </div>
-    <p class="note" style="text-align:left">Not sure what your letter is? Upload it – we'll tell you.</p>
+    <p class="note" style="text-align:left">{E(ui['unsure'])}</p>
   </section>
-  {DISCLAIMER}
+  <p class="callout">{ui['disclaimer']}</p>
 </main>
 
-""" + FOOT
-with open(os.path.join(out, "index.html"), "w") as f:
-    f.write(hub)
+""" + foot(ui)
+    with open(os.path.join(out, "index.html"), "w") as f:
+        f.write(hub)
 
-print("built", len(PAGES), "pages + hub")
-for p in PAGES:
-    print(p["slug"], len(p["body"].split()) + len(" ".join(a for _, a in p["faq"]).split()), "words")
+build(UI_EN, PAGES, UI_RO, PAGES_RO, DIFF, CHECKED)
+build(UI_RO, PAGES_RO, UI_EN, PAGES, DIFF_RO, CHECKED_RO)
+print("built", len(PAGES), "EN +", len(PAGES_RO), "RO pages + 2 hubs")

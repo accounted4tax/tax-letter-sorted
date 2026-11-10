@@ -207,7 +207,16 @@
 
 <script>
   // Until launch the upload button is switched off and shows the opening date.
+  // Letter guide links follow the chosen language (English guides in /letters/, Romanian in /ro/scrisori/).
+  var RO_GUIDES = {"hmrc-100-late-filing-penalty":"amenda-hmrc-100-lire-depunere-tarzie","self-assessment-late-payment-penalty":"amenda-plata-tarzie-self-assessment",
+    "hmrc-nudge-letter-online-sellers":"scrisoare-hmrc-vanzari-online","corporation-tax-late-filing-penalty":"amenda-corporation-tax-depunere-tarzie",
+    "companies-house-late-filing-penalty":"amenda-companies-house-depunere-tarzie"};
   document.addEventListener("tls:language", function (e) {
+    document.querySelectorAll('a[href^="letters/"], a[href^="ro/scrisori/"]').forEach(function (a) {
+      if (!a.dataset.en) a.dataset.en = a.getAttribute("href");
+      var slug = a.dataset.en.replace("letters/", "").replace(".html", "");
+      a.setAttribute("href", e.detail.lang === "ro" ? "ro/scrisori/" + (RO_GUIDES[slug] ? RO_GUIDES[slug] + ".html" : "") : a.dataset.en);
+    });
     var cfg = window.TLS_CONFIG, cta = document.getElementById("cta"), soon = document.getElementById("soon");
     document.getElementById("contact").href = "mailto:" + cfg.contactEmail;
     if (!cfg.live) {

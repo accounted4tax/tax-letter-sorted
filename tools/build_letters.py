@@ -378,7 +378,6 @@ page(
 <ul class="list">
 <li>you owe tax that can't be taken automatically through your tax code</li>
 <li>you owe HMRC more than £3,000</li>
-<li>you have to pay tax on your State Pension (for example, because it is above your Personal Allowance)</li>
 </ul>
 <p>The letter (PA302) shows the income HMRC used – pay, pensions, savings interest, benefits – and how the tax was worked out.</p>
 
@@ -400,7 +399,6 @@ page(
  help="""<p>Upload your Simple Assessment for a free explanation in plain English or Romanian: why you got it, how the tax was worked out, your payment deadline and your 60-day window to query it. If the figures look wrong, you can ask a qualified accountant to call you – free.</p>""",
  faq=[
   ("Do I need to file a tax return if I got a Simple Assessment?","No. HMRC has already worked out the tax. You only need to check the figures and pay by the deadline."),
-  ("Why do I have to pay tax on my State Pension?","The State Pension is taxable income, but no tax is taken from it before it's paid. If your total income is above your Personal Allowance, HMRC may use Simple Assessment to collect the tax."),
   ("Can I pay a Simple Assessment in instalments?","You can pay in smaller amounts as long as everything is paid by the deadline. If you need longer, ask HMRC about a payment plan before the deadline."),
  ],
  sources=[("Simple Assessment (GOV.UK)","https://www.gov.uk/simple-assessment"),("Tax overpayments and underpayments (GOV.UK)","https://www.gov.uk/tax-overpayments-and-underpayments")],

@@ -377,7 +377,6 @@ page(
 <ul class="list">
 <li>datorați impozit care nu poate fi reținut automat prin codul fiscal</li>
 <li>datorați HMRC mai mult de £3.000</li>
-<li>trebuie să plătiți impozit pe pensia de stat (State Pension), de exemplu pentru că depășește alocația personală neimpozabilă (Personal Allowance)</li>
 </ul>
 <p>Scrisoarea (PA302) arată veniturile folosite de HMRC – salariu, pensii, dobânzi la economii, ajutoare sociale – și cum a fost calculat impozitul.</p>
 
@@ -399,7 +398,6 @@ page(
  help="""<p>Încărcați Simple Assessment pentru o explicație gratuită, pe înțeles, în română sau engleză: de ce ați primit-o, cum a fost calculat impozitul, termenul de plată și cele 60 de zile în care o puteți contesta. Dacă cifrele par greșite, puteți cere să vă sune un contabil calificat – gratuit.</p>""",
  faq=[
   ("Trebuie să depun declarație fiscală dacă am primit Simple Assessment?","Nu. HMRC a calculat deja impozitul. Trebuie doar să verificați cifrele și să plătiți până la termen."),
-  ("De ce trebuie să plătesc impozit pe pensia de stat?","Pensia de stat este venit impozabil, dar nu se reține impozit din ea înainte de plată. Dacă venitul total depășește alocația personală neimpozabilă, HMRC poate folosi Simple Assessment pentru a încasa impozitul."),
   ("Pot plăti Simple Assessment în rate?","Puteți plăti în sume mai mici, cu condiția să fie totul plătit până la termen. Dacă aveți nevoie de mai mult timp, întrebați HMRC de un plan de plată înainte de termen."),
  ],
  sources=[("Simple Assessment (GOV.UK, în engleză)","https://www.gov.uk/simple-assessment"),("Tax overpayments and underpayments (GOV.UK, în engleză)","https://www.gov.uk/tax-overpayments-and-underpayments")],

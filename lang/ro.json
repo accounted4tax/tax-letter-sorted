@@ -12,7 +12,9 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": []
+    "to_review": [
+      "home.letters_all"
+    ]
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -105,7 +107,8 @@
       "a4": "Da. Puteți citi explicația și răspunde la întrebări în engleză sau română. Contestația este întotdeauna în engleză, pentru că merge la HMRC.",
       "q5": "Ce se întâmplă cu scrisoarea pe care o încarc?",
       "a5": "Dacă doriți doar explicația, scrisoarea se șterge automat în 24 de ore. Datele dvs. nu sunt vândute niciodată. Detalii în Politica de confidențialitate."
-    }
+    },
+    "letters_all": "Vedeți ghidurile noastre despre scrisorile HMRC și Companies House (în engleză) →"
   },
   "upload": {
     "step": "Încărcare",

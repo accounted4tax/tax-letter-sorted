@@ -112,3 +112,27 @@ footer a{color:#fff;min-height:44px;display:flex;align-items:center}
 .faq{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .faq summary{font-weight:600;cursor:pointer;line-height:1.4}
 .faq p{margin-top:8px;color:var(--muted);line-height:1.5}
+/* letter guide pages (/letters/) */
+.topcta{color:#fff;font-weight:600;font-size:14px;min-height:44px;display:flex;align-items:center;padding:0 14px;border:1px solid #5B6B8C;border-radius:8px;text-decoration:none}
+.topcta:hover{background:#fff;color:var(--navy)}
+.crumbs{font-size:13px;color:var(--soft)}
+.prose{display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.6}
+.prose h2{font-size:21px;margin-top:14px}
+.prose h3{margin:6px 0 0;font-size:16px}
+.prose .list{font-size:16px}
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;font-size:15px;line-height:1.4}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{background:var(--teal-tint);font-size:13px;color:var(--teal-dark)}
+.tbl tr:last-child td{border-bottom:0}
+.keyfacts{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+@media (max-width:480px){.keyfacts{grid-template-columns:1fr}.keyfacts dd{margin-bottom:6px}}
+.small{font-size:13px;line-height:1.5;color:var(--soft)}
+.offer p{font-size:15px;line-height:1.55}
+.chips a{font-size:13px;padding:8px 12px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--teal-dark);font-weight:600}
+.chips a:hover{border-color:var(--teal)}
+.lcards{display:grid;gap:12px}
+@media (min-width:640px){.lcards{grid-template-columns:1fr 1fr}}
+.lcard{display:flex;flex-direction:column;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-decoration:none;color:var(--ink)}
+.lcard:hover{border-color:var(--teal)}
+.lcard b{color:var(--teal-dark);font-size:16px}
+.lcard span{font-size:14px;line-height:1.45;color:var(--muted)}

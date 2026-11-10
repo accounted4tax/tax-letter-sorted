@@ -99,7 +99,8 @@
       "a4": "Yes. You can read the explanation and answer the questions in English or Romanian. The appeal itself is always in English, because it goes to HMRC.",
       "q5": "What happens to the letter I upload?",
       "a5": "If you only want the explanation, your letter is deleted automatically within 24 hours. Your data is never sold. See our Privacy Policy for details."
-    }
+    },
+    "letters_all": "See our guides to HMRC and Companies House letters →"
   },
   "upload": {
     "step": "Upload",

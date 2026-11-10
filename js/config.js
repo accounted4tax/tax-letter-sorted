@@ -1,7 +1,7 @@
 // Public settings for the website. Nothing secret belongs in this file:
 // API keys live only in Supabase (server side) and GitHub secrets.
 window.TLS_CONFIG = {
-  live: false,                       // false = "opening soon" (no uploads yet)
+  live: true,                        // live since 10 Nov 2026 (false = "opening soon", no uploads)
   openingNote: { en: "Opening January 2027", ro: "Se deschide în ianuarie 2027" },
   contactEmail: "letters@accounted4tax.co.uk",
   phone: "07563 811938",

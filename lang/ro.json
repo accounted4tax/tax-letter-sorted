@@ -12,25 +12,7 @@
       "Buttons use the imperative form (Plătește, Solicită, Trimite, Alege).",
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
-    "to_review": [
-      "home.faq_title",
-      "home.faq.q1",
-      "home.faq.a1",
-      "home.faq.q2",
-      "home.faq.a2",
-      "home.faq.q3",
-      "home.faq.a3",
-      "home.faq.q4",
-      "home.faq.a4",
-      "home.faq.q5",
-      "home.faq.a5",
-      "home.letter.vat_penalty",
-      "home.letter.paye_penalty",
-      "home.letter.cis_penalty",
-      "home.letter.sa_statement",
-      "home.letter.mtd",
-      "home.letter.strike_off"
-    ]
+    "to_review": []
   },
   "common": {
     "brand": "Tax Letter Sorted",
@@ -118,7 +100,7 @@
       "q2": "Cât costă?",
       "a2": "Explicația scrisorii este gratuită. Dacă puteți contesta o amendă, contestația completată costă £19 sau £39 cu verificare de către un contabil calificat (£59 pentru o companie).",
       "q3": "Cât timp am pentru a contesta o amendă de la HMRC?",
-      "a3": "De obicei 30 de zile de la data de pe notificarea de penalitate. HMRC poate accepta o contestație mai târzie dacă explicați motivul întârzierii.",
+      "a3": "De obicei 30 de zile de la data de pe notificarea de amendă. HMRC poate accepta o contestație mai târzie dacă explicați motivul întârzierii.",
       "q4": "Îmi puteți explica scrisoarea în română?",
       "a4": "Da. Puteți citi explicația și răspunde la întrebări în engleză sau română. Contestația este întotdeauna în engleză, pentru că merge la HMRC.",
       "q5": "Ce se întâmplă cu scrisoarea pe care o încarc?",

@@ -63,7 +63,7 @@ page(
 </ol>
 <p>You don't have to pay the penalty while HMRC looks at your appeal. If the appeal is refused, you'll owe interest from the original due date. If you disagree with HMRC's decision, you can ask for a review or go to the tax tribunal.</p>
 """,
- help="""<p>Upload your penalty notice and we explain it in plain English or Romanian, with your exact deadlines – free. If your reason is one HMRC may accept, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: we give you the appeal wording in English, ready to copy and paste into your HMRC online account. You'll need your Government Gateway sign-in.</li><li><b>£19</b> – no HMRC account, or rather do it on paper? We fill in the official SA370 for you, ready to sign and post.</li><li><b>£39</b> – a qualified accountant checks and improves your appeal first.</li></ul>""",
+ help="""<p>Upload your penalty notice and we explain it in plain English or Romanian, with your exact deadlines – free. If your reason is one HMRC may accept, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs your HMRC sign&#8209;in).</li><li><b>£19</b> – we fill in the official SA370; you print, sign and post it.</li><li><b>£39</b> – a qualified accountant reviews your appeal first.</li></ul>""",
  faq=[
   ("Do I have to pay the £100 if I owe no tax?","Yes. The penalty is for sending the return late, not for paying late, so it applies even if no tax is due. If you didn't need to send a return at all, you can ask HMRC to cancel it."),
   ("Can I appeal after 30 days?","Yes. HMRC can accept a late appeal if you explain why you couldn't appeal on time, for example because you were in hospital."),
@@ -116,7 +116,7 @@ page(
 <li>Give dates for when the problem started and ended, and say what evidence you have.</li>
 </ol>
 """,
- help="""<p>Upload your penalty letters – free explanation of each one, the deadlines and the totals. If an appeal is possible, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: we give you the appeal wording in English, ready to copy and paste into your HMRC online account. You'll need your Government Gateway sign-in.</li><li><b>£19</b> – no HMRC account, or rather do it on paper? We put every late filing penalty for that tax year on one SA370, ready to sign and post.</li><li><b>£39</b> – a qualified accountant checks and improves your appeal first.</li></ul><p>Same price whatever the amount.</p>""",
+ help="""<p>Upload your penalty letters – free explanation of each one, the deadlines and the totals. If an appeal is possible, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs your HMRC sign&#8209;in).</li><li><b>£19</b> – we fill in one SA370 for all that year's penalties; you print, sign and post it.</li><li><b>£39</b> – a qualified accountant reviews your appeal first.</li></ul><p>Same price whatever the amount.</p>""",
  faq=[
   ("When do HMRC daily penalties start?","Once the return is 3 months late. For a return due on 31 January, that is from 1 May. They run at £10 a day for up to 90 days."),
   ("Can I appeal the £100 and the daily penalties together?","Yes. Penalties for the same tax year can go on one SA370 form, with a section for each penalty."),
@@ -163,7 +163,7 @@ page(
 </ol>
 <p class="small">This page covers tax years up to 2025-26. From 2026-27, people in Making Tax Digital for Income Tax come under new penalty rules.</p>
 """,
- help="""<p>Upload the notice for a free explanation of the penalty, the interest and your deadlines. If your reason may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: we give you the appeal wording in English, ready to copy and paste into your HMRC online account. You'll need your Government Gateway sign-in.</li><li><b>£19</b> – no HMRC account, or rather do it on paper? We fill in the official SA370 for you, ready to sign and post.</li><li><b>£39</b> – a qualified accountant checks and improves your appeal first.</li></ul><p>If not, we show you the payment options instead.</p>""",
+ help="""<p>Upload the notice for a free explanation of the penalty, the interest and your deadlines. If your reason may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs your HMRC sign&#8209;in).</li><li><b>£19</b> – we fill in the official SA370; you print, sign and post it.</li><li><b>£39</b> – a qualified accountant reviews your appeal first.</li></ul><p>If not, we show you the payment options instead.</p>""",
  faq=[
   ("How much is the HMRC late payment penalty?","5% of the tax still unpaid 30 days after the deadline, then another 5% of what is unpaid at 6 months and again at 12 months. Interest is charged on top."),
   ("Is not being able to afford it a reasonable excuse?","No, not on its own. Set up a payment plan with HMRC as early as you can instead."),
@@ -211,7 +211,7 @@ page(
 </ol>
 <p>If HMRC refuses, the company can ask for a review or appeal to the tax tribunal within 30 days.</p>
 """,
- help="""<p>Upload the penalty notice for a free explanation, with the deadlines and a check that the amount is right. If an appeal is possible, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – we give you the appeal wording in English. A director pastes it into the company's HMRC online account, or prints, signs and posts it. You'll need the company's Government Gateway sign-in.</li><li><b>£59</b> – no access to the company's HMRC account, or rather not deal with it? A qualified accountant prepares the appeal and sends it to HMRC as the company's agent.</li></ul>""",
+ help="""<p>Upload the penalty notice for a free explanation, with the deadlines and a check that the amount is right. If an appeal is possible, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs the company's HMRC sign&#8209;in).</li><li><b>£59</b> – a qualified accountant prepares the appeal and sends it to HMRC for you.</li></ul>""",
  company=True,
  faq=[
   ("How much is the Corporation Tax late filing penalty in 2026?","For returns with a filing date on or after 1 April 2026: £200 if the return is late, another £200 at 3 months, and £1,000 or £2,000 if it is the third late return in a row."),
@@ -264,7 +264,7 @@ page(
 </ol>
 <p>There is no fixed time limit, but appeal straight away – unpaid penalties are passed to debt collectors and can go to the County Court (or the Sheriff Court in Scotland). If you can't pay in one go, you can ask Companies House for monthly instalments.</p>
 """,
- help="""<p>Upload the Companies House letter for a free explanation and a check that the amount matches how late the accounts were. If your circumstances may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – we give you the appeal wording in English to paste into Companies House's online appeal service. You'll need the company number and the penalty reference.</li><li><b>£59</b> – rather have it done for you? A qualified accountant prepares the appeal for the director.</li></ul><p>If not, we show you how to pay or ask for instalments.</p>""",
+ help="""<p>Upload the Companies House letter for a free explanation and a check that the amount matches how late the accounts were. If your circumstances may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording into Companies House's appeal service.</li><li><b>£59</b> – a qualified accountant prepares the appeal for you.</li></ul><p>If not, we show you how to pay or ask for instalments.</p>""",
  company=True,
  faq=[
   ("Is a Companies House penalty the same as an HMRC penalty?","No. Companies House fines the company for late accounts; HMRC fines it separately for a late company tax return. You may need to deal with both."),

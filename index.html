@@ -165,16 +165,16 @@
     <div class="chips">
       <a href="letters/hmrc-100-late-filing-penalty.html" data-i18n="home.letter.late_filing">Late filing penalty</a>
       <a href="letters/self-assessment-late-payment-penalty.html" data-i18n="home.letter.late_payment">Late payment penalty</a>
-      <span data-i18n="home.letter.notice_to_file">Notice to file</span>
+      <a href="letters/self-assessment-notice-to-file.html" data-i18n="home.letter.notice_to_file">Notice to file</a>
       <a href="letters/hmrc-nudge-letter-online-sellers.html" data-i18n="home.letter.nudge">Nudge letters</a>
-      <span data-i18n="home.letter.p800">P800</span>
-      <span data-i18n="home.letter.simple_assessment">Simple Assessment</span>
+      <a href="letters/hmrc-p800-tax-calculation.html" data-i18n="home.letter.p800">P800</a>
+      <a href="letters/hmrc-simple-assessment-pa302.html" data-i18n="home.letter.simple_assessment">Simple Assessment</a>
       <a href="letters/corporation-tax-late-filing-penalty.html" data-i18n="home.letter.ct_penalty">Corporation Tax penalty</a>
       <a href="letters/companies-house-late-filing-penalty.html" data-i18n="home.letter.ch_penalty">Companies House penalty</a>
       <span data-i18n="home.letter.vat_penalty">VAT penalty</span>
       <span data-i18n="home.letter.paye_penalty">PAYE penalty</span>
       <span data-i18n="home.letter.cis_penalty">CIS penalty</span>
-      <span data-i18n="home.letter.sa_statement">Self Assessment statement</span>
+      <a href="letters/self-assessment-statement-payments-on-account.html" data-i18n="home.letter.sa_statement">Self Assessment statement</a>
       <span data-i18n="home.letter.mtd">Making Tax Digital</span>
       <span data-i18n="home.letter.strike_off">Strike-off notice</span>
     </div>
@@ -210,7 +210,8 @@
   // Letter guide links follow the chosen language (English guides in /letters/, Romanian in /ro/scrisori/).
   var RO_GUIDES = {"hmrc-100-late-filing-penalty":"amenda-hmrc-100-lire-depunere-tarzie","self-assessment-late-payment-penalty":"amenda-plata-tarzie-self-assessment",
     "hmrc-nudge-letter-online-sellers":"scrisoare-hmrc-vanzari-online","corporation-tax-late-filing-penalty":"amenda-corporation-tax-depunere-tarzie",
-    "companies-house-late-filing-penalty":"amenda-companies-house-depunere-tarzie"};
+    "companies-house-late-filing-penalty":"amenda-companies-house-depunere-tarzie",
+    "hmrc-p800-tax-calculation":"scrisoare-p800-calcul-impozit","hmrc-simple-assessment-pa302":"simple-assessment-pa302-factura-impozit","self-assessment-notice-to-file":"notificare-depunere-declaratie-self-assessment","self-assessment-statement-payments-on-account":"situatia-contului-self-assessment"};
   document.addEventListener("tls:language", function (e) {
     document.querySelectorAll('a[href^="letters/"], a[href^="ro/scrisori/"]').forEach(function (a) {
       if (!a.dataset.en) a.dataset.en = a.getAttribute("href");

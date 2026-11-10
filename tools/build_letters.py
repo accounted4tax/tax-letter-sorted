@@ -316,10 +316,190 @@ page(
  sources=[("Selling goods or services on a digital platform (GOV.UK)","https://www.gov.uk/guidance/selling-goods-or-services-on-a-digital-platform"),("Check if you need to send a Self Assessment tax return (GOV.UK)","https://www.gov.uk/check-if-you-need-tax-return")],
 )
 
+# ================================================================ batch 2a (individual letters, explanation only)
+# ---------------------------------------------------------------- 7
+page(
+ slug="hmrc-p800-tax-calculation",
+ kind="explain",
+ chip="P800 tax calculation",
+ title="HMRC P800 tax calculation letter: refund or tax to pay?",
+ meta_title="HMRC P800 letter explained – tax refund or underpayment | Tax Letter Sorted",
+ desc="Got a P800 from HMRC? What the tax calculation means, how to claim a refund safely, how underpaid tax is collected through your tax code, and what to do if the figures are wrong.",
+ lead="A P800 is HMRC's end-of-year check of the tax you paid through your job or pension. It tells you whether you paid too much – and get a refund – or too little, and how you'll pay it back.",
+ facts=[("Who gets one","Employees and pensioners who pay tax through PAYE"),("When it arrives","Between June and March after the tax year ends (5 April)"),("Refund claimed online","Usually paid within 5 working days"),("Refund by cheque","Arrives within 14 days of the letter, if the letter says a cheque is coming"),("Tax owed (under £3,000)","Usually collected through your tax code over 12 months")],
+ body="""
+<h2>Why you got a P800</h2>
+<p>After the tax year ends, HMRC compares the tax taken from your pay or pension with the tax you should have paid. If they don't match, it sends a P800. Common reasons are:</p>
+<ul class="list">
+<li>you were on the wrong tax code</li>
+<li>you had two jobs (or a job and a pension) paid in the same month</li>
+<li>you started getting a workplace pension</li>
+<li>you got Employment and Support Allowance or Jobseeker's Allowance</li>
+</ul>
+<p>If you are in Self Assessment, you won't usually get a P800 – your tax is sorted out through your tax return instead.</p>
+
+<h2>If the P800 says you're due a refund</h2>
+<ul class="list">
+<li><b>Letter says you can claim online:</b> claim through GOV.UK, your personal tax account or the HMRC app. You'll need the P800 reference and your National Insurance number. Money usually arrives within 5 working days.</li>
+<li><b>Letter says a cheque will be sent:</b> you don't need to do anything. It should arrive within 14 days of the date on the letter.</li>
+</ul>
+<p><b>Watch out for scams.</b> HMRC doesn't ask for bank details by text or email. Only claim through GOV.UK or the official HMRC app – never through a link in a message.</p>
+
+<h2>If the P800 says you owe tax</h2>
+<p>If you still have a job or pension, earn enough, and owe less than £3,000, HMRC usually collects it automatically by changing your tax code. The amount is spread over 12 months, starting the next tax year. You can choose to pay it all at once instead.</p>
+<p>If it can't be collected this way, HMRC writes to tell you how to pay – often with a Simple Assessment bill. <a href="hmrc-simple-assessment-pa302.html">More about Simple Assessment</a>.</p>
+
+<h2>If you think the P800 is wrong</h2>
+<p>Check the income, benefits and tax figures against your P60, P45 or payslips. If something is wrong, contact HMRC's Income Tax helpline, say which amounts are wrong and what they should be. If HMRC agrees, it sends a new calculation; if not, it explains why.</p>
+<p>A wrong tax code often causes the same problem the next year too, so it's worth checking your current code at the same time.</p>
+""",
+ help="""<p>Upload your P800 for a free explanation in plain English or Romanian: whether it's a refund or tax to pay, the amounts, and what to do next. If the figures look wrong, you can ask a qualified accountant to call you – free.</p>""",
+ faq=[
+  ("Is a P800 refund genuine or a scam?","A real P800 comes by post or appears in your personal tax account. Claim only through GOV.UK or the HMRC app. HMRC doesn't send texts or emails asking for bank details."),
+  ("How long does a P800 refund take?","About 5 working days if you claim online. If the letter says a cheque is being sent, it should arrive within 14 days of the letter."),
+  ("Do I have to pay the underpayment straight away?","Usually not. If you owe less than £3,000 and have a job or pension, HMRC normally collects it through your tax code over the next tax year. You can pay it in full earlier if you want."),
+ ],
+ sources=[("Tax overpayments and underpayments (GOV.UK)","https://www.gov.uk/tax-overpayments-and-underpayments"),("If your P800 says you're due a refund (GOV.UK)","https://www.gov.uk/tax-overpayments-and-underpayments/if-youre-due-a-refund"),("If your P800 says you owe tax (GOV.UK)","https://www.gov.uk/tax-overpayments-and-underpayments/if-you-owe-tax")],
+)
+
+# ---------------------------------------------------------------- 8
+page(
+ slug="hmrc-simple-assessment-pa302",
+ kind="explain",
+ chip="Simple Assessment (PA302)",
+ title="HMRC Simple Assessment letter (PA302): what it is and how to pay",
+ meta_title="HMRC Simple Assessment (PA302) explained – deadlines and payment | Tax Letter Sorted",
+ desc="Got a Simple Assessment tax bill from HMRC? Why you got it, when you have to pay, how to pay with the right reference, and what to do within 60 days if the figures are wrong.",
+ lead="A Simple Assessment is a tax bill HMRC works out for you, without you filing a tax return. It's often sent to pensioners, or when tax can't be collected through your tax code.",
+ facts=[("What it is","A tax bill calculated by HMRC – no tax return needed"),("Pay by (letter sent before 31 October)","31 January after the end of the tax year"),("Pay by (letter sent on or after 31 October)","3 months from the date of the letter"),("Think it's wrong?","Contact HMRC within 60 days of the letter"),("Payment reference","14 characters, starting with X – on your letter")],
+ body="""
+<h2>Why you got a Simple Assessment</h2>
+<p>HMRC uses Simple Assessment when you owe tax but don't need to file a tax return. The usual reasons are:</p>
+<ul class="list">
+<li>you owe tax that can't be taken automatically through your tax code</li>
+<li>you owe HMRC more than £3,000</li>
+<li>you have to pay tax on your State Pension (for example, because it is above your Personal Allowance)</li>
+</ul>
+<p>The letter (PA302) shows the income HMRC used – pay, pensions, savings interest, benefits – and how the tax was worked out.</p>
+
+<h2>When and how to pay</h2>
+<ul class="list">
+<li>If the letter was sent <b>before 31 October</b> following the tax year, pay by <b>31 January</b>.</li>
+<li>If it was sent <b>on or after 31 October</b>, pay within <b>3 months of the date on the letter</b>.</li>
+</ul>
+<p>You can pay online, by bank transfer or by cheque, in one go or in smaller amounts – as long as it's all paid by the deadline. Always use the 14-character payment reference starting with X from your letter. A wrong reference can delay the payment or put it against a different bill.</p>
+<p>If you can't pay in full, contact HMRC before the deadline to ask about a payment plan. Interest is charged on anything paid late.</p>
+
+<h2>If you think the figures are wrong</h2>
+<p>Check each income figure against your P60, pension statements and bank interest statements. If something is wrong, contact HMRC <b>within 60 days</b> of the date on the letter – by phone or in writing – and say which amounts are wrong and what they should be.</p>
+<p>Keep in mind that you still have to pay by the deadline while HMRC looks at it, unless HMRC tells you in writing that you can wait. If HMRC disagrees with you, it sends a decision letter, and you then have 30 days to appeal.</p>
+
+<h2>Simple Assessment and Self Assessment are different</h2>
+<p>With Simple Assessment, HMRC does the calculation and you just check and pay. With Self Assessment, you file a tax return and work out the tax yourself. If you're already in Self Assessment, you won't usually get a Simple Assessment for the same year.</p>
+""",
+ help="""<p>Upload your Simple Assessment for a free explanation in plain English or Romanian: why you got it, how the tax was worked out, your payment deadline and your 60-day window to query it. If the figures look wrong, you can ask a qualified accountant to call you – free.</p>""",
+ faq=[
+  ("Do I need to file a tax return if I got a Simple Assessment?","No. HMRC has already worked out the tax. You only need to check the figures and pay by the deadline."),
+  ("Why do I have to pay tax on my State Pension?","The State Pension is taxable income, but no tax is taken from it before it's paid. If your total income is above your Personal Allowance, HMRC may use Simple Assessment to collect the tax."),
+  ("Can I pay a Simple Assessment in instalments?","You can pay in smaller amounts as long as everything is paid by the deadline. If you need longer, ask HMRC about a payment plan before the deadline."),
+ ],
+ sources=[("Simple Assessment (GOV.UK)","https://www.gov.uk/simple-assessment"),("Tax overpayments and underpayments (GOV.UK)","https://www.gov.uk/tax-overpayments-and-underpayments")],
+)
+
+# ---------------------------------------------------------------- 9
+page(
+ slug="self-assessment-notice-to-file",
+ kind="explain",
+ chip="Notice to file a tax return",
+ title="HMRC notice to file a Self Assessment tax return: what to do",
+ meta_title="HMRC notice to file a tax return – deadlines and what to do | Tax Letter Sorted",
+ desc="HMRC has asked you to send a Self Assessment tax return? What the notice to file means, your deadline, why you must file even if you owe nothing, and what to do if you don't think you need to.",
+ lead="A notice to file means HMRC wants a Self Assessment tax return from you for the tax year shown. Once you've been sent one, you have to file – even if you think you owe no tax.",
+ facts=[("Online deadline","31 January after the end of the tax year"),("Paper deadline","31 October after the end of the tax year"),("Notice sent late?","If dated after 31 October, you have 3 months from the date of the notice"),("Tax to pay by","31 January after the end of the tax year"),("If you miss the deadline","Automatic £100 penalty, then more after 3, 6 and 12 months")],
+ body="""
+<h2>Why you got this letter</h2>
+<p>HMRC sends a notice to file when it thinks you need to complete a tax return – for example because you've registered as self-employed, have rental or foreign income, earn above certain limits, or filed a return in the past. It can come as a letter or as an email to your online account.</p>
+<p>Once a notice has been sent, the return is <b>required</b>. Not owing any tax doesn't stop the £100 penalty if the return is late.</p>
+
+<h2>Your deadlines</h2>
+<table class="tbl"><thead><tr><th>What</th><th>Deadline</th></tr></thead><tbody>
+<tr><td>Paper return</td><td>31 October after the end of the tax year</td></tr>
+<tr><td>Online return</td><td>31 January after the end of the tax year</td></tr>
+<tr><td>Online return, if you want tax owed collected through your tax code</td><td>30 December</td></tr>
+<tr><td>Paying the tax you owe</td><td>31 January after the end of the tax year</td></tr>
+</tbody></table>
+<p>If the notice is dated <b>after 31 October</b>, your filing deadline is 3 months from the date of the notice. The payment date doesn't move.</p>
+
+<h2>If you don't think you need to file</h2>
+<p>Use HMRC's online checker to see whether you need a return. If you don't, tell HMRC <b>before the deadline</b> and ask it to withdraw the notice. If HMRC agrees, you won't get a penalty for that year.</p>
+<p>Don't simply ignore the letter – if the notice stands and no return arrives, penalties start automatically. <a href="hmrc-100-late-filing-penalty.html">How the £100 late filing penalty works</a>.</p>
+
+<h2>What you'll need to file</h2>
+<ul class="list">
+<li>your Unique Taxpayer Reference (UTR) and Government Gateway sign-in</li>
+<li>your income for the tax year (6 April to 5 April): self-employment, rent, pay (P60), pensions, savings interest</li>
+<li>your expenses, if you're self-employed or a landlord</li>
+<li>any pension contributions or Gift Aid donations</li>
+</ul>
+""",
+ help="""<p>Upload the notice for a free explanation in plain English or Romanian, with your exact filing and payment deadlines. If you'd like the return done for you, a qualified accountant can prepare and file it – ask for a quote after your explanation.</p>""",
+ faq=[
+  ("Do I have to file if I don't owe any tax?","Yes, once HMRC has sent a notice to file – unless you ask HMRC to withdraw it before the deadline and it agrees. Otherwise the £100 late filing penalty still applies."),
+  ("I got the notice in December. When is my deadline?","If the notice is dated after 31 October, you have 3 months from the date of the notice to file. Tax is still due by 31 January."),
+  ("How do I know if I really need a tax return?","Use HMRC's online checker on GOV.UK. If it says you don't need one, contact HMRC before the deadline and ask it to cancel the notice."),
+ ],
+ sources=[("Self Assessment deadlines (GOV.UK)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Check if you need to send a Self Assessment tax return (GOV.UK)","https://www.gov.uk/check-if-you-need-tax-return")],
+)
+
+# ---------------------------------------------------------------- 10
+page(
+ slug="self-assessment-statement-payments-on-account",
+ kind="explain",
+ chip="Self Assessment statement",
+ title="HMRC Self Assessment statement: payments on account and what you owe",
+ meta_title="HMRC Self Assessment statement (SA300) and payments on account explained | Tax Letter Sorted",
+ desc="Got a Self Assessment statement from HMRC? How to read it, what payments on account are, why you owe more than you expected, and what to do if you can't pay.",
+ lead="A Self Assessment statement shows what you owe HMRC and what you've paid: the balancing payment, payments on account, interest and any penalties. Many people are surprised by the payments on account.",
+ facts=[("Balancing payment","Due 31 January after the end of the tax year"),("1st payment on account","Due 31 January – half of last year's bill"),("2nd payment on account","Due 31 July – the other half"),("No payments on account if","Last year's bill was under £1,000, or over 80% of your tax was paid at source"),("Can't pay?","Ask HMRC for a payment plan (Time to Pay) – 0300 200 3820")],
+ body="""
+<h2>Why you owe more than your tax bill</h2>
+<p>Most people in Self Assessment pay tax in advance, in two <b>payments on account</b>. Each one is normally half of last year's bill, due on 31 January and 31 July. On 31 January you pay the <b>balancing payment</b> for the year just ended <i>and</i> the first payment on account for the current year – so the first bill can be up to one and a half times what you expected.</p>
+<p>You don't have to make payments on account if last year's bill was under £1,000, or if more than 80% of your tax was already paid through your tax code or taken off savings interest.</p>
+
+<h2>Reading the statement</h2>
+<ul class="list">
+<li><b>Balancing payment:</b> the tax for the last year minus any payments on account you made towards it.</li>
+<li><b>Payments on account:</b> the advance payments for the current year.</li>
+<li><b>Interest:</b> charged on anything paid late, from the due date.</li>
+<li><b>Penalties:</b> late filing or late payment penalties, if any.</li>
+<li><b>Amount due:</b> what you need to pay, and by when.</li>
+</ul>
+
+<h2>Can you reduce your payments on account?</h2>
+<p>Yes, if you expect your income this year to be lower than last year. You can ask HMRC to reduce them in your online account, or on form SA303. Only reduce them if you're confident – if your final bill turns out higher, HMRC charges interest on the difference.</p>
+
+<h2>If you can't pay</h2>
+<ul class="list">
+<li><b>Pay what you can</b> – interest and penalties are worked out on what's still unpaid.</li>
+<li><b>Set up a payment plan</b> (Time to Pay). You can often do this online if you owe £30,000 or less, or call HMRC on 0300 200 3820.</li>
+<li><b>Don't ignore debt letters.</b> If HMRC's Debt Management team writes to you, contact them before the date on the letter – HMRC can take enforcement action.</li>
+</ul>
+<p>Paid late? <a href="self-assessment-late-payment-penalty.html">How the 5% late payment penalty works</a>.</p>
+""",
+ help="""<p>Upload your statement for a free explanation in plain English or Romanian: what each amount is, what's due and when. For a full review of what you owe and your options – including a payment plan – you can book a 30-minute call with a qualified accountant for <b>£59</b>.</p>""",
+ faq=[
+  ("Why is my January tax bill so high?","On 31 January you pay the balancing payment for last year plus the first payment on account for this year. In your first year in Self Assessment, that can be up to one and a half times your tax bill."),
+  ("What is a payment on account?","An advance payment towards next year's tax, normally half of last year's bill, due on 31 January and 31 July."),
+  ("Can I set up a payment plan with HMRC?","Yes. Many people can set one up online if they owe £30,000 or less. Otherwise, call HMRC on 0300 200 3820. Do it as early as you can."),
+ ],
+ sources=[("Payments on account (GOV.UK)","https://www.gov.uk/understand-self-assessment-bill/payments-on-account"),("Self Assessment deadlines (GOV.UK)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Pay your Self Assessment bill in instalments (GOV.UK)","https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments")],
+)
+
 DIFF = {
  "sa": "This page explains the general rules. Upload yours and we'll read your actual letter, check whether the penalty is right, tell you your exact deadline and – if your reason is one HMRC accepts – fill in the SA370 for you in English, even if you answer in Romanian.",
  "co": "This page explains the general rules. Upload yours and we'll read your actual letter, check the amount against how late the filing was, tell you your exact deadline and – if your reason may be accepted – prepare the appeal wording in English, even if you answer in Romanian.",
  "nudge": "This page explains the general rules. Upload yours and we'll read your actual letter, tell you what HMRC is asking for and by when, and explain your options in plain English or Romanian.",
+ "explain": "This page explains the general rules. Upload yours and we'll read your actual letter, check the figures and dates on it, tell you exactly what to do and by when – in plain English or Romanian.",
 }
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -337,6 +517,7 @@ UI_EN = {
  "mid_title": "Check my dates and deadlines",
  "mid_text": "Not sure which penalty you have, whether the amount is right, or exactly when your deadline is? Upload your letter and we'll check it for you – free.",
  "mid_text_nudge": "Not sure what HMRC is asking for, or exactly when you need to reply?",
+ "mid_text_explain": "Not sure whether the figures on your letter are right, or exactly when you need to act?",
  "mid_btn": "Check my letter – free",
  "helps": "How Tax Letter Sorted helps",
  "questions": "Questions",
@@ -357,8 +538,7 @@ UI_EN = {
  "hub_lead": "Plain-English guides to the letters people ask us about most: what they mean, the deadlines, and when you can appeal. Or upload your own letter for a free explanation in English or Romanian.",
  "guides": "Guides",
  "also": "We also explain",
- "also_list": ["Notice to file a tax return", "P800 tax calculation", "Simple Assessment (PA302)", "Self Assessment statement",
-              "VAT penalty", "PAYE penalty", "CIS penalty", "Making Tax Digital letters", "Companies House strike-off notice"],
+ "also_list": ["VAT penalty", "PAYE penalty", "CIS penalty", "Making Tax Digital letters", "Companies House strike-off notice"],
  "unsure": "Not sure what your letter is? Upload it – we'll tell you.",
 }
 
@@ -432,7 +612,7 @@ def cta(ui):
     </a>"""
 
 def mid(ui, kind):
-    text = ui["mid_text"] if kind != "nudge" else ui["mid_text_nudge"] + " " + ui["mid_text"].split("? ", 1)[1]
+    text = ui["mid_text"] if kind not in ("nudge", "explain") else ui["mid_text_" + kind] + " " + ui["mid_text"].split("? ", 1)[1]
     return f"""<section class="midcta">
     <h2>{E(ui['mid_title'])}</h2>
     <p>{E(text)}</p>

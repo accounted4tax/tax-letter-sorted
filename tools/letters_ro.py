@@ -315,10 +315,190 @@ page(
  sources=[("Selling goods or services on a digital platform (GOV.UK, în engleză)","https://www.gov.uk/guidance/selling-goods-or-services-on-a-digital-platform"),("Check if you need to send a Self Assessment tax return (GOV.UK, în engleză)","https://www.gov.uk/check-if-you-need-tax-return")],
 )
 
+# ================================================================ batch 2a
+# ---------------------------------------------------------------- 7
+page(
+ slug="scrisoare-p800-calcul-impozit",
+ kind="explain",
+ chip="Calculul impozitului P800",
+ title="Scrisoarea HMRC P800 (calculul impozitului): primiți bani înapoi sau aveți de plătit?",
+ meta_title="Scrisoarea HMRC P800 explicată – rambursare sau impozit de plată | Tax Letter Sorted",
+ desc="Ați primit un P800 de la HMRC? Ce înseamnă calculul impozitului, cum cereți în siguranță banii înapoi, cum se recuperează impozitul neplătit prin codul fiscal și ce faceți dacă cifrele sunt greșite.",
+ lead="P800 este verificarea făcută de HMRC la sfârșitul anului pentru impozitul plătit prin salariu sau pensie. Vă spune dacă ați plătit prea mult – și primiți banii înapoi – sau prea puțin și cum îl veți plăti.",
+ facts=[("Cine îl primește","Angajații și pensionarii care plătesc impozitul prin PAYE"),("Când vine","Între iunie și martie, după sfârșitul anului fiscal (5 aprilie)"),("Rambursare cerută online","De obicei în 5 zile lucrătoare"),("Rambursare prin cec","Ajunge în 14 zile de la data scrisorii, dacă scrisoarea spune că vine un cec"),("Impozit datorat (sub £3.000)","De obicei se recuperează prin codul fiscal (tax code), în 12 luni")],
+ body="""
+<h2>De ce ați primit P800</h2>
+<p>După sfârșitul anului fiscal, HMRC compară impozitul reținut din salariu sau pensie cu impozitul pe care trebuia să îl plătiți. Dacă nu se potrivesc, trimite un P800. Motive frecvente:</p>
+<ul class="list">
+<li>ați avut un cod fiscal (tax code) greșit</li>
+<li>ați avut două locuri de muncă (sau un loc de muncă și o pensie) plătite în aceeași lună</li>
+<li>ați început să primiți o pensie de la locul de muncă</li>
+<li>ați primit Employment and Support Allowance sau Jobseeker's Allowance</li>
+</ul>
+<p>Dacă sunteți în Self Assessment, de obicei nu primiți P800 – impozitul se regularizează prin declarația fiscală anuală.</p>
+
+<h2>Dacă P800 spune că primiți bani înapoi</h2>
+<ul class="list">
+<li><b>Scrisoarea spune că puteți cere online:</b> cereți prin GOV.UK, contul fiscal personal (personal tax account) sau aplicația HMRC. Aveți nevoie de referința P800 și de numărul de asigurări sociale (National Insurance number). Banii vin de obicei în 5 zile lucrătoare.</li>
+<li><b>Scrisoarea spune că vi se trimite un cec:</b> nu trebuie să faceți nimic. Cecul ar trebui să ajungă în 14 zile de la data scrisorii.</li>
+</ul>
+<p><b>Atenție la înșelătorii.</b> HMRC nu cere date bancare prin SMS sau e-mail. Cereți banii doar prin GOV.UK sau prin aplicația oficială HMRC – niciodată printr-un link primit într-un mesaj.</p>
+
+<h2>Dacă P800 spune că datorați impozit</h2>
+<p>Dacă aveți în continuare un loc de muncă sau o pensie, câștigați suficient și datorați mai puțin de £3.000, HMRC recuperează de obicei suma automat, modificându-vă codul fiscal. Suma se împarte pe 12 luni, începând cu anul fiscal următor. Puteți alege și să plătiți totul odată.</p>
+<p>Dacă nu se poate recupera astfel, HMRC vă scrie cum să plătiți – de multe ori printr-o factură Simple Assessment. <a href="simple-assessment-pa302-factura-impozit.html">Mai multe despre Simple Assessment</a>.</p>
+
+<h2>Dacă credeți că P800 este greșit</h2>
+<p>Verificați veniturile, ajutoarele sociale și impozitul față de P60, P45 sau fluturașii de salariu. Dacă ceva este greșit, contactați linia HMRC pentru impozitul pe venit (Income Tax), spuneți ce sume sunt greșite și cât ar trebui să fie. Dacă HMRC este de acord, trimite un calcul nou; dacă nu, vă explică de ce.</p>
+<p>Un cod fiscal greșit produce de multe ori aceeași problemă și în anul următor, așa că merită să verificați și codul actual.</p>
+""",
+ help="""<p>Încărcați P800 pentru o explicație gratuită, pe înțeles, în română sau engleză: dacă primiți bani înapoi sau aveți de plătit, sumele și ce faceți mai departe. Dacă cifrele par greșite, puteți cere să vă sune un contabil calificat – gratuit.</p>""",
+ faq=[
+  ("Rambursarea P800 este reală sau o înșelătorie?","Un P800 real vine prin poștă sau apare în contul fiscal personal. Cereți banii doar prin GOV.UK sau aplicația HMRC. HMRC nu trimite SMS-uri sau e-mailuri în care cere date bancare."),
+  ("În cât timp primesc banii din P800?","În aproximativ 5 zile lucrătoare dacă cereți online. Dacă scrisoarea spune că vi se trimite un cec, acesta ar trebui să ajungă în 14 zile de la data scrisorii."),
+  ("Trebuie să plătesc imediat suma datorată?","De obicei nu. Dacă datorați mai puțin de £3.000 și aveți un loc de muncă sau o pensie, HMRC o recuperează de regulă prin codul fiscal în anul fiscal următor. O puteți plăti integral mai devreme, dacă doriți."),
+ ],
+ sources=[("Tax overpayments and underpayments (GOV.UK, în engleză)","https://www.gov.uk/tax-overpayments-and-underpayments"),("If your P800 says you're due a refund (GOV.UK, în engleză)","https://www.gov.uk/tax-overpayments-and-underpayments/if-youre-due-a-refund"),("If your P800 says you owe tax (GOV.UK, în engleză)","https://www.gov.uk/tax-overpayments-and-underpayments/if-you-owe-tax")],
+)
+
+# ---------------------------------------------------------------- 8
+page(
+ slug="simple-assessment-pa302-factura-impozit",
+ kind="explain",
+ chip="Simple Assessment (PA302)",
+ title="Scrisoarea HMRC Simple Assessment (PA302): ce este și cum plătiți",
+ meta_title="Simple Assessment (PA302) explicat – termene și plată | Tax Letter Sorted",
+ desc="Ați primit de la HMRC o factură de impozit Simple Assessment? De ce ați primit-o, până când trebuie plătită, cum plătiți cu referința corectă și ce faceți în 60 de zile dacă cifrele sunt greșite.",
+ lead="Simple Assessment este o factură de impozit calculată de HMRC pentru dvs., fără să depuneți o declarație fiscală. Este trimisă des pensionarilor sau atunci când impozitul nu poate fi reținut prin codul fiscal.",
+ facts=[("Ce este","O factură de impozit calculată de HMRC – nu trebuie să depuneți declarație"),("Plata (scrisoare trimisă înainte de 31 octombrie)","Până la 31 ianuarie după sfârșitul anului fiscal"),("Plata (scrisoare trimisă la 31 octombrie sau după)","În 3 luni de la data scrisorii"),("Credeți că e greșită?","Contactați HMRC în 60 de zile de la data scrisorii"),("Referința de plată","14 caractere, începe cu X – o găsiți în scrisoare")],
+ body="""
+<h2>De ce ați primit Simple Assessment</h2>
+<p>HMRC folosește Simple Assessment când datorați impozit, dar nu trebuie să depuneți declarație fiscală. Motivele obișnuite sunt:</p>
+<ul class="list">
+<li>datorați impozit care nu poate fi reținut automat prin codul fiscal</li>
+<li>datorați HMRC mai mult de £3.000</li>
+<li>trebuie să plătiți impozit pe pensia de stat (State Pension), de exemplu pentru că depășește alocația personală neimpozabilă (Personal Allowance)</li>
+</ul>
+<p>Scrisoarea (PA302) arată veniturile folosite de HMRC – salariu, pensii, dobânzi la economii, ajutoare sociale – și cum a fost calculat impozitul.</p>
+
+<h2>Când și cum plătiți</h2>
+<ul class="list">
+<li>Dacă scrisoarea a fost trimisă <b>înainte de 31 octombrie</b> după anul fiscal, plătiți până la <b>31 ianuarie</b>.</li>
+<li>Dacă a fost trimisă <b>la 31 octombrie sau după</b>, plătiți în <b>3 luni de la data scrisorii</b>.</li>
+</ul>
+<p>Puteți plăti online, prin transfer bancar sau cu cec, dintr-odată sau în sume mai mici – cu condiția ca totul să fie plătit până la termen. Folosiți întotdeauna referința de plată de 14 caractere care începe cu X, din scrisoare. O referință greșită poate întârzia plata sau o poate trece la altă factură.</p>
+<p>Dacă nu puteți plăti integral, contactați HMRC înainte de termen și întrebați de un plan de plată. Pentru orice sumă plătită târziu se percepe dobândă.</p>
+
+<h2>Dacă credeți că cifrele sunt greșite</h2>
+<p>Verificați fiecare venit față de P60, extrasele de pensie și extrasele cu dobânzi bancare. Dacă ceva este greșit, contactați HMRC <b>în 60 de zile</b> de la data scrisorii – telefonic sau în scris – și spuneți ce sume sunt greșite și cât ar trebui să fie.</p>
+<p>Rețineți că trebuie totuși să plătiți până la termen cât timp HMRC analizează, cu excepția cazului în care HMRC vă spune în scris că puteți aștepta. Dacă HMRC nu este de acord cu dvs., vă trimite o scrisoare cu decizia, iar apoi aveți 30 de zile să contestați.</p>
+
+<h2>Simple Assessment și Self Assessment sunt diferite</h2>
+<p>La Simple Assessment, HMRC face calculul, iar dvs. doar verificați și plătiți. La Self Assessment, depuneți o declarație fiscală și calculați singur impozitul. Dacă sunteți deja în Self Assessment, de obicei nu primiți Simple Assessment pentru același an.</p>
+""",
+ help="""<p>Încărcați Simple Assessment pentru o explicație gratuită, pe înțeles, în română sau engleză: de ce ați primit-o, cum a fost calculat impozitul, termenul de plată și cele 60 de zile în care o puteți contesta. Dacă cifrele par greșite, puteți cere să vă sune un contabil calificat – gratuit.</p>""",
+ faq=[
+  ("Trebuie să depun declarație fiscală dacă am primit Simple Assessment?","Nu. HMRC a calculat deja impozitul. Trebuie doar să verificați cifrele și să plătiți până la termen."),
+  ("De ce trebuie să plătesc impozit pe pensia de stat?","Pensia de stat este venit impozabil, dar nu se reține impozit din ea înainte de plată. Dacă venitul total depășește alocația personală neimpozabilă, HMRC poate folosi Simple Assessment pentru a încasa impozitul."),
+  ("Pot plăti Simple Assessment în rate?","Puteți plăti în sume mai mici, cu condiția să fie totul plătit până la termen. Dacă aveți nevoie de mai mult timp, întrebați HMRC de un plan de plată înainte de termen."),
+ ],
+ sources=[("Simple Assessment (GOV.UK, în engleză)","https://www.gov.uk/simple-assessment"),("Tax overpayments and underpayments (GOV.UK, în engleză)","https://www.gov.uk/tax-overpayments-and-underpayments")],
+)
+
+# ---------------------------------------------------------------- 9
+page(
+ slug="notificare-depunere-declaratie-self-assessment",
+ kind="explain",
+ chip="Notificare de depunere a declarației",
+ title="Notificarea HMRC de depunere a declarației Self Assessment (notice to file): ce faceți",
+ meta_title="Notificare HMRC de depunere a declarației (notice to file) – termene | Tax Letter Sorted",
+ desc="HMRC v-a cerut să depuneți declarația fiscală Self Assessment? Ce înseamnă notificarea, termenul dvs., de ce trebuie să depuneți chiar dacă nu datorați nimic și ce faceți dacă credeți că nu e cazul.",
+ lead="Notificarea de depunere (notice to file) înseamnă că HMRC vrea de la dvs. o declarație fiscală anuală Self Assessment pentru anul fiscal indicat. Odată primită, trebuie să depuneți – chiar dacă credeți că nu datorați impozit.",
+ facts=[("Termen online","31 ianuarie după sfârșitul anului fiscal"),("Termen pe hârtie","31 octombrie după sfârșitul anului fiscal"),("Notificare trimisă târziu?","Dacă are data după 31 octombrie, aveți 3 luni de la data notificării"),("Plata impozitului","Până la 31 ianuarie după sfârșitul anului fiscal"),("Dacă ratați termenul","Amendă automată de £100, apoi altele după 3, 6 și 12 luni")],
+ body="""
+<h2>De ce ați primit această scrisoare</h2>
+<p>HMRC trimite o notificare de depunere când consideră că trebuie să completați o declarație fiscală – de exemplu pentru că v-ați înregistrat ca self-employed, aveți venituri din chirii sau din străinătate, câștigați peste anumite limite sau ați depus declarații în trecut. Poate veni ca scrisoare sau ca e-mail în contul online.</p>
+<p>Odată trimisă notificarea, declarația este <b>obligatorie</b>. Faptul că nu datorați impozit nu vă scutește de amenda de £100 dacă depuneți târziu.</p>
+
+<h2>Termenele dvs.</h2>
+<table class="tbl"><thead><tr><th>Ce</th><th>Termen</th></tr></thead><tbody>
+<tr><td>Declarație pe hârtie</td><td>31 octombrie după sfârșitul anului fiscal</td></tr>
+<tr><td>Declarație online</td><td>31 ianuarie după sfârșitul anului fiscal</td></tr>
+<tr><td>Declarație online, dacă vreți ca impozitul să fie reținut prin codul fiscal</td><td>30 decembrie</td></tr>
+<tr><td>Plata impozitului datorat</td><td>31 ianuarie după sfârșitul anului fiscal</td></tr>
+</tbody></table>
+<p>Dacă notificarea are data <b>după 31 octombrie</b>, termenul de depunere este de 3 luni de la data notificării. Termenul de plată nu se schimbă.</p>
+
+<h2>Dacă credeți că nu trebuie să depuneți</h2>
+<p>Folosiți verificatorul online HMRC ca să vedeți dacă aveți nevoie de declarație. Dacă nu, anunțați HMRC <b>înainte de termen</b> și cereți să retragă notificarea. Dacă HMRC este de acord, nu primiți amendă pentru acel an.</p>
+<p>Nu ignorați pur și simplu scrisoarea – dacă notificarea rămâne valabilă și declarația nu sosește, amenzile încep automat. <a href="amenda-hmrc-100-lire-depunere-tarzie.html">Cum funcționează amenda de £100 pentru depunere târzie</a>.</p>
+
+<h2>De ce aveți nevoie ca să depuneți</h2>
+<ul class="list">
+<li>referința unică de contribuabil (UTR) și datele de autentificare Government Gateway</li>
+<li>veniturile din anul fiscal (6 aprilie – 5 aprilie): self-employed, chirii, salariu (P60), pensii, dobânzi la economii</li>
+<li>cheltuielile, dacă sunteți self-employed sau proprietar care închiriază</li>
+<li>contribuțiile la pensie sau donațiile Gift Aid</li>
+</ul>
+""",
+ help="""<p>Încărcați notificarea pentru o explicație gratuită, pe înțeles, în română sau engleză, cu termenele exacte de depunere și de plată. Dacă doriți să vi se facă declarația, un contabil calificat o poate pregăti și depune – cereți o ofertă după explicație.</p>""",
+ faq=[
+  ("Trebuie să depun declarația dacă nu datorez impozit?","Da, odată ce HMRC v-a trimis notificarea de depunere – cu excepția cazului în care cereți HMRC să o retragă înainte de termen și HMRC este de acord. Altfel, amenda de £100 pentru depunere târzie se aplică oricum."),
+  ("Am primit notificarea în decembrie. Care este termenul meu?","Dacă notificarea are data după 31 octombrie, aveți 3 luni de la data ei pentru depunere. Impozitul trebuie plătit tot până la 31 ianuarie."),
+  ("Cum aflu dacă am nevoie de declarație fiscală?","Folosiți verificatorul online HMRC de pe GOV.UK. Dacă spune că nu aveți nevoie, contactați HMRC înainte de termen și cereți anularea notificării."),
+ ],
+ sources=[("Self Assessment deadlines (GOV.UK, în engleză)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Check if you need to send a Self Assessment tax return (GOV.UK, în engleză)","https://www.gov.uk/check-if-you-need-tax-return")],
+)
+
+# ---------------------------------------------------------------- 10
+page(
+ slug="situatia-contului-self-assessment",
+ kind="explain",
+ chip="Situația contului Self Assessment",
+ title="Situația contului Self Assessment de la HMRC: plățile în avans și ce datorați",
+ meta_title="Situația contului Self Assessment (SA300) și plățile în avans explicate | Tax Letter Sorted",
+ desc="Ați primit de la HMRC situația contului Self Assessment? Cum o citiți, ce sunt plățile în avans (payments on account), de ce datorați mai mult decât vă așteptați și ce faceți dacă nu puteți plăti.",
+ lead="Situația contului Self Assessment arată ce datorați la HMRC și ce ați plătit: plata de regularizare, plățile în avans, dobânda și eventualele amenzi. Mulți oameni sunt surprinși de plățile în avans.",
+ facts=[("Plata de regularizare (balancing payment)","Până la 31 ianuarie după sfârșitul anului fiscal"),("Prima plată în avans","31 ianuarie – jumătate din impozitul de anul trecut"),("A doua plată în avans","31 iulie – cealaltă jumătate"),("Nu faceți plăți în avans dacă","Impozitul de anul trecut a fost sub £1.000 sau peste 80% din impozit a fost reținut la sursă"),("Nu puteți plăti?","Cereți HMRC un plan de plată (Time to Pay) – 0300 200 3820")],
+ body="""
+<h2>De ce datorați mai mult decât impozitul</h2>
+<p>Majoritatea celor din Self Assessment plătesc impozitul în avans, în două <b>plăți în avans</b> (payments on account). Fiecare este de obicei jumătate din impozitul de anul trecut, cu termen 31 ianuarie și 31 iulie. Pe 31 ianuarie plătiți <b>plata de regularizare</b> pentru anul încheiat <i>și</i> prima plată în avans pentru anul curent – așa că prima factură poate fi de până la o dată și jumătate cât vă așteptați.</p>
+<p>Nu trebuie să faceți plăți în avans dacă impozitul de anul trecut a fost sub £1.000 sau dacă peste 80% din impozit a fost deja plătit prin codul fiscal sau reținut din dobânzile la economii.</p>
+
+<h2>Cum citiți situația contului</h2>
+<ul class="list">
+<li><b>Plata de regularizare (balancing payment):</b> impozitul pentru anul trecut minus plățile în avans făcute pentru el.</li>
+<li><b>Plățile în avans (payments on account):</b> plățile anticipate pentru anul curent.</li>
+<li><b>Dobânda (interest):</b> se aplică pentru orice sumă plătită târziu, de la data scadentă.</li>
+<li><b>Amenzile (penalties):</b> pentru depunere sau plată târzie, dacă există.</li>
+<li><b>Suma de plată (amount due):</b> cât trebuie să plătiți și până când.</li>
+</ul>
+
+<h2>Puteți reduce plățile în avans?</h2>
+<p>Da, dacă vă așteptați ca venitul din acest an să fie mai mic decât anul trecut. Puteți cere HMRC să le reducă din contul online sau pe formularul SA303. Reduceți-le doar dacă sunteți sigur – dacă impozitul final iese mai mare, HMRC percepe dobândă pentru diferență.</p>
+
+<h2>Dacă nu puteți plăti</h2>
+<ul class="list">
+<li><b>Plătiți cât puteți</b> – dobânda și amenzile se calculează la suma rămasă neplătită.</li>
+<li><b>Faceți un plan de plată</b> (Time to Pay). De multe ori îl puteți face online dacă datorați cel mult £30.000, sau sunați la HMRC la 0300 200 3820.</li>
+<li><b>Nu ignorați scrisorile pentru datorii.</b> Dacă echipa HMRC Debt Management vă scrie, contactați-o înainte de data din scrisoare – HMRC poate lua măsuri de executare.</li>
+</ul>
+<p>Ați plătit târziu? <a href="amenda-plata-tarzie-self-assessment.html">Cum funcționează amenda de 5% pentru plata târzie</a>.</p>
+""",
+ help="""<p>Încărcați situația contului pentru o explicație gratuită, pe înțeles, în română sau engleză: ce reprezintă fiecare sumă, ce aveți de plătit și până când. Pentru o analiză completă a datoriei și a opțiunilor – inclusiv un plan de plată – puteți programa o discuție de 30 de minute cu un contabil calificat, pentru <b>£59</b>.</p>""",
+ faq=[
+  ("De ce este atât de mare factura din ianuarie?","Pe 31 ianuarie plătiți plata de regularizare pentru anul trecut plus prima plată în avans pentru anul acesta. În primul an în Self Assessment, suma poate fi de până la o dată și jumătate impozitul dvs."),
+  ("Ce este o plată în avans (payment on account)?","O plată anticipată pentru impozitul de anul următor, de obicei jumătate din impozitul de anul trecut, cu termen 31 ianuarie și 31 iulie."),
+  ("Pot face un plan de plată cu HMRC?","Da. Mulți îl pot face online dacă datorează cel mult £30.000. Altfel, sunați la HMRC la 0300 200 3820. Faceți-l cât mai devreme."),
+ ],
+ sources=[("Payments on account (GOV.UK, în engleză)","https://www.gov.uk/understand-self-assessment-bill/payments-on-account"),("Self Assessment deadlines (GOV.UK, în engleză)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Pay your Self Assessment bill in instalments (GOV.UK, în engleză)","https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments")],
+)
+
 DIFF_RO = {
  "sa": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, verificăm dacă amenda este corectă, vă spunem termenul exact și – dacă motivul dvs. este unul acceptat de HMRC – completăm pentru dvs. formularul SA370 în engleză, chiar dacă răspundeți în română.",
  "co": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, verificăm suma față de întârziere, vă spunem termenul exact și – dacă motivul poate fi acceptat – pregătim textul contestației în engleză, chiar dacă răspundeți în română.",
  "nudge": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, vă spunem ce vă cere HMRC și până când și vă explicăm opțiunile pe înțeles, în română sau engleză.",
+ "explain": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, verificăm cifrele și datele din ea și vă spunem exact ce aveți de făcut și până când – pe înțeles, în română sau engleză.",
 }
 
 UI_RO = {
@@ -332,6 +512,7 @@ UI_RO = {
  "mid_title": "Verificați-mi datele și termenele",
  "mid_text": "Nu știți sigur ce amendă aveți, dacă suma este corectă sau când este exact termenul? Încărcați scrisoarea și o verificăm pentru dvs. – gratuit.",
  "mid_text_nudge": "Nu știți sigur ce vă cere HMRC sau până când trebuie să răspundeți?",
+ "mid_text_explain": "Nu știți sigur dacă cifrele din scrisoare sunt corecte sau până când trebuie să acționați?",
  "mid_btn": "Verificați-mi scrisoarea – gratuit",
  "helps": "Cum vă ajută Tax Letter Sorted",
  "questions": "Întrebări",
@@ -352,7 +533,6 @@ UI_RO = {
  "hub_lead": "Ghiduri pe înțeles despre scrisorile despre care suntem întrebați cel mai des: ce înseamnă, termenele și când puteți contesta. Sau încărcați scrisoarea dvs. pentru o explicație gratuită în română.",
  "guides": "Ghiduri",
  "also": "Mai explicăm și",
- "also_list": ["Notificare de depunere a declarației (notice to file)", "Calculul impozitului P800", "Simple Assessment (PA302)", "Situația contului Self Assessment",
-              "Amendă TVA (VAT)", "Amendă PAYE", "Amendă CIS", "Scrisori Making Tax Digital", "Notificare de închidere a companiei (strike-off)"],
+ "also_list": ["Amendă TVA (VAT)", "Amendă PAYE", "Amendă CIS", "Scrisori Making Tax Digital", "Notificare de închidere a companiei (strike-off)"],
  "unsure": "Nu știți ce scrisoare aveți? Încărcați-o – vă spunem noi.",
 }

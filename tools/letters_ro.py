@@ -1,6 +1,6 @@
 """Romanian versions of the letter guide pages (/ro/scrisori/).
 Same order as PAGES in build_letters.py – page N here is the translation of English page N.
-English is authoritative. Reviewed by: (awaiting Eduard's review)"""
+English is authoritative. Reviewed by Eduard, 10 Nov 2026 (pages 1–15)"""
 
 CHECKED_RO = "10 noiembrie 2026"
 

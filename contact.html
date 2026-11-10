@@ -165,7 +165,8 @@
       <label class="field" id="svcPeopleRow" hidden><span id="svcPeopleLabel"></span>
         <input id="svc_people" type="number" inputmode="numeric" min="1" value="1" style="max-width:120px"></label>
       <div class="deadline" id="svcBox" aria-live="polite"><b id="svcTotal"></b><span id="svcLines" style="white-space:pre-line"></span></div>
-      <p class="hint" data-i18n="pkg.disclaimer"></p>
+      <div class="mtdest" id="mtdBox" aria-live="polite" hidden></div>
+      <p class="hint" id="svcDisc" data-i18n="pkg.disclaimer"></p>
     </div>
     <div class="card">
       <label class="field"><span data-i18n="common.full_name">Full name</span>
@@ -199,6 +200,11 @@
     <a class="btn secondary" href="upload.html" data-i18n="common.explain_another">Explain another letter</a>
   </section>
 </main>
+<dialog id="mtdDlg" class="mtddlg" aria-labelledby="mtdDlgTitle">
+  <h2 id="mtdDlgTitle"></h2>
+  <div id="mtdDlgBody"></div>
+  <button type="button" class="btn secondary" id="mtdDlgClose"></button>
+</dialog>
 
 <footer>
   <div class="wrap">
@@ -372,6 +378,25 @@
     if (ctxS.company_number && !$("company_number").value) $("company_number").value = ctxS.company_number;
   }
   // ---------- service estimate (payroll / CIS / VAT) ----------
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function mtdPlanHtml(key) {
+    var M = P.mtd;
+    return '<div class="mtdplan"><div class="mtdrow"><b>' + esc(t("mtd.name_" + key)) + '</b><b>' + esc(gbpp(M.plans[key])) + ' <small>' + esc(t("mtd.a_month")) + '</small></b></div><ul class="plist">' +
+      t("mtd.inc_" + key).split("|").map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
+  }
+  function mtdDialog(title, html) {
+    var d = $("mtdDlg");
+    $("mtdDlgTitle").textContent = title; $("mtdDlgBody").innerHTML = html; $("mtdDlgClose").textContent = t("mtd.close");
+    if (d.showModal) d.showModal(); else d.setAttribute("open", "");
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("[data-mtd-inc],[data-mtd-other]") : null;
+    if (b && P) {
+      if (b.hasAttribute("data-mtd-inc")) mtdDialog(t("mtd.whats_included"), mtdPlanHtml(b.getAttribute("data-mtd-inc")));
+      else mtdDialog(t("mtd.other_plans"), b.getAttribute("data-mtd-other").split(",").map(mtdPlanHtml).join(""));
+    }
+    if (e.target.id === "mtdDlgClose" || e.target.id === "mtdDlg") { var d = $("mtdDlg"); if (d.close) d.close(); else d.removeAttribute("open"); }
+  });
   function service() {
     if (!P) return;
     $("svcVatRow").hidden = $("svcVatMRow").hidden = svc !== "vat";
@@ -379,6 +404,7 @@
     $("svcUtrRow").hidden = svc !== "cis" && svc !== "mtd";
     $("svcPeopleRow").hidden = svc === "vat" || svc === "mtd";
     $("mtdQs").hidden = svc !== "mtd";
+    $("svcBox").hidden = svc === "mtd"; $("svcDisc").hidden = svc === "mtd"; if (svc !== "mtd") $("mtdBox").hidden = true;
     $("svcPeopleLabel").textContent = t(svc === "cis" ? "pkg.subs" : "pkg.employees");
     var lines = [], total;
     if (svc === "mtd") {
@@ -395,16 +421,22 @@
       }
       var gross = months * monthly, pct = months === 0 ? 0 : months <= M.catch_up.discount_up_to_months ? M.catch_up.discount_small : M.catch_up.discount_large;
       var disc = Math.round(gross * pct * 100) / 100, catchUp = Math.round((gross - disc) * 100) / 100;
-      lines.push(t("mtd.l_plan_" + planKey, { amount: gbpp(M.plans[planKey]) }));
-      if (src > 1) lines.push(t("mtd.l_extra", { n: src - 1, each: gbpp(M.extra_income_source), amount: gbpp((src - 1) * M.extra_income_source) }));
+      // Mobile-friendly layout (Eduard 10 Nov 2026): recommended plan + "What's included?" pop-up, then the catch-up, then the estimate note.
+      var others = (vatReg ? ["compliance", "essential"] : ["essential", "full_vat"]);
+      var h = '<span class="pill">' + esc(t("mtd.recommended")) + '</span>' +
+        '<div class="mtdrow"><b>' + esc(t("mtd.name_" + planKey)) + '</b><b class="mtdprice">' + esc(gbpp(M.plans[planKey])) + ' <small>' + esc(t("mtd.a_month")) + '</small></b></div>' +
+        '<button type="button" class="linkbtn" data-mtd-inc="' + planKey + '">' + esc(t("mtd.whats_included")) + '</button>';
+      if (src > 1) h += '<p class="mtdsub">' + esc(t("mtd.extra_short", { n: src - 1, each: gbpp(M.extra_income_source), amount: gbpp((src - 1) * M.extra_income_source) })) + '</p>';
       if (months > 0) {
-        lines.push(t("mtd.l_catchup", { n: months, from: fromLbl, to: toLbl, each: gbpp(monthly), amount: gbpp(gross) }));
-        lines.push(t("mtd.l_discount", { pct: Math.round(pct * 100), amount: gbpp(disc) }));
-      } else if (start === "unsure") lines.push(t("mtd.l_unsure"));
-      lines.push(t("mtd.l_dd_from", { monthly: gbpp(monthly), month: mname(now) }));
-      lines.push(t(vatReg ? "mtd.l_other_vat" : "mtd.l_other", { essential: gbpp(M.plans.essential), full: gbpp(M.plans.full_vat), compliance: gbpp(M.plans.compliance) }));
-      $("svcTotal").textContent = catchUp > 0 ? t("mtd.total", { catchup: gbpp(catchUp), monthly: gbpp(monthly) }) : t("mtd.total_monthly", { monthly: gbpp(monthly) });
-      $("svcLines").textContent = lines.join("\n");
+        h += '<hr><div class="mtdrow"><span>' + esc(t("mtd.catchup_label", { n: months, from: fromLbl, to: toLbl })) + '</span><b>' + esc(gbpp(catchUp)) + '</b></div>' +
+          '<p class="mtdsub">' + esc(t("mtd.catchup_calc", { gross: gbpp(gross), pct: Math.round(pct * 100) })) + '</p>';
+      } else if (start === "unsure") h += '<hr><p class="mtdsub">' + esc(t("mtd.l_unsure")) + '</p>';
+      h += '<div class="mtdtotal"><b>' + esc(catchUp > 0 ? t("mtd.total", { catchup: gbpp(catchUp), monthly: gbpp(monthly) }) : t("mtd.total_monthly", { monthly: gbpp(monthly) })) + '</b>' +
+        '<span>' + esc(t("mtd.then_card", { monthly: gbpp(monthly), month: mname(now) })) + '</span></div>' +
+        '<p class="mtdsub">' + esc(t("mtd.est_note")) + '</p>' +
+        '<button type="button" class="linkbtn" data-mtd-other="' + others.join(",") + '">' + esc(t("mtd.other_plans")) + '</button>';
+      $("svcBox").hidden = true; $("svcDisc").hidden = true;
+      $("mtdBox").innerHTML = h; $("mtdBox").hidden = false;
       svcEst = { catch_up: catchUp, catch_up_months: months, catch_up_before_discount: gross, discount_pct: Math.round(pct * 100), monthly: monthly, plan: planKey,
         registered: reg, updates_sent: sent, income_sources: src, vat: vatReg, start: start };
       return;

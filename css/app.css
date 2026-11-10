@@ -143,3 +143,22 @@ footer a{color:#fff;min-height:44px;display:flex;align-items:center}
 .topnav{display:flex;align-items:center;gap:8px}
 .langlink{color:#fff;font-weight:600;font-size:14px;min-height:44px;display:flex;align-items:center;padding:0 8px}
 .langlink:hover{color:#C9D2E3}
+/* MTD estimate card (contact.html?kind=service&svc=mtd) */
+.mtdest{background:var(--card);border:2px solid var(--teal);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.mtdest .pill{align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;background:var(--teal);color:#fff}
+.mtdrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:16px;line-height:1.35}
+.mtdrow small{font-size:13px;font-weight:500;color:var(--soft)}
+.mtdprice{font-size:20px;white-space:nowrap}
+.mtdsub{font-size:13px;line-height:1.45;color:var(--soft)}
+.mtdest hr{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
+.mtdtotal{background:var(--teal-tint);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.mtdtotal b{font-size:16px;color:var(--teal-dark)}
+.mtdtotal span{font-size:14px;color:var(--muted)}
+.linkbtn{align-self:flex-start;background:none;border:1px solid var(--teal);border-radius:16px;color:var(--teal-dark);font:600 13px var(--sans);padding:6px 12px;min-height:34px;cursor:pointer}
+.linkbtn:hover{background:var(--teal-tint)}
+.mtddlg{border:0;border-radius:14px;padding:18px;width:min(92vw,420px);box-shadow:0 10px 40px rgba(20,33,61,.3);color:var(--ink)}
+.mtddlg::backdrop{background:rgba(20,33,61,.45)}
+.mtddlg h2{margin:0 0 10px;font-size:18px}
+.mtddlg .mtdplan{margin-bottom:12px}
+.mtddlg .plist{margin-top:6px}
+.mtddlg .btn{width:100%;min-height:46px}

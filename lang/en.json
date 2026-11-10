@@ -1238,6 +1238,22 @@
     "l_catchup": "Catch-up: {n} months ({from} to {to}) × {each} = {amount}",
     "l_discount": "Catch-up discount {pct}%: −{amount}",
     "l_dd_from": "Then {monthly} a month, paid monthly by card, starting {month}.",
-    "l_unsure": "We'll confirm your start date and any catch-up when we contact you."
+    "l_unsure": "We'll confirm your start date and any catch-up when we contact you.",
+    "recommended": "Recommended",
+    "name_compliance": "Compliance plan",
+    "name_full_vat": "Full MTD plan (with VAT)",
+    "name_essential": "Essential plan",
+    "a_month": "a month",
+    "whats_included": "What's included?",
+    "inc_compliance": "Software|Set-up and reminders|Bookkeeping up to 50 transactions a month (then £0.50 each)|Your 4 quarterly updates|The final declaration|A quarterly tax estimate|Phone and WhatsApp support",
+    "inc_full_vat": "Everything in the Compliance plan|Your VAT returns|Bookkeeping up to 100 transactions a month (then £0.50 each)|Priority support",
+    "inc_essential": "Software|Set-up and MTD registration|Reminders|Email support|You send the quarterly updates yourself",
+    "extra_short": "+ {n} extra business/property × {each} = {amount} a month",
+    "catchup_label": "Catch-up: {n} months ({from} – {to})",
+    "catchup_calc": "{gross} less {pct}% discount",
+    "then_card": "Then {monthly} a month by card, starting {month}.",
+    "est_note": "This is an estimate. Get in touch and we'll confirm your price.",
+    "other_plans": "Other plans",
+    "close": "Close"
   }
 }

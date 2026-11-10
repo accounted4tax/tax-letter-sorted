@@ -13,7 +13,23 @@
       "Self Assessment and Corporation Tax returns: 'declarația fiscală anuală'. Company annual accounts (Companies House): 'bilanțul financiar anual' (Eduard, 31 Oct 2026)."
     ],
     "to_review": [
-      "home.letters_all"
+      "home.letters_all",
+      "mtd.recommended",
+      "mtd.name_compliance",
+      "mtd.name_full_vat",
+      "mtd.name_essential",
+      "mtd.a_month",
+      "mtd.whats_included",
+      "mtd.inc_compliance",
+      "mtd.inc_full_vat",
+      "mtd.inc_essential",
+      "mtd.extra_short",
+      "mtd.catchup_label",
+      "mtd.catchup_calc",
+      "mtd.then_card",
+      "mtd.est_note",
+      "mtd.other_plans",
+      "mtd.close"
     ]
   },
   "common": {
@@ -1254,6 +1270,22 @@
     "l_catchup": "Servicii din trecut: {n} luni ({from} – {to}) × {each} = {amount}",
     "l_discount": "Reducere la serviciile din trecut {pct}%: −{amount}",
     "l_dd_from": "Apoi {monthly} pe lună, plătit lunar cu cardul, începând din {month}.",
-    "l_unsure": "Vă confirmăm data de început și eventualele servicii din trecut când vă contactăm."
+    "l_unsure": "Vă confirmăm data de început și eventualele servicii din trecut când vă contactăm.",
+    "recommended": "Recomandat",
+    "name_compliance": "Pachetul Compliance",
+    "name_full_vat": "Pachetul Full MTD (cu TVA)",
+    "name_essential": "Pachetul Essential",
+    "a_month": "pe lună",
+    "whats_included": "Ce include?",
+    "inc_compliance": "Programul|Configurarea și notificări de amintire a termenelor limită|Contabilitatea primară până la 50 de tranzacții pe lună (apoi £0,50 fiecare)|Cele 4 raportări trimestriale|Declarația finală|O estimare trimestrială a impozitului|Suport prin telefon și WhatsApp",
+    "inc_full_vat": "Tot ce include pachetul Compliance|Declarațiile de TVA|Contabilitatea primară până la 100 de tranzacții pe lună (apoi £0,50 fiecare)|Suport prioritar",
+    "inc_essential": "Programul|Configurarea și înregistrarea MTD|Notificări de amintire a termenelor limită|Suport pe email|Raportările trimestriale le trimiteți dvs.",
+    "extra_short": "+ {n} afaceri/proprietăți în plus × {each} = {amount} pe lună",
+    "catchup_label": "Servicii din trecut: {n} luni ({from} – {to})",
+    "catchup_calc": "{gross} minus reducere de {pct}%",
+    "then_card": "Apoi {monthly} pe lună, plătit cu cardul, începând din {month}.",
+    "est_note": "Aceasta este o estimare. Contactați-ne și vă confirmăm prețul.",
+    "other_plans": "Alte pachete",
+    "close": "Închide"
   }
 }

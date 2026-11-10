@@ -407,6 +407,7 @@ page(
 # ---------------------------------------------------------------- 9
 page(
  slug="self-assessment-notice-to-file",
+ help_btn=True,
  kind="explain",
  chip="Notice to file a tax return",
  title="HMRC notice to file a Self Assessment tax return: what to do",
@@ -518,6 +519,7 @@ UI_EN = {
  "mid_text_nudge": "Not sure what HMRC is asking for, or exactly when you need to reply?",
  "mid_text_explain": "Not sure whether the figures on your letter are right, or exactly when you need to act?",
  "mid_btn": "Check my letter – free",
+ "help_btn": "Help me file my Self Assessment",
  "helps": "How Tax Letter Sorted helps",
  "questions": "Questions",
  "checked": "Checked against GOV.UK on {d}:",
@@ -610,18 +612,26 @@ def cta(ui):
       <span>{E(ui['cta'])}</span>
     </a>"""
 
-def mid(ui, kind):
+def extra_btn(ui, p):
+    # optional second button, e.g. "Help me file my Self Assessment" -> contact form (kind=help)
+    if not p.get("help_btn"):
+        return ""
+    sep = "&" if ui["q"] else "?"
+    href = f"{ui['up']}contact.html?kind=help" + (f"&lang={ui['lang']}" if ui["q"] else "")
+    return f'\n    <a class="btn secondary" href="{href}">{E(ui["help_btn"])}</a>'
+
+def mid(ui, kind, extra=""):
     text = ui["mid_text"] if kind not in ("nudge", "explain") else ui["mid_text_" + kind] + " " + ui["mid_text"].split("? ", 1)[1]
     return f"""<section class="midcta">
     <h2>{E(ui['mid_title'])}</h2>
     <p>{E(text)}</p>
-    <a class="btn secondary" href="{ui['up']}upload.html{ui['q']}">{E(ui['mid_btn'])}</a>
+    <a class="btn secondary" href="{ui['up']}upload.html{ui['q']}">{E(ui['mid_btn'])}</a>{extra}
   </section>"""
 
-def with_mid(ui, body, kind):
+def with_mid(ui, body, kind, extra=""):
     parts = re.split(r'(?=<h2>)', body.strip())
     if len(parts) > 3:
-        parts.insert(3, mid(ui, kind) + "\n")
+        parts.insert(3, mid(ui, kind, extra) + "\n")
     return "".join(parts)
 
 def crumbs_ld(items):
@@ -675,13 +685,13 @@ def build(ui, pages, other_ui, other_pages, diff, checked):
   </section>
 
   <section class="prose">
-{with_mid(ui, p['body'], kind)}
+{with_mid(ui, p['body'], kind, extra_btn(ui, p))}
   </section>
 
   <section class="offer featured">
     <h2>{E(ui['helps'])}</h2>
     {p['help'].strip()}
-    {cta(ui)}
+    {cta(ui)}{extra_btn(ui, p)}
   </section>
 
   <section class="stack">

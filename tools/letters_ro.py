@@ -406,6 +406,7 @@ page(
 # ---------------------------------------------------------------- 9
 page(
  slug="notificare-depunere-declaratie-self-assessment",
+ help_btn=True,
  kind="explain",
  chip="Notificare de depunere a declarației",
  title="Notificarea HMRC de depunere a declarației Self Assessment (notice to file): ce faceți",
@@ -513,6 +514,7 @@ UI_RO = {
  "mid_text_nudge": "Nu știți sigur ce vă cere HMRC sau până când trebuie să răspundeți?",
  "mid_text_explain": "Nu știți sigur dacă cifrele din scrisoare sunt corecte sau până când trebuie să acționați?",
  "mid_btn": "Verificați-mi scrisoarea – gratuit",
+ "help_btn": "Ajutați-mă să depun declarația Self Assessment",
  "helps": "Cum vă ajută Tax Letter Sorted",
  "questions": "Întrebări",
  "checked": "Verificat după GOV.UK la {d}:",

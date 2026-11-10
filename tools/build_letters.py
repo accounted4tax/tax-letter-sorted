@@ -370,7 +370,7 @@ page(
  title="HMRC Simple Assessment letter (PA302): what it is and how to pay",
  meta_title="HMRC Simple Assessment (PA302) explained – deadlines and payment | Tax Letter Sorted",
  desc="Got a Simple Assessment tax bill from HMRC? Why you got it, when you have to pay, how to pay with the right reference, and what to do within 60 days if the figures are wrong.",
- lead="A Simple Assessment is a tax bill HMRC works out for you, without you filing a tax return. It's often sent to pensioners, or when tax can't be collected through your tax code.",
+ lead="A Simple Assessment is a tax bill HMRC works out for you, without you filing a tax return. It usually comes when you owe tax that can't be collected through your tax code.",
  facts=[("What it is","A tax bill calculated by HMRC – no tax return needed"),("Pay by (letter sent before 31 October)","31 January after the end of the tax year"),("Pay by (letter sent on or after 31 October)","3 months from the date of the letter"),("Think it's wrong?","Contact HMRC within 60 days of the letter"),("Payment reference","14 characters, starting with X – on your letter")],
  body="""
 <h2>Why you got a Simple Assessment</h2>
@@ -495,6 +495,249 @@ page(
  sources=[("Payments on account (GOV.UK)","https://www.gov.uk/understand-self-assessment-bill/payments-on-account"),("Self Assessment deadlines (GOV.UK)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Pay your Self Assessment bill in instalments (GOV.UK)","https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments")],
 )
 
+# ================================================================ batch 2b (10 Nov 2026)
+# ---------------------------------------------------------------- 11
+page(
+ slug="vat-late-submission-penalty-points",
+ kind="co",
+ extra=("File my VAT returns for me", "contact.html?kind=service&svc=vat"),
+ chip="VAT penalty",
+ title="VAT late submission penalty points and the £200 penalty explained",
+ meta_title="VAT late submission penalty – points and £200 penalty explained | Tax Letter Sorted",
+ desc="Got a VAT penalty point or a £200 late submission penalty from HMRC? How the points system works, the thresholds, how to get points removed, and how to ask HMRC for a review.",
+ lead="Since 2023, each VAT Return sent late gets a penalty point. When you reach your threshold, HMRC charges a £200 penalty – and another £200 for every late return after that.",
+ facts=[("Applies to","VAT periods starting on or after 1 January 2023"),("Each late return","1 penalty point – nil and repayment returns count too"),("Threshold","Annual: 2 points · Quarterly: 4 points · Monthly: 5 points"),("At the threshold","£200 penalty, and £200 for each further late return"),("Challenge it","Ask HMRC for a review – usually within 30 days of the decision")],
+ body="""
+<h2>How the points system works</h2>
+<p>Every VAT Return that reaches HMRC after its deadline earns one penalty point – even a nil return, or one where HMRC owes you money. A point on its own costs nothing. The money starts when you reach the threshold for how often you file:</p>
+<table class="tbl"><thead><tr><th>You file</th><th>Penalty threshold</th></tr></thead><tbody>
+<tr><td>Annually</td><td>2 points</td></tr>
+<tr><td>Quarterly</td><td>4 points</td></tr>
+<tr><td>Monthly</td><td>5 points</td></tr>
+</tbody></table>
+<p>When you reach the threshold, HMRC charges a <b>£200 penalty</b>. While you stay at the threshold, every further late return costs another £200.</p>
+
+<h2>Getting points removed</h2>
+<p><b>Below the threshold</b>, each point expires on its own after about 2 years (the end of the month 24 months after the month the late return was due).</p>
+<p><b>At the threshold</b>, all your points are wiped only when you have both:</p>
+<ul class="list">
+<li>sent every return on time for a set period – 12 months if you file quarterly (4 returns), 24 months if annually, 6 months if monthly</li>
+<li>sent any returns still outstanding from the last 24 months</li>
+</ul>
+<p>So the most important thing is to <b>keep sending returns on time</b>, even while you challenge a penalty.</p>
+
+<h2>Late payment is separate</h2>
+<p>Paying VAT late is dealt with separately, with its own late payment penalties and interest. A late return and a late payment can happen for the same period.</p>
+
+<h2>Can you challenge a point or penalty?</h2>
+<p>Yes. The penalty letter offers a review. You can challenge a point or the £200 if it is wrong, or if you had a <b>reasonable excuse</b> – something unexpected or outside your control, such as a serious illness, a death in the family shortly before the deadline, or a failure of your software or HMRC's systems. If the excuse is accepted, the point is removed too.</p>
+
+<h2>How to ask for a review</h2>
+<ol class="list">
+<li>Act within 30 days of the date on the penalty decision.</li>
+<li>Ask for a review in the business's VAT online account, or write to: Solicitor's Office and Legal Services, HMRC, BX9 1ZT – or the address on your letter.</li>
+<li>Explain what happened, with dates, and say what evidence you have.</li>
+</ol>
+""",
+ help="""<p>Upload the penalty letter for a free explanation: how many points you have, what the £200 is for, and your deadline. If your reason may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs the business's VAT account sign&#8209;in).</li><li><b>£19</b> – we write the appeal letter; you print, sign and post it.</li><li><b>£39</b> – a qualified accountant reviews your appeal and follows it up with HMRC for you.</li></ul>""",
+ faq=[
+  ("Do I get a VAT penalty point for a nil return?","Yes. For VAT periods starting on or after 1 January 2023, nil returns and repayment returns sent late also get a penalty point."),
+  ("How many points before I get a £200 VAT penalty?","2 points if you file annually, 4 if you file quarterly and 5 if you file monthly. At the threshold, each late return costs £200."),
+  ("How do I get rid of VAT penalty points?","Below the threshold they expire after about 2 years. At the threshold, you need to send every return on time for a set period – 12 months for quarterly filers – and have no returns outstanding."),
+ ],
+ sources=[("Penalty points and penalties if you submit your VAT Return late (GOV.UK)","https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late"),("Sending a VAT Return: late returns and payment (GOV.UK)","https://www.gov.uk/submit-vat-return/late-returns-and-payment")],
+)
+
+# ---------------------------------------------------------------- 12
+page(
+ slug="paye-late-filing-penalty-employers",
+ kind="explain",
+ extra=("Run my payroll for me", "contact.html?kind=service&svc=payroll"),
+ chip="PAYE penalty",
+ title="PAYE late filing penalty for employers: what it means",
+ meta_title="PAYE late filing penalty for employers (RTI) explained | Tax Letter Sorted",
+ desc="Got a PAYE late filing penalty from HMRC? Why employers are charged when payroll reports (FPS) are late, the monthly amounts, when no penalty applies, and how to appeal.",
+ lead="HMRC charges employers a penalty when payroll reports – the Full Payment Submission (FPS) – reach HMRC late, or when a month with no payments isn't reported. The amount depends on how many employees you have.",
+ facts=[("Report","Full Payment Submission (FPS) – on or before each payday"),("1–9 employees","£100 a month"),("10–49 employees","£200 a month"),("50–249 employees","£300 a month"),("250 or more","£400 a month"),("Notices","Sent every quarter – pay within 30 days to avoid interest")],
+ body="""
+<h2>Why you got the penalty</h2>
+<p>Under Real Time Information (RTI), an employer must send an FPS to HMRC every time employees are paid, on or before payday. If a report is late, or a month with no pay isn't reported, HMRC can charge a penalty for each month. Employers with more than one PAYE scheme can be charged for each one.</p>
+<table class="tbl"><thead><tr><th>Number of employees</th><th>Penalty per month</th></tr></thead><tbody>
+<tr><td>1 to 9</td><td>£100</td></tr>
+<tr><td>10 to 49</td><td>£200</td></tr>
+<tr><td>50 to 249</td><td>£300</td></tr>
+<tr><td>250 or more</td><td>£400</td></tr>
+</tbody></table>
+
+<h2>When there shouldn't be a penalty</h2>
+<ul class="list">
+<li><b>Within 3 days:</b> the FPS was late, but all the payments on it were made within 3 days of payday.</li>
+<li><b>New employer:</b> your first FPS was sent within 30 days of first paying an employee.</li>
+<li><b>First time this tax year:</b> HMRC doesn't charge for the first late report in a tax year (this doesn't apply to annual schemes).</li>
+</ul>
+<p>If one of these fits, the penalty may be wrong and can be appealed.</p>
+
+<h2>Estimated charges</h2>
+<p>If reports are missing, HMRC may also send an estimated bill for the PAYE it thinks is due. Only sending the missing reports replaces it with the real figures.</p>
+
+<h2>How to appeal</h2>
+<p>You can appeal if the penalty isn't due, the amount is wrong, or you had a <b>reasonable excuse</b>.</p>
+<ol class="list">
+<li>Appeal within 30 days of the penalty notice.</li>
+<li>Online: sign in to HMRC's PAYE for employers service and choose <b>Appeal a penalty</b>. Take a screenshot of the confirmation – it can't be printed.</li>
+<li>By post: National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX.</li>
+<li>Quote the unique ID of each penalty from the notice.</li>
+</ol>
+""",
+ help="""<p>Upload the penalty notice for a free explanation in plain English or Romanian: which months were charged, whether one of the no-penalty rules may apply, and your deadline. If you'd rather not worry about payroll deadlines again, a qualified accountant can run your payroll and send the reports to HMRC on time every month.</p>""",
+ faq=[
+  ("How much is the PAYE late filing penalty?","£100 a month for 1 to 9 employees, £200 for 10 to 49, £300 for 50 to 249 and £400 for 250 or more."),
+  ("Is there a penalty if the FPS is only a day or two late?","Usually not, if all the payments on it were made within 3 days of payday. HMRC may still contact employers who are often late within those 3 days."),
+  ("Do I get a penalty the first time I'm late?","No. The first late report in a tax year isn't charged, unless you're registered as an annual scheme."),
+ ],
+ sources=[("What happens if you do not report payroll information on time (GOV.UK)","https://www.gov.uk/guidance/what-happens-if-you-dont-report-payroll-information-on-time")],
+)
+
+# ---------------------------------------------------------------- 13
+page(
+ slug="cis-late-return-penalty",
+ kind="co",
+ extra=("Deal with my CIS returns", "contact.html?kind=service&svc=cis"),
+ chip="CIS penalty",
+ title="CIS late return penalty for contractors: amounts and appeals",
+ meta_title="CIS late return penalty (£100, £200, £300) explained | Tax Letter Sorted",
+ desc="Got a CIS penalty for a late monthly return? The deadline, how the penalties grow from £100, why nil returns matter, and how a contractor can appeal within 30 days.",
+ lead="If you're a contractor in the Construction Industry Scheme, your monthly CIS return must reach HMRC by the 19th of the following month. If it's late, HMRC charges a penalty that grows the longer it stays late.",
+ facts=[("Deadline","19th of the month after the tax month ends"),("1 day late","£100"),("2 months late","Another £200"),("6 months late","£300 or 5% of the CIS deductions, whichever is higher"),("12 months late","Another £300 or 5%, whichever is higher"),("Time to appeal","30 days from the penalty notice")],
+ body="""
+<h2>Why you got the penalty</h2>
+<p>A contractor has to send a CIS return for every tax month (6th to 5th), by the 19th of the next month. For example, the return for 6 May to 5 June is due by 19 June. The penalty is for the return arriving late – it applies even if the deductions were paid on time.</p>
+
+<h2>How the penalties grow</h2>
+<table class="tbl"><thead><tr><th>Return late by</th><th>Penalty</th></tr></thead><tbody>
+<tr><td>1 day</td><td>£100</td></tr>
+<tr><td>2 months</td><td>£200</td></tr>
+<tr><td>6 months</td><td>£300 or 5% of the CIS deductions on the return, whichever is higher</td></tr>
+<tr><td>12 months</td><td>£300 or 5% of the CIS deductions, whichever is higher</td></tr>
+</tbody></table>
+<p>Returns later than that can get an extra penalty of up to £3,000 or 100% of the deductions. Each month is a separate return, so several late months mean several penalties.</p>
+
+<h2>No subcontractors paid that month?</h2>
+<p>You still need to tell HMRC. Either send a <b>nil return</b>, or tell HMRC you've stopped using subcontractors for now (an inactivity request). A missing nil return gets the same penalties as any other.</p>
+
+<h2>Can you appeal?</h2>
+<p>Yes, if the penalty is wrong or you had a <b>reasonable excuse</b> – something unexpected or outside your control, such as a serious illness, a death in the family shortly before the deadline, or a failure of HMRC's online service – and you sent the return as soon as you could.</p>
+
+<h2>How to appeal</h2>
+<ol class="list">
+<li>Appeal within 30 days of the date on the penalty notice.</li>
+<li>Use HMRC's online service, or write to the address on the notice (CIS general enquiries). You can't appeal by phone.</li>
+<li>Quote your UTR and the payment reference from the notice, and explain what happened, with dates.</li>
+</ol>
+""",
+ help="""<p>Upload the penalty notice for a free explanation: which months were charged, whether the amounts are right, and your deadline. If your reason may be accepted, you choose how to appeal:</p><ul class="list"><li><b>Free</b> – appeal online yourself: copy and paste our wording (needs your HMRC sign&#8209;in).</li><li><b>£19</b> – we write the appeal letter; you print, sign and post it.</li><li><b>£39</b> – a qualified accountant reviews your appeal and follows it up with HMRC for you.</li></ul>""",
+ faq=[
+  ("When is the CIS return due?","By the 19th of the month after the tax month ends. The tax month runs from the 6th to the 5th."),
+  ("Do I need to send a CIS return if I paid no subcontractors?","Yes – send a nil return, or tell HMRC you're temporarily inactive. Otherwise you can be charged the late return penalties."),
+  ("Can I appeal a CIS penalty by phone?","No. Use HMRC's online service or write to HMRC, quoting your UTR and the payment reference from the notice."),
+ ],
+ sources=[("What you must do as a CIS contractor: file your monthly returns (GOV.UK)","https://www.gov.uk/what-you-must-do-as-a-cis-contractor/file-your-monthly-returns"),("Penalties for failure to file CIS returns on time – CC/FS18b (GOV.UK)","https://www.gov.uk/government/publications/compliance-checks-penalties-if-you-dont-file-construction-industry-scheme-returns-on-time-ccfs18b/penalties-for-failure-to-file-returns-on-time-the-construction-industry-scheme-cis-ccfs18b")],
+)
+
+# ---------------------------------------------------------------- 14
+page(
+ slug="making-tax-digital-income-tax-letter",
+ kind="explain",
+ extra=("Help me with Making Tax Digital", "contact.html?kind=service&svc=mtd"),
+ chip="Making Tax Digital",
+ title="HMRC Making Tax Digital for Income Tax letter: what you need to do",
+ meta_title="HMRC Making Tax Digital for Income Tax letter – what to do | Tax Letter Sorted",
+ desc="Got a letter from HMRC about Making Tax Digital for Income Tax? Who has to join and when, the quarterly update deadlines, the 2026-27 penalty soft landing, and what to do now.",
+ lead="Making Tax Digital (MTD) for Income Tax means sole traders and landlords keep digital records and send HMRC an update every quarter, then a tax return after the year ends. HMRC writes to people who have to start.",
+ facts=[("Over £50,000 in 2024-25","Start from 6 April 2026"),("Over £30,000 in 2025-26","Start from 6 April 2027"),("Over £20,000 in 2026-27","Start from 6 April 2028"),("Income that counts","Self-employment and property income (before expenses)"),("Quarterly updates due","7 August, 7 November, 7 February and 7 May")],
+ body="""
+<h2>Why HMRC wrote to you</h2>
+<p>HMRC looks at your Self Assessment return to see whether your <b>qualifying income</b> – your self-employment turnover plus your property income, before expenses – is over the limit. If it is, you have to use MTD from the date shown. Partnerships aren't included yet.</p>
+<table class="tbl"><thead><tr><th>Qualifying income</th><th>In tax year</th><th>Start MTD from</th></tr></thead><tbody>
+<tr><td>Over £50,000</td><td>2024-25</td><td>6 April 2026</td></tr>
+<tr><td>Over £30,000</td><td>2025-26</td><td>6 April 2027</td></tr>
+<tr><td>Over £20,000</td><td>2026-27</td><td>6 April 2028</td></tr>
+</tbody></table>
+<p>If you should have started on 6 April 2026 and haven't signed up yet, you can still sign up now.</p>
+
+<h2>What changes</h2>
+<ul class="list">
+<li>Keep your business and property records in <b>MTD-compatible software</b>.</li>
+<li>Send a <b>quarterly update</b> for each business and property: by 7 August, 7 November, 7 February and 7 May.</li>
+<li>Send your <b>tax return</b> through the software after the year ends, by 31 January.</li>
+<li>You still <b>pay</b> tax on the usual Self Assessment dates: 31 January and 31 July.</li>
+</ul>
+
+<h2>Penalties</h2>
+<p>Late quarterly updates come under a points system. For the 2026-27 tax year HMRC won't give penalty points for late quarterly updates – but the updates and digital records are still required, and a late tax return still gets points. Don't rely on the soft landing as a reason to wait.</p>
+
+<h2>Exemptions</h2>
+<p>Some people are exempt, for example if they are digitally excluded because of age, disability, location or other reasons. Some exemptions are automatic; others you have to apply for. Exempt people still file a Self Assessment return.</p>
+
+<h2>What to do now</h2>
+<ol class="list">
+<li>Check the start date in your letter.</li>
+<li>Choose MTD-compatible software, or ask an accountant to do it for you.</li>
+<li>Sign up before your first quarter ends, and keep digital records from the start date.</li>
+</ol>
+""",
+ help="""<p>Upload the letter for a free explanation in plain English or Romanian: when you need to start, what you'll have to send and by when. If you'd like help, a qualified accountant can set you up and send your quarterly updates for you – you get an estimate first.</p>""",
+ faq=[
+  ("Do I have to use Making Tax Digital?","Only if your qualifying income – self-employment plus property income, before expenses – is over the limit: £50,000 in 2024-25, £30,000 in 2025-26 or £20,000 in 2026-27. HMRC writes to people who have to start."),
+  ("When are MTD quarterly updates due?","By 7 August, 7 November, 7 February and 7 May for the standard quarters of the tax year."),
+  ("Will I get a penalty for a late quarterly update in 2026-27?","HMRC has said it won't give penalty points for late quarterly updates in 2026-27. The updates are still required, and a late tax return still gets penalty points."),
+ ],
+ sources=[("Find out if and when you need to use Making Tax Digital for Income Tax (GOV.UK)","https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax"),("Send quarterly updates (GOV.UK)","https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax/send-quarterly-updates"),("Exemptions from Making Tax Digital for Income Tax (GOV.UK)","https://www.gov.uk/guidance/find-out-if-you-can-get-an-exemption-from-making-tax-digital-for-income-tax")],
+)
+
+# ---------------------------------------------------------------- 15
+page(
+ slug="companies-house-strike-off-notice",
+ kind="explain",
+ extra=("Stop the strike-off – get a quote", "contact.html?kind=package&strike=1"),
+ chip="Strike-off notice",
+ title="Companies House strike-off notice: how to stop your company being closed",
+ meta_title="Companies House compulsory strike-off notice – how to stop it | Tax Letter Sorted",
+ desc="Got a letter from Companies House saying your company will be struck off? Why it happens, the Gazette notice and 2-month timeline, how to stop it, and what happens if the company is dissolved.",
+ lead="If Companies House thinks a company has stopped trading – usually because the accounts or confirmation statement are overdue – it starts to remove it from the register. Act quickly: once a company is dissolved, its bank account is frozen.",
+ facts=[("From","Companies House (not HMRC)"),("Usual reason","Overdue confirmation statement or annual accounts"),("What comes next","A notice in The Gazette"),("Struck off","About 2 months after the Gazette notice, if nothing is done"),("To stop it","File the overdue documents, or object, as soon as possible")],
+ body="""
+<h2>Why you got this letter</h2>
+<p>Companies House starts compulsory strike-off when it has reason to believe a company is no longer trading – most often because documents are overdue and its letters have had no reply. Usually two letters are sent, then a notice is published in <b>The Gazette</b> saying the company will be struck off.</p>
+
+<h2>What happens if you do nothing</h2>
+<ul class="list">
+<li>About <b>2 months</b> after the Gazette notice, the company is struck off and <b>dissolved</b>.</li>
+<li>The company's <b>bank accounts are frozen</b>.</li>
+<li>Its money and property pass to the Crown.</li>
+<li>Getting it back means applying to restore the company, which costs time and money.</li>
+</ul>
+
+<h2>How to stop it</h2>
+<ol class="list">
+<li><b>File the overdue documents</b> – usually the confirmation statement and any overdue accounts. Once they're filed, Companies House normally stops the strike-off.</li>
+<li>If you need more time, <b>contact Companies House straight away</b>. Anyone with an interest in the company can object; send the objection as early as possible, and at least 2 weeks before the Gazette notice runs out.</li>
+<li>After an objection, Companies House sets a deadline. If there's no progress by then, the strike-off starts again.</li>
+</ol>
+<p>To file, you'll need the company number and the <b>authentication code</b> (a 6-character code sent to the registered office). Directors may also need to verify their identity with Companies House.</p>
+
+<h2>Late filing penalties too</h2>
+<p>Overdue accounts also mean a Companies House late filing penalty, and a late company tax return means a separate HMRC penalty. <a href="companies-house-late-filing-penalty.html">More about Companies House penalties</a>.</p>
+""",
+ help="""<p>Upload the letter for a free explanation in plain English or Romanian: what is overdue and how long you have. If you'd like it sorted, a qualified accountant can file the confirmation statement and any overdue accounts for the company – you get a quote first. The confirmation statement starts from £99, Companies House fee included.</p>""",
+ faq=[
+  ("How long before my company is struck off?","Usually about 2 months after the notice is published in The Gazette, if the overdue documents aren't filed and no one objects."),
+  ("How do I stop a compulsory strike-off?","File the overdue documents as soon as possible – usually the confirmation statement and accounts. If you need more time, contact Companies House and object before the Gazette notice runs out."),
+  ("What happens to the bank account if the company is dissolved?","It is frozen, and the company's money and property pass to the Crown. To get them back, the company has to be restored to the register."),
+ ],
+ sources=[("Companies House: compulsory strike-off process (GOV.UK)","https://www.gov.uk/government/news/companies-house-to-resume-the-compulsory-strike-off-process"),("Strike off, dissolution and restoration (GOV.UK)","https://www.gov.uk/government/publications/strike-off-dissolution-and-restoration/strike-off-dissolution-and-restoration"),("File your confirmation statement (GOV.UK)","https://www.gov.uk/file-your-confirmation-statement-with-companies-house")],
+)
+
 DIFF = {
  "sa": "This page explains the general rules. Upload yours and we'll read your actual letter, check whether the penalty is right, tell you your exact deadline and – if your reason is one HMRC accepts – fill in the SA370 for you in English, even if you answer in Romanian.",
  "co": "This page explains the general rules. Upload yours and we'll read your actual letter, check the amount against how late the filing was, tell you your exact deadline and – if your reason may be accepted – prepare the appeal wording in English, even if you answer in Romanian.",
@@ -539,7 +782,7 @@ UI_EN = {
  "hub_lead": "Plain-English guides to the letters people ask us about most: what they mean, the deadlines, and when you can appeal. Or upload your own letter for a free explanation in English or Romanian.",
  "guides": "Guides",
  "also": "We also explain",
- "also_list": ["VAT penalty", "PAYE penalty", "CIS penalty", "Making Tax Digital letters", "Companies House strike-off notice"],
+ "also_list": [],
  "unsure": "Not sure what your letter is? Upload it – we'll tell you.",
 }
 
@@ -613,12 +856,15 @@ def cta(ui):
     </a>"""
 
 def extra_btn(ui, p):
-    # optional second button, e.g. "Help me file my Self Assessment" -> contact form (kind=help)
-    if not p.get("help_btn"):
+    # optional second green button: p["extra"] = (label, link) or help_btn=True for "Help me file my Self Assessment"
+    if p.get("extra"):
+        label, link = p["extra"]
+    elif p.get("help_btn"):
+        label, link = ui["help_btn"], "contact.html?kind=help"
+    else:
         return ""
-    sep = "&" if ui["q"] else "?"
-    href = f"{ui['up']}contact.html?kind=help" + (f"&lang={ui['lang']}" if ui["q"] else "")
-    return f'\n    <a class="btn" href="{href}">{E(ui["help_btn"])}</a>'
+    href = f"{ui['up']}{link}" + (f"&lang={ui['lang']}" if ui["q"] else "")
+    return f'\n    <a class="btn" href="{href}">{E(label)}</a>'
 
 def mid(ui, kind, extra=""):
     text = ui["mid_text"] if kind not in ("nudge", "explain") else ui["mid_text_" + kind] + " " + ui["mid_text"].split("? ", 1)[1]
@@ -633,6 +879,18 @@ def with_mid(ui, body, kind, extra=""):
     if len(parts) > 3:
         parts.insert(3, mid(ui, kind, extra) + "\n")
     return "".join(parts)
+
+def also_block(ui):
+    chips = ""
+    if ui["also_list"]:
+        chips = f"""<h2>{E(ui['also'])}</h2>
+    <div class="chips">
+{chr(10).join(f'<span>{E(o)}</span>' for o in ui['also_list'])}
+    </div>
+    """
+    return f"""<section class="stack">
+    {chips}<p class="note" style="text-align:left">{E(ui['unsure'])}</p>
+  </section>"""
 
 def crumbs_ld(items):
     return {"@type": "BreadcrumbList", "itemListElement": [
@@ -741,13 +999,7 @@ def build(ui, pages, other_ui, other_pages, diff, checked):
 {cards}
     </div>
   </section>
-  <section class="stack">
-    <h2>{E(ui['also'])}</h2>
-    <div class="chips">
-{chr(10).join(f'<span>{E(o)}</span>' for o in ui['also_list'])}
-    </div>
-    <p class="note" style="text-align:left">{E(ui['unsure'])}</p>
-  </section>
+  {also_block(ui)}
   <p class="callout">{ui['disclaimer']}</p>
 </main>
 

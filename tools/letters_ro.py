@@ -369,7 +369,7 @@ page(
  title="Scrisoarea HMRC Simple Assessment (PA302): ce este și cum plătiți",
  meta_title="Simple Assessment (PA302) explicat – termene și plată | Tax Letter Sorted",
  desc="Ați primit de la HMRC o factură de impozit Simple Assessment? De ce ați primit-o, până când trebuie plătită, cum plătiți cu referința corectă și ce faceți în 60 de zile dacă cifrele sunt greșite.",
- lead="Simple Assessment este o factură de impozit calculată de HMRC pentru dvs., fără să depuneți o declarație fiscală. Este trimisă des pensionarilor sau atunci când impozitul nu poate fi reținut prin codul fiscal.",
+ lead="Simple Assessment este o factură de impozit calculată de HMRC pentru dvs., fără să depuneți o declarație fiscală. De obicei vine atunci când datorați impozit care nu poate fi reținut prin codul fiscal.",
  facts=[("Ce este","O factură de impozit calculată de HMRC – nu trebuie să depuneți declarație"),("Plata (scrisoare trimisă înainte de 31 octombrie)","Până la 31 ianuarie după sfârșitul anului fiscal"),("Plata (scrisoare trimisă la 31 octombrie sau după)","În 3 luni de la data scrisorii"),("Credeți că e greșită?","Contactați HMRC în 60 de zile de la data scrisorii"),("Referința de plată","14 caractere, începe cu X – o găsiți în scrisoare")],
  body="""
 <h2>De ce ați primit Simple Assessment</h2>
@@ -494,6 +494,252 @@ page(
  sources=[("Payments on account (GOV.UK, în engleză)","https://www.gov.uk/understand-self-assessment-bill/payments-on-account"),("Self Assessment deadlines (GOV.UK, în engleză)","https://www.gov.uk/self-assessment-tax-returns/deadlines"),("Pay your Self Assessment bill in instalments (GOV.UK, în engleză)","https://www.gov.uk/pay-self-assessment-tax-bill/pay-in-instalments")],
 )
 
+# ================================================================ batch 2b (10 Nov 2026)
+# ---------------------------------------------------------------- 11
+page(
+ slug="amenda-tva-depunere-tarzie-puncte",
+ kind="co",
+ extra=("Depuneți-mi declarațiile TVA", "contact.html?kind=service&svc=vat"),
+ chip="Amendă TVA (VAT)",
+ title="Punctele de amendă pentru declarația TVA depusă târziu și amenda de £200, explicate",
+ meta_title="Amenda TVA (VAT) pentru depunere târzie – puncte și amenda de £200 | Tax Letter Sorted",
+ desc="Ați primit un punct de amendă TVA sau o amendă de £200 de la HMRC? Cum funcționează sistemul de puncte, pragurile, cum se șterg punctele și cum cereți HMRC o reanalizare.",
+ lead="Din 2023, fiecare declarație TVA (VAT Return) depusă târziu primește un punct de amendă. Când ajungeți la prag, HMRC aplică o amendă de £200 – și încă £200 pentru fiecare declarație întârziată după aceea.",
+ facts=[("Se aplică","Perioadelor TVA care încep la 1 ianuarie 2023 sau după"),("Fiecare declarație întârziată","1 punct de amendă – contează și declarațiile zero (nil) și cele de rambursare"),("Pragul","Anual: 2 puncte · Trimestrial: 4 puncte · Lunar: 5 puncte"),("La prag","Amendă de £200 și încă £200 pentru fiecare declarație întârziată"),("Contestare","Cereți HMRC o reanalizare (review) – de obicei în 30 de zile de la decizie")],
+ body="""
+<h2>Cum funcționează sistemul de puncte</h2>
+<p>Fiecare declarație TVA care ajunge la HMRC după termen primește un punct de amendă – chiar și o declarație zero (nil) sau una în care HMRC vă datorează bani. Un punct singur nu costă nimic. Plata începe când ajungeți la pragul corespunzător frecvenței cu care depuneți:</p>
+<table class="tbl"><thead><tr><th>Depuneți</th><th>Pragul de amendă</th></tr></thead><tbody>
+<tr><td>Anual</td><td>2 puncte</td></tr>
+<tr><td>Trimestrial</td><td>4 puncte</td></tr>
+<tr><td>Lunar</td><td>5 puncte</td></tr>
+</tbody></table>
+<p>Când ajungeți la prag, HMRC aplică o <b>amendă de £200</b>. Cât timp rămâneți la prag, fiecare declarație întârziată costă încă £200.</p>
+
+<h2>Cum se șterg punctele</h2>
+<p><b>Sub prag</b>, fiecare punct expiră singur după aproximativ 2 ani (la sfârșitul lunii aflate la 24 de luni după luna în care declarația era scadentă).</p>
+<p><b>La prag</b>, toate punctele se șterg doar când îndepliniți ambele condiții:</p>
+<ul class="list">
+<li>ați depus fiecare declarație la timp pe o anumită perioadă – 12 luni dacă depuneți trimestrial (4 declarații), 24 de luni dacă depuneți anual, 6 luni dacă depuneți lunar</li>
+<li>ați depus toate declarațiile restante din ultimele 24 de luni</li>
+</ul>
+<p>Așadar, cel mai important este să <b>depuneți în continuare declarațiile la timp</b>, chiar și cât timp contestați o amendă.</p>
+
+<h2>Plata târzie este separată</h2>
+<p>Plata TVA cu întârziere are propriile amenzi și propria dobândă. Pentru aceeași perioadă puteți avea și declarație întârziată, și plată întârziată.</p>
+
+<h2>Puteți contesta un punct sau o amendă?</h2>
+<p>Da. Scrisoarea de amendă vă oferă o reanalizare (review). Puteți contesta punctul sau amenda de £200 dacă sunt greșite sau dacă ați avut un <b>motiv întemeiat (reasonable excuse)</b> – ceva neprevăzut sau în afara controlului dvs., cum ar fi o boală gravă, un deces în familie cu puțin timp înainte de termen sau o defecțiune a programului dvs. ori a sistemelor HMRC. Dacă motivul este acceptat, se șterge și punctul.</p>
+
+<h2>Cum cereți reanalizarea</h2>
+<ol class="list">
+<li>Acționați în 30 de zile de la data deciziei de amendă.</li>
+<li>Cereți reanalizarea din contul online TVA al firmei sau scrieți la: Solicitor's Office and Legal Services, HMRC, BX9 1ZT – ori la adresa din scrisoare.</li>
+<li>Explicați ce s-a întâmplat, cu date, și spuneți ce dovezi aveți.</li>
+</ol>
+<p class="small">Contestația către HMRC se face în engleză.</p>
+""",
+ help="""<p>Încărcați scrisoarea de amendă pentru o explicație gratuită: câte puncte aveți, pentru ce este amenda de £200 și termenul dvs. Dacă motivul dvs. poate fi acceptat, alegeți cum contestați:</p><ul class="list"><li><b>Gratuit</b> – contestați singur online: copiați și lipiți textul nostru (aveți nevoie de datele de autentificare ale contului TVA al firmei).</li><li><b>£19</b> – scriem scrisoarea de contestație; dvs. o tipăriți, semnați și trimiteți prin poștă.</li><li><b>£39</b> – un contabil calificat verifică contestația și o urmărește la HMRC pentru dvs.</li></ul>""",
+ faq=[
+  ("Primesc punct de amendă TVA pentru o declarație zero?","Da. Pentru perioadele TVA care încep la 1 ianuarie 2023 sau după, și declarațiile zero (nil) și cele de rambursare depuse târziu primesc un punct de amendă."),
+  ("Câte puncte până la amenda TVA de £200?","2 puncte dacă depuneți anual, 4 dacă depuneți trimestrial și 5 dacă depuneți lunar. La prag, fiecare declarație întârziată costă £200."),
+  ("Cum scap de punctele de amendă TVA?","Sub prag, expiră după aproximativ 2 ani. La prag, trebuie să depuneți fiecare declarație la timp pe o anumită perioadă – 12 luni dacă depuneți trimestrial – și să nu aveți declarații restante."),
+ ],
+ sources=[("Penalty points and penalties if you submit your VAT Return late (GOV.UK, în engleză)","https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late"),("Sending a VAT Return: late returns and payment (GOV.UK, în engleză)","https://www.gov.uk/submit-vat-return/late-returns-and-payment")],
+)
+
+# ---------------------------------------------------------------- 12
+page(
+ slug="amenda-paye-angajatori-depunere-tarzie",
+ kind="explain",
+ extra=("Faceți-mi salarizarea", "contact.html?kind=service&svc=payroll"),
+ chip="Amendă PAYE",
+ title="Amenda PAYE pentru angajatori care raportează târziu: ce înseamnă",
+ meta_title="Amenda PAYE pentru angajatori (RTI) explicată | Tax Letter Sorted",
+ desc="Ați primit o amendă PAYE de la HMRC? De ce sunt amendați angajatorii când rapoartele de salarii (FPS) întârzie, sumele lunare, când nu se aplică amenda și cum contestați.",
+ lead="HMRC amendează angajatorii când rapoartele de salarii – Full Payment Submission (FPS) – ajung la HMRC cu întârziere sau când o lună fără plăți nu este raportată. Suma depinde de numărul de angajați.",
+ facts=[("Raportul","Full Payment Submission (FPS) – cel târziu în ziua de plată a salariului"),("1–9 angajați","£100 pe lună"),("10–49 angajați","£200 pe lună"),("50–249 angajați","£300 pe lună"),("250 sau mai mulți","£400 pe lună"),("Notificări","Trimise trimestrial – plătiți în 30 de zile ca să evitați dobânda")],
+ body="""
+<h2>De ce ați primit amenda</h2>
+<p>Prin sistemul Real Time Information (RTI), angajatorul trebuie să trimită un FPS la HMRC de fiecare dată când plătește angajații, cel târziu în ziua de plată. Dacă raportul întârzie sau o lună fără salarii nu este raportată, HMRC poate aplica o amendă pentru fiecare lună. Angajatorii cu mai multe scheme PAYE pot fi amendați pentru fiecare.</p>
+<table class="tbl"><thead><tr><th>Număr de angajați</th><th>Amendă pe lună</th></tr></thead><tbody>
+<tr><td>1–9</td><td>£100</td></tr>
+<tr><td>10–49</td><td>£200</td></tr>
+<tr><td>50–249</td><td>£300</td></tr>
+<tr><td>250 sau mai mulți</td><td>£400</td></tr>
+</tbody></table>
+
+<h2>Când nu ar trebui să existe amendă</h2>
+<ul class="list">
+<li><b>În 3 zile:</b> FPS a întârziat, dar toate plățile din el au fost făcute în 3 zile de la ziua de plată.</li>
+<li><b>Angajator nou:</b> primul FPS a fost trimis în 30 de zile de la prima plată către un angajat.</li>
+<li><b>Prima dată în acest an fiscal:</b> HMRC nu amendează prima raportare întârziată din anul fiscal (nu se aplică schemelor anuale).</li>
+</ul>
+<p>Dacă se potrivește una dintre acestea, amenda poate fi greșită și poate fi contestată.</p>
+
+<h2>Sume estimate</h2>
+<p>Dacă lipsesc rapoarte, HMRC vă poate trimite și o factură estimată pentru PAYE pe care crede că îl datorați. Doar trimiterea rapoartelor lipsă o înlocuiește cu cifrele reale.</p>
+
+<h2>Cum contestați</h2>
+<p>Puteți contesta dacă amenda nu este datorată, suma este greșită sau ați avut un <b>motiv întemeiat (reasonable excuse)</b>.</p>
+<ol class="list">
+<li>Contestați în 30 de zile de la notificarea de amendă.</li>
+<li>Online: intrați în serviciul HMRC PAYE for employers și alegeți <b>Appeal a penalty</b>. Faceți o captură de ecran cu confirmarea – nu poate fi tipărită.</li>
+<li>Prin poștă: National Insurance Contributions and Employers Office, HM Revenue and Customs, BX9 1BX.</li>
+<li>Menționați codul unic (unique ID) al fiecărei amenzi din notificare.</li>
+</ol>
+<p class="small">Contestația către HMRC se face în engleză.</p>
+""",
+ help="""<p>Încărcați notificarea de amendă pentru o explicație gratuită, pe înțeles, în română sau engleză: ce luni au fost amendate, dacă se poate aplica una dintre regulile fără amendă și termenul dvs. Dacă nu mai vreți să vă faceți griji cu termenele pentru salarii, un contabil calificat vă poate face salarizarea și poate trimite rapoartele la HMRC la timp, în fiecare lună.</p>""",
+ faq=[
+  ("Cât este amenda PAYE pentru raportare târzie?","£100 pe lună pentru 1–9 angajați, £200 pentru 10–49, £300 pentru 50–249 și £400 pentru 250 sau mai mulți."),
+  ("Primesc amendă dacă FPS întârzie doar o zi sau două?","De obicei nu, dacă toate plățile din el au fost făcute în 3 zile de la ziua de plată. HMRC poate totuși contacta angajatorii care întârzie des în aceste 3 zile."),
+  ("Primesc amendă prima dată când întârzii?","Nu. Prima raportare întârziată dintr-un an fiscal nu se amendează, cu excepția schemelor anuale."),
+ ],
+ sources=[("What happens if you do not report payroll information on time (GOV.UK, în engleză)","https://www.gov.uk/guidance/what-happens-if-you-dont-report-payroll-information-on-time")],
+)
+
+# ---------------------------------------------------------------- 13
+page(
+ slug="amenda-cis-declaratie-lunara-tarzie",
+ kind="co",
+ extra=("Ocupați-vă de declarațiile mele CIS", "contact.html?kind=service&svc=cis"),
+ chip="Amendă CIS",
+ title="Amenda CIS pentru declarația lunară depusă târziu: sume și contestație",
+ meta_title="Amenda CIS pentru declarație lunară târzie (£100, £200, £300) explicată | Tax Letter Sorted",
+ desc="Ați primit o amendă CIS pentru o declarație lunară depusă târziu? Termenul, cum cresc amenzile de la £100, de ce contează declarațiile zero și cum poate contesta contractorul în 30 de zile.",
+ lead="Dacă sunteți contractor în Construction Industry Scheme (CIS), declarația lunară CIS trebuie să ajungă la HMRC până pe 19 ale lunii următoare. Dacă întârzie, HMRC aplică o amendă care crește cu cât întârzierea este mai mare.",
+ facts=[("Termen","Pe 19 ale lunii de după încheierea lunii fiscale"),("1 zi întârziere","£100"),("2 luni întârziere","Încă £200"),("6 luni întârziere","£300 sau 5% din reținerile CIS, care dintre ele este mai mare"),("12 luni întârziere","Încă £300 sau 5%, care dintre ele este mai mare"),("Termen de contestație","30 de zile de la notificarea de amendă")],
+ body="""
+<h2>De ce ați primit amenda</h2>
+<p>Contractorul trebuie să trimită o declarație CIS pentru fiecare lună fiscală (de pe 6 până pe 5), până pe 19 ale lunii următoare. De exemplu, declarația pentru 6 mai – 5 iunie trebuie depusă până pe 19 iunie. Amenda este pentru declarația depusă târziu – se aplică chiar dacă reținerile au fost plătite la timp.</p>
+
+<h2>Cum cresc amenzile</h2>
+<table class="tbl"><thead><tr><th>Întârziere</th><th>Amendă</th></tr></thead><tbody>
+<tr><td>1 zi</td><td>£100</td></tr>
+<tr><td>2 luni</td><td>£200</td></tr>
+<tr><td>6 luni</td><td>£300 sau 5% din reținerile CIS din declarație, care dintre ele este mai mare</td></tr>
+<tr><td>12 luni</td><td>£300 sau 5% din reținerile CIS, care dintre ele este mai mare</td></tr>
+</tbody></table>
+<p>Declarațiile depuse și mai târziu pot primi o amendă suplimentară de până la £3.000 sau 100% din rețineri. Fiecare lună este o declarație separată, așa că mai multe luni întârziate înseamnă mai multe amenzi.</p>
+
+<h2>Nu ați plătit subcontractori în acea lună?</h2>
+<p>Trebuie totuși să anunțați HMRC. Fie trimiteți o <b>declarație zero</b> (nil return), fie anunțați HMRC că ați încetat temporar să folosiți subcontractori (inactivity request). O declarație zero lipsă primește aceleași amenzi ca oricare alta.</p>
+
+<h2>Puteți contesta?</h2>
+<p>Da, dacă amenda este greșită sau ați avut un <b>motiv întemeiat (reasonable excuse)</b> – ceva neprevăzut sau în afara controlului dvs., cum ar fi o boală gravă, un deces în familie cu puțin timp înainte de termen sau o defecțiune a serviciului online HMRC – și ați trimis declarația cât de repede ați putut.</p>
+
+<h2>Cum contestați</h2>
+<ol class="list">
+<li>Contestați în 30 de zile de la data de pe notificarea de amendă.</li>
+<li>Folosiți serviciul online HMRC sau scrieți la adresa din notificare (CIS general enquiries). Nu puteți contesta telefonic.</li>
+<li>Menționați UTR-ul și referința de plată din notificare și explicați ce s-a întâmplat, cu date.</li>
+</ol>
+<p class="small">Contestația către HMRC se face în engleză.</p>
+""",
+ help="""<p>Încărcați notificarea de amendă pentru o explicație gratuită: ce luni au fost amendate, dacă sumele sunt corecte și termenul dvs. Dacă motivul dvs. poate fi acceptat, alegeți cum contestați:</p><ul class="list"><li><b>Gratuit</b> – contestați singur online: copiați și lipiți textul nostru (aveți nevoie de datele de autentificare HMRC).</li><li><b>£19</b> – scriem scrisoarea de contestație; dvs. o tipăriți, semnați și trimiteți prin poștă.</li><li><b>£39</b> – un contabil calificat verifică contestația și o urmărește la HMRC pentru dvs.</li></ul>""",
+ faq=[
+  ("Când trebuie depusă declarația CIS?","Până pe 19 ale lunii de după încheierea lunii fiscale. Luna fiscală este de pe 6 până pe 5."),
+  ("Trebuie să trimit declarația CIS dacă nu am plătit subcontractori?","Da – trimiteți o declarație zero sau anunțați HMRC că sunteți temporar inactiv. Altfel puteți primi amenzile pentru declarație întârziată."),
+  ("Pot contesta telefonic o amendă CIS?","Nu. Folosiți serviciul online HMRC sau scrieți la HMRC, menționând UTR-ul și referința de plată din notificare."),
+ ],
+ sources=[("What you must do as a CIS contractor: file your monthly returns (GOV.UK, în engleză)","https://www.gov.uk/what-you-must-do-as-a-cis-contractor/file-your-monthly-returns"),("Penalties for failure to file CIS returns on time – CC/FS18b (GOV.UK, în engleză)","https://www.gov.uk/government/publications/compliance-checks-penalties-if-you-dont-file-construction-industry-scheme-returns-on-time-ccfs18b/penalties-for-failure-to-file-returns-on-time-the-construction-industry-scheme-cis-ccfs18b")],
+)
+
+# ---------------------------------------------------------------- 14
+page(
+ slug="scrisoare-making-tax-digital-impozit-venit",
+ kind="explain",
+ extra=("Ajutați-mă cu Making Tax Digital", "contact.html?kind=service&svc=mtd"),
+ chip="Making Tax Digital",
+ title="Scrisoarea HMRC despre Making Tax Digital for Income Tax: ce trebuie să faceți",
+ meta_title="Scrisoare HMRC Making Tax Digital for Income Tax – ce faceți | Tax Letter Sorted",
+ desc="Ați primit o scrisoare de la HMRC despre Making Tax Digital for Income Tax? Cine trebuie să intre și când, termenele pentru raportările trimestriale, perioada fără puncte de amendă din 2026-27 și ce faceți acum.",
+ lead="Making Tax Digital (MTD) for Income Tax înseamnă că persoanele care lucrează pe cont propriu (self-employed) și proprietarii care închiriază țin evidența în format digital și trimit la HMRC o raportare în fiecare trimestru, apoi declarația fiscală după sfârșitul anului. HMRC le scrie celor care trebuie să înceapă.",
+ facts=[("Peste £50.000 în 2024-25","Începeți de la 6 aprilie 2026"),("Peste £30.000 în 2025-26","Începeți de la 6 aprilie 2027"),("Peste £20.000 în 2026-27","Începeți de la 6 aprilie 2028"),("Venituri care contează","Din activitate pe cont propriu și din proprietăți (înainte de cheltuieli)"),("Raportări trimestriale","Până la 7 august, 7 noiembrie, 7 februarie și 7 mai")],
+ body="""
+<h2>De ce v-a scris HMRC</h2>
+<p>HMRC se uită în declarația Self Assessment ca să vadă dacă <b>venitul calificat</b> (qualifying income) – încasările din activitatea pe cont propriu plus veniturile din proprietăți, înainte de cheltuieli – depășește limita. Dacă o depășește, trebuie să folosiți MTD de la data indicată. Parteneriatele nu sunt incluse deocamdată.</p>
+<table class="tbl"><thead><tr><th>Venit calificat</th><th>În anul fiscal</th><th>Începeți MTD de la</th></tr></thead><tbody>
+<tr><td>Peste £50.000</td><td>2024-25</td><td>6 aprilie 2026</td></tr>
+<tr><td>Peste £30.000</td><td>2025-26</td><td>6 aprilie 2027</td></tr>
+<tr><td>Peste £20.000</td><td>2026-27</td><td>6 aprilie 2028</td></tr>
+</tbody></table>
+<p>Dacă trebuia să începeți la 6 aprilie 2026 și nu v-ați înscris încă, vă puteți înscrie și acum.</p>
+
+<h2>Ce se schimbă</h2>
+<ul class="list">
+<li>Țineți evidența afacerii și a proprietăților într-un <b>program compatibil MTD</b>.</li>
+<li>Trimiteți o <b>raportare trimestrială</b> (quarterly update) pentru fiecare afacere și proprietate: până la 7 august, 7 noiembrie, 7 februarie și 7 mai.</li>
+<li>Trimiteți <b>declarația fiscală</b> din program după sfârșitul anului, până la 31 ianuarie.</li>
+<li><b>Plătiți</b> în continuare impozitul la datele obișnuite Self Assessment: 31 ianuarie și 31 iulie.</li>
+</ul>
+
+<h2>Amenzi</h2>
+<p>Raportările trimestriale întârziate intră într-un sistem de puncte. Pentru anul fiscal 2026-27, HMRC nu va da puncte de amendă pentru raportările trimestriale întârziate – dar raportările și evidența digitală rămân obligatorii, iar o declarație fiscală întârziată primește în continuare puncte. Nu vă bazați pe această perioadă ca motiv să amânați.</p>
+
+<h2>Scutiri</h2>
+<p>Unele persoane sunt scutite, de exemplu dacă nu pot folosi mijloace digitale din cauza vârstei, a unei dizabilități, a locului unde locuiesc sau din alte motive (digitally excluded). Unele scutiri sunt automate, pentru altele trebuie să faceți cerere. Persoanele scutite depun în continuare declarația Self Assessment.</p>
+
+<h2>Ce faceți acum</h2>
+<ol class="list">
+<li>Verificați data de început din scrisoare.</li>
+<li>Alegeți un program compatibil MTD sau cereți unui contabil să se ocupe în locul dvs.</li>
+<li>Înscrieți-vă înainte să se termine primul trimestru și țineți evidența digitală de la data de început.</li>
+</ol>
+""",
+ help="""<p>Încărcați scrisoarea pentru o explicație gratuită, pe înțeles, în română sau engleză: când trebuie să începeți, ce trebuie să trimiteți și până când. Dacă doriți ajutor, un contabil calificat vă poate pregăti totul și vă poate trimite raportările trimestriale – primiți mai întâi o estimare de preț.</p>""",
+ faq=[
+  ("Trebuie să folosesc Making Tax Digital?","Doar dacă venitul calificat – din activitate pe cont propriu plus din proprietăți, înainte de cheltuieli – depășește limita: £50.000 în 2024-25, £30.000 în 2025-26 sau £20.000 în 2026-27. HMRC le scrie celor care trebuie să înceapă."),
+  ("Când trebuie trimise raportările trimestriale MTD?","Până la 7 august, 7 noiembrie, 7 februarie și 7 mai, pentru trimestrele standard ale anului fiscal."),
+  ("Primesc amendă pentru o raportare trimestrială întârziată în 2026-27?","HMRC a spus că nu va da puncte de amendă pentru raportările trimestriale întârziate în 2026-27. Raportările rămân obligatorii, iar o declarație fiscală întârziată primește în continuare puncte de amendă."),
+ ],
+ sources=[("Find out if and when you need to use Making Tax Digital for Income Tax (GOV.UK, în engleză)","https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax"),("Send quarterly updates (GOV.UK, în engleză)","https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax/send-quarterly-updates"),("Exemptions from Making Tax Digital for Income Tax (GOV.UK, în engleză)","https://www.gov.uk/guidance/find-out-if-you-can-get-an-exemption-from-making-tax-digital-for-income-tax")],
+)
+
+# ---------------------------------------------------------------- 15
+page(
+ slug="notificare-companies-house-inchidere-companie",
+ kind="explain",
+ extra=("Opriți închiderea – cereți o ofertă", "contact.html?kind=package&strike=1"),
+ chip="Notificare de închidere a companiei",
+ title="Notificarea Companies House de închidere a companiei (strike-off): cum o opriți",
+ meta_title="Notificare Companies House de radiere (compulsory strike-off) – cum o opriți | Tax Letter Sorted",
+ desc="Ați primit o scrisoare de la Companies House că firma va fi radiată (struck off)? De ce se întâmplă, anunțul din The Gazette și termenul de 2 luni, cum opriți procesul și ce se întâmplă dacă firma este dizolvată.",
+ lead="Dacă Companies House crede că o companie nu mai funcționează – de obicei pentru că bilanțul sau declarația de confirmare (confirmation statement) sunt restante – începe s-o radieze din registru. Acționați repede: odată dizolvată compania, contul ei bancar este blocat.",
+ facts=[("De la","Companies House (nu HMRC)"),("Motivul obișnuit","Declarația de confirmare sau bilanțul anual restante"),("Ce urmează","Un anunț în The Gazette"),("Radierea","La aproximativ 2 luni după anunțul din Gazette, dacă nu faceți nimic"),("Ca s-o opriți","Depuneți documentele restante sau faceți obiecție, cât mai repede")],
+ body="""
+<h2>De ce ați primit această scrisoare</h2>
+<p>Companies House începe radierea obligatorie (compulsory strike-off) atunci când are motive să creadă că o companie nu mai funcționează – cel mai des pentru că documentele sunt restante și nu s-a răspuns la scrisorile sale. De obicei se trimit două scrisori, apoi se publică un anunț în <b>The Gazette</b> că firma va fi radiată.</p>
+
+<h2>Ce se întâmplă dacă nu faceți nimic</h2>
+<ul class="list">
+<li>La aproximativ <b>2 luni</b> după anunțul din Gazette, compania este radiată și <b>dizolvată</b>.</li>
+<li><b>Conturile bancare</b> ale companiei sunt <b>blocate</b>.</li>
+<li>Banii și bunurile ei trec în proprietatea statului (the Crown).</li>
+<li>Pentru a le recupera, trebuie să cereți repunerea companiei în registru (restoration), ceea ce costă timp și bani.</li>
+</ul>
+
+<h2>Cum opriți procesul</h2>
+<ol class="list">
+<li><b>Depuneți documentele restante</b> – de obicei declarația de confirmare și bilanțul restant. După ce sunt depuse, Companies House oprește de regulă radierea.</li>
+<li>Dacă aveți nevoie de mai mult timp, <b>contactați imediat Companies House</b>. Oricine are un interes în companie poate face obiecție; trimiteți-o cât mai devreme și cu cel puțin 2 săptămâni înainte să expire anunțul din Gazette.</li>
+<li>După o obiecție, Companies House stabilește un termen. Dacă până atunci nu există progrese, radierea reîncepe.</li>
+</ol>
+<p>Pentru depunere aveți nevoie de numărul companiei (company number) și de <b>codul de autentificare</b> (authentication code – un cod de 6 caractere trimis la sediul social). Este posibil ca directorii să trebuiască să își verifice identitatea la Companies House.</p>
+
+<h2>Și amenzi pentru depunere târzie</h2>
+<p>Bilanțul restant înseamnă și o amendă Companies House pentru depunere târzie, iar declarația fiscală a companiei depusă târziu înseamnă o amendă separată de la HMRC. <a href="amenda-companies-house-depunere-tarzie.html">Mai multe despre amenzile Companies House</a>.</p>
+""",
+ help="""<p>Încărcați scrisoarea pentru o explicație gratuită, pe înțeles, în română sau engleză: ce documente sunt restante și cât timp aveți. Dacă doriți să rezolvăm noi, un contabil calificat poate depune declarația de confirmare și bilanțul restant pentru companie – primiți mai întâi o ofertă. Declarația de confirmare pornește de la £99, cu taxa Companies House inclusă.</p>""",
+ faq=[
+  ("Cât timp până când compania este radiată?","De obicei aproximativ 2 luni după publicarea anunțului în The Gazette, dacă documentele restante nu sunt depuse și nimeni nu face obiecție."),
+  ("Cum opresc radierea obligatorie a companiei?","Depuneți cât mai repede documentele restante – de obicei declarația de confirmare și bilanțul. Dacă aveți nevoie de timp, contactați Companies House și faceți obiecție înainte să expire anunțul din Gazette."),
+  ("Ce se întâmplă cu contul bancar dacă firma este dizolvată?","Este blocat, iar banii și bunurile companiei trec în proprietatea statului. Pentru a le recupera, compania trebuie repusă în registru."),
+ ],
+ sources=[("Companies House: compulsory strike-off process (GOV.UK, în engleză)","https://www.gov.uk/government/news/companies-house-to-resume-the-compulsory-strike-off-process"),("Strike off, dissolution and restoration (GOV.UK, în engleză)","https://www.gov.uk/government/publications/strike-off-dissolution-and-restoration/strike-off-dissolution-and-restoration"),("File your confirmation statement (GOV.UK, în engleză)","https://www.gov.uk/file-your-confirmation-statement-with-companies-house")],
+)
+
 DIFF_RO = {
  "sa": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, verificăm dacă amenda este corectă, vă spunem termenul exact și – dacă motivul dvs. este unul acceptat de HMRC – completăm pentru dvs. formularul SA370 în engleză, chiar dacă răspundeți în română.",
  "co": "Această pagină explică regulile generale. Încărcați scrisoarea dvs. și o citim pe cea reală, verificăm suma față de întârziere, vă spunem termenul exact și – dacă motivul poate fi acceptat – pregătim textul contestației în engleză, chiar dacă răspundeți în română.",
@@ -534,6 +780,6 @@ UI_RO = {
  "hub_lead": "Ghiduri pe înțeles despre scrisorile despre care suntem întrebați cel mai des: ce înseamnă, termenele și când puteți contesta. Sau încărcați scrisoarea dvs. pentru o explicație gratuită în română.",
  "guides": "Ghiduri",
  "also": "Mai explicăm și",
- "also_list": ["Amendă TVA (VAT)", "Amendă PAYE", "Amendă CIS", "Scrisori Making Tax Digital", "Notificare de închidere a companiei (strike-off)"],
+ "also_list": [],
  "unsure": "Nu știți ce scrisoare aveți? Încărcați-o – vă spunem noi.",
 }

@@ -459,7 +459,7 @@
         svc === "vat" ? "VAT number: " + ($("svc_vat").value.trim() || "-") + " · VAT returns not submitted: " + $("svc_vat_n").value : "",
         svc === "cis" || svc === "mtd" ? "UTR: " + ($("svc_utr").value.trim() || "-") : "",
         svc === "mtd" && svcEst ? "Signed up: " + svcEst.registered + " · Start date: " + svcEst.start + " · Quarterly updates already sent: " + svcEst.updates_sent + " · Businesses/properties: " + svcEst.income_sources + " · VAT registered: " + (svcEst.vat ? "yes" : "no") : "",
-        svc === "mtd" && svcEst ? "ESTIMATE catch-up £" + svcEst.catch_up + " (" + svcEst.catch_up_months + " months, " + svcEst.discount_pct + "% off £" + svcEst.catch_up_before_discount + ") + " + (svcEst.plan === "full_vat" ? "Full MTD (with VAT)" : "Compliance") + " plan £" + svcEst.monthly + " per month by Direct Debit" : "",
+        svc === "mtd" && svcEst ? "ESTIMATE catch-up £" + svcEst.catch_up + " (" + svcEst.catch_up_months + " months, " + svcEst.discount_pct + "% off £" + svcEst.catch_up_before_discount + ") + " + (svcEst.plan === "full_vat" ? "Full MTD (with VAT)" : "Compliance") + " plan £" + svcEst.monthly + " per month (monthly card payment)" : "",
         svc !== "vat" && svc !== "mtd" ? "PAYE ref: " + ($("svc_paye").value.trim().toUpperCase() || "-") + " · Accounts Office ref: " + ($("svc_ao").value.trim().toUpperCase() || "-") : "",
         svc !== "vat" && svc !== "mtd" ? (svc === "cis" ? "Subcontractors: " : "Employees: ") + $("svc_people").value : "",
         svcEst != null && svc !== "mtd" ? (svc === "vat" ? "ESTIMATE £" + svcEst + " (catch-up)" : "ESTIMATE £" + svcEst + " per month") : "",

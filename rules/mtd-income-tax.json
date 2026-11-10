@@ -1,7 +1,7 @@
 {
   "id": "mtd-income-tax",
   "version": "0.1",
-  "status": "Eduard 10 Nov 2026 – prices from Eduard's MTD price list; facts from GOV.UK (checked 10 Nov 2026)",
+  "status": "Eduard 10 Nov 2026 – prices and facts confirmed (incl. 2026-27 penalty soft landing)",
   "title_key": "letters.mtd_income_tax.title",
   "tax": "Income Tax (Making Tax Digital)",
   "kind": "explain_and_service",
@@ -20,6 +20,5 @@
   "sources": [
     "https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax",
     "https://www.gov.uk/guidance/check-if-a-qr-code-on-a-letter-youve-received-from-hmrc-is-genuine"
-  ],
-  "facts_check": "Penalty soft landing taken from Sage's summary of the 2025 Autumn Budget / Finance Act 2026 – Eduard to confirm against GOV.UK"
+  ]
 }

@@ -1267,7 +1267,7 @@
     "q_sent_hint": "Puneți 0 dacă nu a fost trimisă niciuna.",
     "l_catchup": "Recuperare: {n} luni ({from} – {to}) × {each} = {amount}",
     "l_discount": "Reducere la recuperare {pct}%: −{amount}",
-    "l_dd_from": "Apoi {monthly} pe lună prin Direct Debit, începând din {month}.",
+    "l_dd_from": "Apoi {monthly} pe lună, plătit lunar cu cardul, începând din {month}.",
     "l_unsure": "Vă confirmăm data de început și eventuala recuperare când vă contactăm."
   }
 }

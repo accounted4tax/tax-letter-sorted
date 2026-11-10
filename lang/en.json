@@ -1217,7 +1217,7 @@
     "q_sent_hint": "Put 0 if none have been sent.",
     "l_catchup": "Catch-up: {n} months ({from} to {to}) × {each} = {amount}",
     "l_discount": "Catch-up discount {pct}%: −{amount}",
-    "l_dd_from": "Then {monthly} a month by Direct Debit, starting {month}.",
+    "l_dd_from": "Then {monthly} a month, paid monthly by card, starting {month}.",
     "l_unsure": "We'll confirm your start date and any catch-up when we contact you."
   }
 }

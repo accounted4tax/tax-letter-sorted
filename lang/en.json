@@ -79,7 +79,26 @@
       "p800": "P800",
       "simple_assessment": "Simple Assessment",
       "ct_penalty": "Corporation Tax penalty",
-      "ch_penalty": "Companies House penalty"
+      "ch_penalty": "Companies House penalty",
+      "vat_penalty": "VAT penalty",
+      "paye_penalty": "PAYE penalty",
+      "cis_penalty": "CIS penalty",
+      "sa_statement": "Self Assessment statement",
+      "mtd": "Making Tax Digital",
+      "strike_off": "Strike-off notice"
+    },
+    "faq_title": "Questions",
+    "faq": {
+      "q1": "Is Tax Letter Sorted part of HMRC?",
+      "a1": "No. Tax Letter Sorted is run by Accounted4Tax Ltd, a UK accountancy practice. We explain HMRC and Companies House letters and help you reply or appeal.",
+      "q2": "How much does it cost?",
+      "a2": "The explanation of your letter is free. If you can appeal a penalty, a filled-in appeal costs £19, or £39 with a review by a qualified accountant (£59 for a company).",
+      "q3": "How long do I have to appeal an HMRC penalty?",
+      "a3": "Usually 30 days from the date on the penalty notice. HMRC can accept a later appeal if you explain why it is late.",
+      "q4": "Can you explain my letter in Romanian?",
+      "a4": "Yes. You can read the explanation and answer the questions in English or Romanian. The appeal itself is always in English, because it goes to HMRC.",
+      "q5": "What happens to the letter I upload?",
+      "a5": "If you only want the explanation, your letter is deleted automatically within 24 hours. Your data is never sold. See our Privacy Policy for details."
     }
   },
   "upload": {

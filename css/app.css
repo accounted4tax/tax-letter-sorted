@@ -108,3 +108,7 @@ footer a{color:#fff;min-height:44px;display:flex;align-items:center}
 .offer ul{margin:0;padding-left:20px;font-size:14px;line-height:1.5;color:var(--muted)}
 .btnrow{display:flex;flex-direction:column;gap:10px}
 .btn{padding:8px 16px;text-align:center;line-height:1.3}
+
+.faq{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.faq summary{font-weight:600;cursor:pointer;line-height:1.4}
+.faq p{margin-top:8px;color:var(--muted);line-height:1.5}

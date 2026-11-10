@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /upload.html
+Disallow: /check.html
+Disallow: /explain.html
+Disallow: /questions.html
+Disallow: /confirm.html
+Disallow: /outcome.html
+Disallow: /details.html
+Disallow: /review.html
+Disallow: /pay.html
+Disallow: /paid.html
+Disallow: /pay-link.html
+Disallow: /id.html
+Disallow: /code.html
+Disallow: /followup.html
+Disallow: /quote.html
+Disallow: /appointment.html
+Disallow: /contact.html
+
+Sitemap: https://taxletters.accounted4tax.co.uk/sitemap.xml

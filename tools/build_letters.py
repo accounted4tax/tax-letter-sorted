@@ -618,7 +618,7 @@ def extra_btn(ui, p):
         return ""
     sep = "&" if ui["q"] else "?"
     href = f"{ui['up']}contact.html?kind=help" + (f"&lang={ui['lang']}" if ui["q"] else "")
-    return f'\n    <a class="btn secondary" href="{href}">{E(ui["help_btn"])}</a>'
+    return f'\n    <a class="btn" href="{href}">{E(ui["help_btn"])}</a>'
 
 def mid(ui, kind, extra=""):
     text = ui["mid_text"] if kind not in ("nudge", "explain") else ui["mid_text_" + kind] + " " + ui["mid_text"].split("? ", 1)[1]

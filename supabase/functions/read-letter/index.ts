@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
     const ext = (c.extracted ?? {}) as Record<string, unknown>;
     const deadline = isDate(ext.extended_appeal_date) ? String(ext.extended_appeal_date)
       : (noticeDate && letterType && PENALTY_TYPES.includes(letterType) ? addDays(noticeDate, 30) : null);
-    await db.from("cases").update({
+    const { error: upErr } = await db.from("cases").update({
       letter_type: letterType,
       notice_date: noticeDate,
       tax_year: typeof d.tax_year === "string" ? d.tax_year.slice(0, 9) : null,
@@ -188,6 +188,7 @@ Deno.serve(async (req) => {
       extracted: { ...ext, confirmed: d },
       details_confirmed_at: new Date().toISOString(),
     }).eq("id", c.id);
+    if (upErr) { await db.from("audit_log").insert({ actor: "system", action: "confirm_error", case_id: c.id, detail: { error: upErr.message.slice(0, 300) } }); return reply(500, { error: "server" }); }
     await db.from("audit_log").insert({ actor: "system", action: "details_confirmed", case_id: c.id });
     return reply(200, { ok: true, appeal_deadline: deadline });
   }

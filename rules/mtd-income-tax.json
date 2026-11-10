@@ -10,7 +10,8 @@
     "what_it_is": "Making Tax Digital (MTD) for Income Tax means sole traders and landlords keep digital records in MTD-compatible software and send HMRC quarterly updates, then a final declaration after the tax year, instead of only one Self Assessment return.",
     "who_and_when": "Qualifying income (self-employment plus property income) over £50,000 in 2024-25: from 6 April 2026 (sign-up is still open). Over £30,000 in 2025-26: from 6 April 2027. Over £20,000 in 2026-27: from 6 April 2028. HMRC writes to people who must start.",
     "sign_up": "You must be registered for Self Assessment and have filed a return in the last two years. Some people are exempt, for example if they are digitally excluded – they must still file a Self Assessment return.",
-    "payment_letter": "A payment awareness letter is about paying the tax: the amounts are still paid by the Self Assessment payment dates (31 January and 31 July)."
+    "payment_letter": "A payment awareness letter is about paying the tax: the amounts are still paid by the Self Assessment payment dates (31 January and 31 July).",
+    "penalties": "Penalties for late quarterly updates use a points system. For people who had to start from 6 April 2026, late quarterly updates for 2026-27 do not get penalty points (a 'soft landing', provided other conditions are met), but the updates and digital records are still required, and the end-of-year return for 2026-27 (due 31 January 2028) is not covered. Do not say penalties have already been charged unless the letter says so."
   },
   "service": {
     "product": "quote",
@@ -19,5 +20,6 @@
   "sources": [
     "https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax",
     "https://www.gov.uk/guidance/check-if-a-qr-code-on-a-letter-youve-received-from-hmrc-is-genuine"
-  ]
+  ],
+  "facts_check": "Penalty soft landing taken from Sage's summary of the 2025 Autumn Budget / Finance Act 2026 – Eduard to confirm against GOV.UK"
 }

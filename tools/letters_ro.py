@@ -435,6 +435,7 @@ page(
 <ul class="list">
 <li>referința unică de contribuabil (UTR) și datele de autentificare Government Gateway</li>
 <li>veniturile din anul fiscal (6 aprilie – 5 aprilie): self-employed, chirii, salariu (P60), pensii, dobânzi la economii</li>
+<li>detalii despre orice alt venit obținut în cursul anului fiscal</li>
 <li>cheltuielile, dacă sunteți self-employed sau proprietar care închiriază</li>
 <li>contribuțiile la pensie sau donațiile Gift Aid</li>
 </ul>

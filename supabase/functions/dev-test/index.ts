@@ -12,6 +12,23 @@ Deno.serve(async (req) => {
   if (!settings?.cron_secret || req.headers.get("x-cron-secret") !== settings.cron_secret) return json(403, { error: "forbidden" });
   let b: Record<string, unknown>;
   try { b = await req.json(); } catch { return json(400, { error: "bad_request" }); }
+  // before launch: empty the storage buckets of test files (only while not live)
+  if (b.action === "wipe_storage") {
+    const out: Record<string, number> = {};
+    for (const bucket of ["letters", "appeals", "id-docs"]) {
+      let n = 0;
+      const walk = async (prefix: string): Promise<void> => {
+        const { data } = await db.storage.from(bucket).list(prefix, { limit: 1000 });
+        for (const it of data ?? []) {
+          const path = prefix ? `${prefix}/${it.name}` : it.name;
+          if (it.id === null) await walk(path); else { await db.storage.from(bucket).remove([path]); n++; }
+        }
+      };
+      await walk("");
+      out[bucket] = n;
+    }
+    return json(200, out);
+  }
   // email deliverability check: the domain's mail records, and a test email to Eduard's own addresses only
   if (b.action === "dns") {
     const q = async (n: string, t: "TXT" | "MX" | "CNAME") => { try { return await Deno.resolveDns(n, t as any); } catch (e) { return String((e as Error).message ?? e); } };
